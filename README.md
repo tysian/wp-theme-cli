@@ -2,7 +2,7 @@
 
 ## Goal
 
-Generate PHP and SCSS files for
+Generate PHP and SCSS files for our ACF based WordPress theme
 
 ## How to start
 
