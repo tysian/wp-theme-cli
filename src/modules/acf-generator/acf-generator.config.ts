@@ -1,4 +1,4 @@
-type AcfGenConfig = {
+type AcfGeneratorConfig = {
   modulesFilePath: string;
   modulesFieldName: string;
   conflictAction: 'ignore' | 'overwrite';
@@ -19,7 +19,7 @@ type AcfGenConfig = {
   };
 };
 
-export const defaultConfig: AcfGenConfig = {
+export const config: AcfGeneratorConfig = {
   modulesFilePath: './includes/acf-json/group_5d380bc6e0ae8.json',
   modulesFieldName: 'modules',
   conflictAction: 'ignore',

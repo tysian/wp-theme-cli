@@ -2,7 +2,7 @@ import 'trace';
 import 'clarify';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { acfGenerator } from './modules/acf-gen';
+import { acfGenerator } from './modules/acf-generator';
 // import { log } from './utils/logger';
 
 async function bootstrap() {

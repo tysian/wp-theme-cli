@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
-import { log } from '../utils/logger';
+import { log } from '../../utils/logger';
 
 export const acfGenerator = async () => {
   console.log('ACF Flexible field files generator!');
