@@ -1,13 +1,13 @@
-const fs = require('fs');
+import fs from 'fs';
 
-module.exports = function (file, text) {
-  return new Promise((resolve, reject) => {
+export const writeStream = (file: string, text: string) =>
+  new Promise((resolve, reject) => {
     const writable = fs.createWriteStream(file);
 
     writable.write(text);
 
     writable.on('finish', () => {
-      resolve();
+      resolve(file);
     });
 
     writable.end();
@@ -16,4 +16,3 @@ module.exports = function (file, text) {
       reject(error);
     });
   });
-};

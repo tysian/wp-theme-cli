@@ -1,9 +1,8 @@
-// const inquirer = require('inquirer');
-// const chalk = require('chalk');
+import inquirer from 'inquirer';
+import chalk from 'chalk';
+import { log } from '../utils/logger';
 
-// const log = require('../utils/logger');
-
-async function acfGenerator() {
+export const acfGenerator = async () => {
   console.log('ACF Flexible field files generator!');
   // const { categories } = await inquirer.prompt([
   //   {
@@ -25,6 +24,4 @@ async function acfGenerator() {
   //     validate: (input) => (input.length === 0 ? 'You must choose at least one option' : true),
   //   },
   // ]);
-}
-
-module.exports = acfGenerator;
+};

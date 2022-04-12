@@ -4,7 +4,15 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['airbnb-base', 'node', 'prettier'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
+  extends: [
+    'airbnb-base',
+    'node',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+  ],
   parserOptions: {
     ecmaVersion: 12,
   },
@@ -20,5 +28,22 @@ module.exports = {
     'no-console': 0,
     'no-case-declarations': 0,
     'no-nested-ternary': 0,
+    'import/prefer-default-export': 0,
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        ts: 'never',
+      },
+    ],
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        paths: ['src'],
+        extensions: ['.js', '.ts'],
+      },
+    },
   },
 };

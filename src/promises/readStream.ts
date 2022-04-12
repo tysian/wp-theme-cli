@@ -1,10 +1,10 @@
-const fs = require('fs');
+import fs from 'fs';
 
-module.exports = function (file) {
-  return new Promise((resolve, reject) => {
+export const readStream = (file: string) =>
+  new Promise((resolve, reject) => {
     const stream = fs.createReadStream(file);
     let fileContent = '';
-    stream.on('data', (data) => {
+    stream.on('data', (data: string) => {
       fileContent += data;
     });
 
@@ -16,4 +16,3 @@ module.exports = function (file) {
       reject(error);
     });
   });
-};
