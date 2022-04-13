@@ -17,12 +17,44 @@ export const gitCheck = async (): Promise<boolean> => {
 
   const { whatToDo } = await inquirer.prompt([
     {
-      type: 'confirm',
-      message: 'Current branch has uncommited changes. Do you want to continue? ',
-      name: 'whatToDo',
-      default: false,
+      type: 'expand',
+      message: 'You got uncommited changes, what should we do?',
+      default: 'y',
+      choices: [
+        {
+          key: 'c',
+          name: 'Commit my changes now',
+          value: 'commit',
+        },
+        {
+          key: 'i',
+          name: 'Ignore my changes & continue without commiting',
+          value: 'continue',
+        },
+        {
+          key: 'x',
+          name: 'Abort',
+          value: 'abort',
+        },
+      ],
     },
   ]);
 
+  if (whatToDo === 'commit') {
+    const { commitMessage } = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'commitMessage',
+        message: 'Provide commit message',
+        default: () => 'Changes before generating ACF modules files',
+      },
+    ]);
+  } else if (whatToDo === 'continue') {
+    return true;
+  } else if (whatToDo === 'abort') {
+    return false;
+  }
+
   return whatToDo;
 };
+
