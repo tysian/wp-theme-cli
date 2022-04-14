@@ -1,41 +1,20 @@
-import chalk, { Color } from 'chalk';
+import chalk from 'chalk';
 
 type LogTypes = {
-  [key: string]: {
-    label: string;
-    color: typeof Color;
-  };
+  [key: string]: string;
 };
 
 const types: LogTypes = {
-  success: {
-    label: 'Success',
-    color: 'green',
-  },
-  unchanged: {
-    label: 'Unchanged',
-    color: 'gray',
-  },
-  error: {
-    label: 'Error',
-    color: 'red',
-  },
-  info: {
-    label: 'Info',
-    color: 'blue',
-  },
-  warn: {
-    label: 'Warning',
-    color: 'yellow',
-  },
-  debug: {
-    label: 'DEBUG',
-    color: 'magenta',
-  },
+  info: chalk.blue('info'),
+  success: chalk.green('success'),
+  warning: chalk.yellow('warning'),
+  error: chalk.red('error'),
+  debug: chalk.magenta('debug'),
 };
 
 export const log = (message: string, _type: keyof typeof types = 'info') => {
-  const type = types[_type];
+  const type = types[_type] ?? 'info';
 
-  console.log(`${chalk.bold[type.color](`[${type.label}]`)} ${message}`);
+  console.log(`${type} ${message}`);
 };
+
