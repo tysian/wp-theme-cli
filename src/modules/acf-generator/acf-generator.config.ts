@@ -36,3 +36,18 @@ export const config: AcfGeneratorConfig = {
     lookFor: '@import "modules/',
   },
 };
+
+export const printConfig = () => {
+  const print = [];
+  const getKeyValuePair = (object: Record<string, string>, parent = null) => {
+    const entries = Object.entries(object);
+    for (const [key, value] of entries) {
+      // check if value is an object
+      if (typeof value === 'object' && !Array.isArray(value) && value !== null) {
+      } else {
+        print.push({ key, value });
+      }
+    }
+  };
+  console.table(print);
+};

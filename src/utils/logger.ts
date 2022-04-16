@@ -12,7 +12,7 @@ type LogTypes =
   | 'pause'
   | 'start'
   | 'stop'
-  | 'warning'
+  | 'warn'
   | 'skip'
   | 'pending';
 
@@ -37,7 +37,7 @@ const types: TypesMap = {
   stop: { symbol: '■', label: 'stop', color: chalk.red },
   success: { symbol: '✔', label: 'success', color: chalk.green },
   skip: { symbol: '≫', label: 'skipping', color: chalk.blue },
-  warning: { symbol: '⚠', label: 'warning', color: chalk.yellow },
+  warn: { symbol: '⚠', label: 'warning', color: chalk.yellow },
 };
 
 // Return string of formatted message
@@ -57,15 +57,19 @@ const logMessage = (message: string, logType: LogTypes): string => {
     finalLabel.push(label);
   }
 
-  return `${color(finalLabel.join(' '))} ${message}`.trim();
+  let finalLabelString = finalLabel.join(' ');
+  if (finalLabelString) {
+    finalLabelString = `${color(finalLabelString)}\t`;
+  }
+  return `${finalLabelString}${message}`.trim();
 };
 
 // Log formatted message
-export const log = (message: string, type: LogTypes) => {
+export const log = (message: string, type: LogTypes): void => {
   console.log(logMessage(message, type));
 };
 
-type Logger = Record<LogTypes, typeof logMessage>;
+type Logger = Record<LogTypes, (message: string) => void>;
 
 export const logger = Object.keys(types).reduce(
   (acc, type) => ({
@@ -74,4 +78,3 @@ export const logger = Object.keys(types).reduce(
   }),
   {} as Logger
 );
-

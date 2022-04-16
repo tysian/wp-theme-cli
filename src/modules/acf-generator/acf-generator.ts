@@ -1,9 +1,17 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
-import { log } from '../../utils/logger';
+import { logger } from '../../utils/logger';
+import { gitCheck } from '../../utils/gitCheck';
+import { printConfig } from './acf-generator.config';
 
-export const acfGenerator = async () => {
-  console.log('ACF Flexible field files generator!');
+export const acfGenerator = async (): Promise<boolean> => {
+  logger.none('ACF Flexible field files generator!');
+  const gitCheckStatus = await gitCheck();
+  if (!gitCheckStatus) {
+    return gitCheckStatus;
+  }
+  logger.none('Here is default config of this generator.\n');
+  printConfig();
   // const { categories } = await inquirer.prompt([
   //   {
   //     type: 'checkbox',
@@ -24,4 +32,5 @@ export const acfGenerator = async () => {
   //     validate: (input) => (input.length === 0 ? 'You must choose at least one option' : true),
   //   },
   // ]);
+  return true;
 };

@@ -37,6 +37,7 @@ module.exports = {
         ts: 'never',
       },
     ],
+    'guard-for-in': 0,
   },
   settings: {
     'import/resolver': {

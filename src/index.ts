@@ -8,7 +8,9 @@ import { acfGenerator } from './modules/acf-generator';
 async function bootstrap() {
   yargs(hideBin(process.argv))
     .showHelpOnFail(true)
-    .command('gen', 'Generate acf modules files', {}, acfGenerator)
+    .command('gen', 'Generate ACF flexible field files', {}, () => {
+      acfGenerator();
+    })
     .demandCommand()
     .parse();
 }

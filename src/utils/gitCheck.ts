@@ -1,38 +1,38 @@
 import inquirer from 'inquirer';
 import git from 'simple-git';
-import { log } from './logger';
+import { logger } from './logger';
 
 export const gitCheck = async (): Promise<boolean> => {
-  log('Checking git status...');
-
   const isRepo = await git().checkIsRepo();
   if (!isRepo) {
+    logger.warn('No repo found.');
     return true;
   }
 
   const status = await git().status();
   if (status.isClean()) {
+    logger.skip('Nothing to commit, continuing...');
     return true;
   }
 
-  const { whatToDo } = await inquirer.prompt([
+  const { shouldCommit } = await inquirer.prompt([
     {
-      type: 'expand',
+      type: 'list',
       message: 'You got uncommited changes, what should we do?',
-      default: 'y',
+      name: 'shouldCommit',
+      default: 'commit',
       choices: [
         {
-          key: 'c',
           name: 'Commit my changes now',
+          short: 'Commit',
           value: 'commit',
         },
         {
-          key: 'i',
           name: 'Ignore my changes & continue without commiting',
+          short: 'Ignore & continue',
           value: 'continue',
         },
         {
-          key: 'x',
           name: 'Abort',
           value: 'abort',
         },
@@ -40,21 +40,34 @@ export const gitCheck = async (): Promise<boolean> => {
     },
   ]);
 
-  if (whatToDo === 'commit') {
+  if (shouldCommit === 'commit') {
     const { commitMessage } = await inquirer.prompt([
       {
         type: 'input',
         name: 'commitMessage',
-        message: 'Provide commit message',
+        message: 'Provide commit message.',
         default: () => 'Changes before generating ACF modules files',
+        validate: (input) => input.trim().length > 0,
       },
     ]);
-  } else if (whatToDo === 'continue') {
+
+    try {
+      logger.start('Commiting');
+      await git().add('.');
+      await git().commit(commitMessage);
+      logger.complete('Changes commited successfully!');
+      return true;
+    } catch (error) {
+      logger.error((error as Error)?.message ?? 'Failed to finish this operation.');
+      return false;
+    }
+  } else if (shouldCommit === 'continue') {
+    logger.skip('Continuing without commiting.');
     return true;
-  } else if (whatToDo === 'abort') {
+  } else if (shouldCommit === 'abort') {
+    logger.error('Abort!');
     return false;
   }
 
-  return whatToDo;
+  return shouldCommit;
 };
-
