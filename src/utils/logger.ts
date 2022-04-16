@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import isUnicodeSupported from 'is-unicode-supported';
 
 type LogTypes = {
   [key: string]: string;

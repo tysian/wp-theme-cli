@@ -9,15 +9,8 @@ async function bootstrap() {
   yargs(hideBin(process.argv))
     .showHelpOnFail(true)
     .command('gen', 'Generate acf modules files', {}, acfGenerator)
-    .command({
-      command: '*',
-      handler() {
-        yargs.showHelp();
-      },
-    })
-    .demandCommand();
-
-  yargs.parse();
+    .demandCommand()
+    .parse();
 }
 
 export default bootstrap;
