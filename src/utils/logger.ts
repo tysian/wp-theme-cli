@@ -59,9 +59,9 @@ const logMessage = (message: string, logType: LogTypes): string => {
 
   let finalLabelString = finalLabel.join(' ');
   if (finalLabelString) {
-    finalLabelString = `${color(finalLabelString)}\t`;
+    finalLabelString = `${color(finalLabelString)} `;
   }
-  return `${finalLabelString}${message}`.trim();
+  return `${finalLabelString}${message}`;
 };
 
 // Log formatted message

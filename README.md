@@ -2,11 +2,11 @@
 
 ## Goal
 
-Generate PHP and SCSS files for our ACF based WordPress theme
+Generate, update & remove files in our WordPress theme
 
 ## How to start
 
-> We are recommending to use at least Node v14
+> Required: Node >= 14.17.0
 
 ### Installation
 
