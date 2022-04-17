@@ -1,7 +1,7 @@
 {
   "name": "wp-theme-cli",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "Generate, update & remove files in our WordPress theme",
   "main": "index.js",
   "type": "module",
   "bin": {
@@ -17,19 +17,18 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "clarify": "^2.1.0",
+    "commander": "^9.2.0",
     "ejs": "^3.1.6",
     "inquirer": "^8.2.0",
     "inquirer-fuzzy-path": "^2.3.0",
     "is-unicode-supported": "^1.2.0",
     "simple-git": "^3.6.0",
     "trace": "^3.1.1",
-    "yargs": "^17.2.1"
   },
   "devDependencies": {
     "@digitak/tsc-esm": "^3.1.2",
     "@types/inquirer": "^8.2.1",
     "@types/node": "^17.0.23",
-    "@types/yargs": "^17.0.10",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
     "eslint": "^7.32.0",
