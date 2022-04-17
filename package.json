@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc-esm",
-    "dev": "nodemon --watch \"src/**\" --ext \"js,ts,json\" --exec \"tsc-esm\""
+    "dev": "nodemon --watch \"src/**\" --ext \"js,ts,ejs,json\" --exec \"tsc-esm\""
   },
   "keywords": [],
   "author": "",
@@ -18,12 +18,13 @@
     "chalk": "^4.1.2",
     "clarify": "^2.1.0",
     "commander": "^9.2.0",
+    "comment-json": "^4.2.2",
     "ejs": "^3.1.6",
     "inquirer": "^8.2.0",
-    "inquirer-fuzzy-path": "^2.3.0",
+    "inquirer-file-tree-selection-prompt": "^1.0.19",
     "is-unicode-supported": "^1.2.0",
     "simple-git": "^3.6.0",
-    "trace": "^3.1.1",
+    "trace": "^3.1.1"
   },
   "devDependencies": {
     "@digitak/tsc-esm": "^3.1.2",

@@ -1,4 +1,4 @@
-type AcfGeneratorConfig = {
+export type AcfGeneratorConfig = {
   modulesFilePath: string;
   modulesFieldName: string;
   conflictAction: 'ignore' | 'overwrite';
@@ -37,17 +37,22 @@ export const config: AcfGeneratorConfig = {
   },
 };
 
+export const configDescriptions: Record<string, string> = {
+  modulesFilePath: 'Relative to a JSON file with flexible field',
+  modulesFieldName: 'Flexible field name inside JSON',
+  conflictAction: `Default action if the file already exists
+  Accepting values: 'ignore' | 'overwrite'`,
+  template: `Relative path to EJS template file for specific file type
+  Accepting values:
+  'none' -> don't create file
+  'default' -> use default template
+  string -> provide relative path to custom template`,
+  output: 'Relative path to specific filetypes',
+  scssImport: `Settings required to properly import created scss files
+  filePath: relative path to main scss file which is used for importing
+  lookFor: search for a last line containing this string, then paste new imports below it`,
+};
+
 export const printConfig = () => {
-  const print = [];
-  const getKeyValuePair = (object: Record<string, string>, parent = null) => {
-    const entries = Object.entries(object);
-    for (const [key, value] of entries) {
-      // check if value is an object
-      if (typeof value === 'object' && !Array.isArray(value) && value !== null) {
-      } else {
-        print.push({ key, value });
-      }
-    }
-  };
-  console.table(print);
+  console.log(config);
 };
