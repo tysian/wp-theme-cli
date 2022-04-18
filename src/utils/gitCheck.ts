@@ -51,23 +51,18 @@ export const gitCheck = async (): Promise<boolean> => {
       },
     ]);
 
-    try {
-      logger.start('Commiting');
-      await git().add('.');
-      await git().commit(commitMessage);
-      logger.complete('Changes commited successfully!');
-      return true;
-    } catch (error) {
-      logger.error((error as Error)?.message ?? 'Failed to finish this operation.');
-      return false;
-    }
+    logger.start('Commiting');
+    await git().add('.');
+    await git().commit(commitMessage);
+    logger.complete('Changes commited successfully!');
+
+    return true;
   } else if (shouldCommit === 'continue') {
     logger.skip('Continuing without commiting.');
     return true;
   } else if (shouldCommit === 'abort') {
-    logger.error('Abort!');
-    return false;
+    throw new Error('Abort!');
   }
 
-  return shouldCommit;
+  return true;
 };

@@ -69,12 +69,12 @@ export const log = (message: string, type: LogTypes): void => {
   console.log(logMessage(message, type));
 };
 
-type Logger = Record<LogTypes, (message: string) => void>;
+type Logger = Record<LogTypes, (message: any) => void>;
 
 export const logger = Object.keys(types).reduce(
   (acc, type) => ({
     ...acc,
-    [type]: (message: string) => log(message, type as LogTypes),
+    [type]: (message: any) => log(message, type as LogTypes),
   }),
   {} as Logger
 );

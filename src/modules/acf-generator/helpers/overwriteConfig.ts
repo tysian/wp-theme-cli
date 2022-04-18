@@ -1,6 +1,7 @@
 import inquirer from 'inquirer';
 import commentJSON from 'comment-json';
 import { AcfGeneratorConfig, config, configDescriptions } from '../acf-generator.config';
+import chalk from 'chalk';
 
 const configWithDescriptions = (
   configObject: AcfGeneratorConfig,
@@ -23,7 +24,7 @@ const configWithDescriptions = (
   return stringifiedConfig;
 };
 
-export const overwriteConfig = async (): Promise<boolean> => {
+export const overwriteConfig = async (): Promise<AcfGeneratorConfig> => {
   const { shouldOverwrite } = await inquirer.prompt([
     {
       type: 'confirm',
@@ -34,10 +35,10 @@ export const overwriteConfig = async (): Promise<boolean> => {
   ]);
 
   if (!shouldOverwrite) {
-    return true;
+    return config;
   }
 
-  const { overwrittenConfig: overwrittenConfigRaw } = await inquirer.prompt([
+  const { overwrittenConfig } = await inquirer.prompt([
     {
       type: 'editor',
       name: 'overwrittenConfig',
@@ -49,8 +50,12 @@ export const overwriteConfig = async (): Promise<boolean> => {
       postfix: 'json',
     },
   ]);
-  const overwrittenConfig = commentJSON.parse(overwrittenConfigRaw, undefined, true);
-  console.log(overwrittenConfig);
 
-  return true;
+  if (!['ignore', 'overwrite'].includes(overwrittenConfig.conflictAction)) {
+    throw new Error(
+      `conflictAction property accepts: ${chalk.green.bold('ignore')}, ${chalk.green('overwrite')}`
+    );
+  }
+
+  return commentJSON.parse(overwrittenConfig, undefined, true) as AcfGeneratorConfig;
 };
