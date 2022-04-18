@@ -1,11 +1,10 @@
 import { logger } from '../../utils/logger';
 import { gitCheck } from '../../utils/gitCheck';
-import { AcfGeneratorConfig, config, printConfig } from './acf-generator.config';
+import { printConfig } from './acf-generator.config';
 import { overwriteConfig } from './helpers/overwriteConfig';
-import { fileExists } from '../../utils/fileExist';
-import { relativeToAbsolutePath } from '../../utils/relativeToAbsolutePath';
 import { getAcfModules } from './helpers/getAcfModules';
 import { writeModules } from './helpers/writeModules';
+import { checkConfig } from './helpers/checkConfig';
 
 export const acfGenerator = async (): Promise<boolean> => {
   logger.none('ACF Flexible field files generator!');
@@ -19,6 +18,7 @@ export const acfGenerator = async (): Promise<boolean> => {
     printConfig();
 
     const overwrittenConfig = await overwriteConfig();
+    await checkConfig(overwrittenConfig);
 
     const acfModules = await getAcfModules(
       overwrittenConfig.modulesFilePath,
@@ -26,10 +26,11 @@ export const acfGenerator = async (): Promise<boolean> => {
     );
 
     // Create files
-    await writeModules(acfModules);
+    await writeModules(acfModules, overwrittenConfig);
   } catch (error) {
     logger.error((error as Error)?.message);
   }
 
   return true;
 };
+

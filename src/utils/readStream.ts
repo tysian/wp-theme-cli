@@ -1,8 +1,9 @@
 import fs from 'fs';
+import path from 'path';
 
 export const readStream = (file: string): Promise<string> =>
   new Promise((resolve, reject) => {
-    const stream = fs.createReadStream(file);
+    const stream = fs.createReadStream(path.resolve(file));
     let fileContent = '';
     stream.on('data', (data: string) => {
       fileContent += data;
@@ -16,3 +17,4 @@ export const readStream = (file: string): Promise<string> =>
       reject(error);
     });
   });
+

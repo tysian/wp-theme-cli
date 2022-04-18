@@ -1,8 +1,8 @@
 import chalk from 'chalk';
+import path from 'path';
 import { fileExists } from '../../../utils/fileExist';
 import { logger } from '../../../utils/logger';
 import { readStream } from '../../../utils/readStream';
-import { relativeToAbsolutePath } from '../../../utils/relativeToAbsolutePath';
 import { config } from '../acf-generator.config';
 
 export type AcfLayout = {
@@ -35,7 +35,7 @@ export const getAcfModules = async (
   fieldName = config.modulesFieldName
 ): Promise<AcfLayout[]> => {
   // Check if modulesFilePath exists
-  const modulesFilePath = relativeToAbsolutePath(jsonPath);
+  const modulesFilePath = path.resolve(jsonPath);
   const modulesFilePathFileExists = await fileExists(modulesFilePath);
 
   if (!modulesFilePathFileExists) {
@@ -69,3 +69,4 @@ export const getAcfModules = async (
 
   return Object.values(modulesField.layouts) as AcfLayout[];
 };
+

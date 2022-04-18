@@ -2,6 +2,9 @@ import inquirer from 'inquirer';
 import commentJSON from 'comment-json';
 import { AcfGeneratorConfig, config, configDescriptions } from '../acf-generator.config';
 import chalk from 'chalk';
+import { logger } from '../../../utils/logger';
+import { fileExists } from '../../../utils/fileExist';
+import { relativeToAbsolutePath } from '../../../utils/relativeToAbsolutePath';
 
 const configWithDescriptions = (
   configObject: AcfGeneratorConfig,
@@ -47,15 +50,10 @@ export const overwriteConfig = async (): Promise<AcfGeneratorConfig> => {
       validate: async (answer) => {
         return !!commentJSON.parse(answer, undefined, true);
       },
-      postfix: 'json',
+      postfix: '.jsonc',
     },
   ]);
 
-  if (!['ignore', 'overwrite'].includes(overwrittenConfig.conflictAction)) {
-    throw new Error(
-      `conflictAction property accepts: ${chalk.green.bold('ignore')}, ${chalk.green('overwrite')}`
-    );
-  }
-
   return commentJSON.parse(overwrittenConfig, undefined, true) as AcfGeneratorConfig;
 };
+
