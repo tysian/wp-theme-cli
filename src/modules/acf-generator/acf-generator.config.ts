@@ -2,6 +2,8 @@ import chalk from 'chalk';
 import { QuestionCollection } from 'inquirer';
 import path from 'path';
 
+type FileTypeKey = 'php' | 'scss' | 'js';
+
 type FileType = {
   // 'default' -> use default template
   // path -> provide path to custom template
@@ -18,7 +20,7 @@ export type AcfGeneratorConfig = {
   modulesFilePath: string;
   modulesFieldName: string;
   conflictAction: 'ignore' | 'overwrite';
-  fileTypes: Partial<Record<'php' | 'scss' | 'js', FileType>>;
+  fileTypes: Partial<Record<FileTypeKey, FileType>>;
 };
 
 export const config: AcfGeneratorConfig = {
@@ -43,10 +45,11 @@ export const config: AcfGeneratorConfig = {
   },
 };
 
-export const configDescriptions: Record<
-  string,
-  QuestionCollection | Record<string, QuestionCollection>
-> = {
+export type ConfigDescription = {
+  [key: string]: QuestionCollection | ConfigDescription;
+};
+
+export const configDescriptions: ConfigDescription = {
   modulesFilePath: {
     type: 'file-tree-selection',
     message: 'Select JSON file with flexible field',
@@ -65,37 +68,45 @@ export const configDescriptions: Record<
     message: 'Select action if file already exists',
     suffix: `Accepting values: 'ignore' | 'overwrite'`,
   },
-  fileTypes: {
-    template: {
-      type: 'file-tree-selection',
-      message: `Select EJS template for {filetype} file`,
-      validate: (item) => path.extname(item) === '.ejs',
-    },
-    output: {
-      type: 'file-tree-selection',
-      message: 'Select directory where {filetype} files should go',
-      onlyShowDir: true,
-    },
-    'import.filePath': {
-      type: 'file-tree-selection',
-      message: `Select {filename} file where you want to put your "imports"`,
-    },
-    'import.search': {
-      type: 'input',
-      message: `Search for a string`,
-      suffix: `This will be use to find last line containing this string`,
-    },
-    'import.append': {
-      type: 'input',
-      message: `Paste new import`,
-      suffix: `Use ${chalk.blueBright('{filename}')}, ${chalk.blueBright(
-        '{modulename}'
-      )} variables if you need to.`,
-    },
-  },
+  fileTypes: Object.keys(config.fileTypes).reduce((acc, fileType) => {
+    return {
+      ...acc,
+      [fileType]: {
+        [`create${fileType}`]: {},
+        template: {
+          type: 'file-tree-selection',
+          message: `Select EJS template for ${fileType.toUpperCase()} file`,
+          validate: (item: string) => path.extname(item) === '.ejs',
+          default: config.fileTypes[fileType as FileTypeKey]?.template,
+        },
+        output: {
+          type: 'file-tree-selection',
+          message: `Select directory where ${fileType.toUpperCase()} files should go`,
+          onlyShowDir: true,
+        },
+        import: {
+          filePath: {
+            type: 'file-tree-selection',
+            message: `Select ${fileType.toUpperCase()} file where you want to put your "imports"`,
+          },
+          search: {
+            type: 'input',
+            message: `Search for a string`,
+            suffix: `This will be use to find last line containing this string`,
+          },
+          append: {
+            type: 'input',
+            message: `Paste new import`,
+            suffix: `Use ${chalk.blueBright('{filename}')}, ${chalk.blueBright(
+              '{modulename}'
+            )} variables if you need to.`,
+          },
+        },
+      },
+    };
+  }, {} as ConfigDescription),
 };
 
 export const printConfig = () => {
-  console.log(config);
+  console.dir(config, { depth: null });
 };
-

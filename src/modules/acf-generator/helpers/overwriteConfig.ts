@@ -1,21 +1,51 @@
 import inquirer from 'inquirer';
-import { AcfGeneratorConfig, config, configDescriptions } from '../acf-generator.config';
+import {
+  AcfGeneratorConfig,
+  config,
+  ConfigDescription,
+  configDescriptions,
+} from '../acf-generator.config';
+
+type OverwriteOptions = { parentKey: string | null; fileType: string | null };
 
 const overwrite = async (
   configObject = config,
   descriptions = configDescriptions,
-  parentKey = null
+  options: OverwriteOptions = {
+    parentKey: null,
+    fileType: null,
+  }
 ) => {
-  const newConfig = { ...configObject };
+  let newConfig = { ...configObject };
+  const { parentKey = null, fileType = null } = options;
   for (const [configKey, inquirerQuestion] of Object.entries(descriptions)) {
-    if (inquirerQuestion.hasOwnProperty('type')) {
-      inquirerQuestion.name = configKey;
-      const answers = await inquirer.prompt([inquirerQuestion]);
-      console.log(answers);
+    if (inquirerQuestion.hasOwnProperty('type') && parentKey === null) {
+      const answers = await inquirer.prompt([{ ...inquirerQuestion, name: configKey }]);
+      newConfig = { ...newConfig, ...answers };
+    } else {
+      if (configKey === 'fileTypes') {
+        const subfieldAnswers = overwrite(
+          newConfig[configKey as keyof AcfGeneratorConfig] as AcfGeneratorConfig,
+          descriptions[configKey as keyof AcfGeneratorConfig] as ConfigDescription,
+          { parentKey: configKey, fileType: null }
+        );
+        newConfig = { ...newConfig, [configKey as keyof AcfGeneratorConfig]: subfieldAnswers };
+      } else {
+        if (parentKey === 'fileTypes') {
+          for (const fileType of Object.keys(config.fileTypes)) {
+            const subfieldAnswers = overwrite(
+              newConfig[configKey as keyof AcfGeneratorConfig] as AcfGeneratorConfig,
+              descriptions[configKey as keyof AcfGeneratorConfig] as ConfigDescription,
+              {
+                parentKey: fileType,
+                fileType,
+              }
+            );
+          }
+        }
+      }
     }
-    // if(typeof inquirerQuestion === 'object' && !inquirerQuestion.hasOwnProperty('type') ) {
-
-    // }
+    return newConfig;
   }
 
   return newConfig;
@@ -39,4 +69,3 @@ export const overwriteConfig = async (): Promise<AcfGeneratorConfig> => {
 
   return overwrittenConfig as AcfGeneratorConfig;
 };
-
