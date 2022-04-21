@@ -1,58 +1,101 @@
+import chalk from 'chalk';
+import { QuestionCollection } from 'inquirer';
+import path from 'path';
+
+type FileType = {
+  // 'default' -> use default template
+  // path -> provide path to custom template
+  template: 'default' | string;
+  output: string;
+  import?: {
+    filePath: string;
+    search: string;
+    append: string;
+  };
+};
+
 export type AcfGeneratorConfig = {
   modulesFilePath: string;
   modulesFieldName: string;
   conflictAction: 'ignore' | 'overwrite';
-  template: {
-    // 'none' -> don't create file
-    // 'default' -> use default template
-    // path -> provide path to custom template
-    php: 'none' | 'default' | string;
-    scss: 'none' | 'default' | string;
-  };
-  output: {
-    php: string;
-    scss: string;
-  };
-  scssImport: {
-    filePath: string;
-    lookFor: string;
-  };
+  fileTypes: Partial<Record<'php' | 'scss' | 'js', FileType>>;
 };
 
 export const config: AcfGeneratorConfig = {
   modulesFilePath: './includes/acf-json/group_5d380bc6e0ae8.json',
   modulesFieldName: 'modules',
   conflictAction: 'ignore',
-  template: {
-    php: 'default',
-    scss: 'default',
-  },
-  output: {
-    php: './modules/',
-    scss: './src/scss/modules/',
-  },
-  scssImport: {
-    filePath: './src/scss/main.scss',
-    lookFor: '@import "modules/',
+  fileTypes: {
+    php: {
+      template: 'default',
+      output: './modules',
+    },
+    scss: {
+      template: 'default',
+      output: './src/scss/modules',
+      import: {
+        filePath: './src/scss/mainModule.scss',
+        search: '@import "modules/',
+        append: '@import "modules/{filename}',
+      },
+    },
+    js: undefined,
   },
 };
 
-export const configDescriptions: Record<string, string> = {
-  modulesFilePath: 'Relative to a JSON file with flexible field',
-  modulesFieldName: 'Flexible field name inside JSON',
-  conflictAction: `Default action if the file already exists
-  Accepting values: 'ignore' | 'overwrite'`,
-  template: `Relative path to EJS template file for specific file type
-  Accepting values:
-  'none' -> don't create file
-  'default' -> use default template
-  string -> provide relative path to custom template`,
-  output: 'Relative path to specific filetypes',
-  scssImport: `Settings required to properly import created scss files
-  filePath: relative path to main scss file which is used for importing
-  lookFor: search for a last line containing this string, then paste new imports below it`,
+export const configDescriptions: Record<
+  string,
+  QuestionCollection | Record<string, QuestionCollection>
+> = {
+  modulesFilePath: {
+    type: 'file-tree-selection',
+    message: 'Select JSON file with flexible field',
+    validate: (item) => path.extname(item) === '.json',
+    default: path.resolve(config.modulesFilePath),
+  },
+  modulesFieldName: {
+    type: 'input',
+    message: 'Provide flexible field name inside JSON file',
+    default: config.modulesFieldName,
+  },
+  conflictAction: {
+    type: 'list',
+    choices: ['ignore', 'overwrite'],
+    default: config.conflictAction,
+    message: 'Select action if file already exists',
+    suffix: `Accepting values: 'ignore' | 'overwrite'`,
+  },
+  fileTypes: {
+    template: {
+      type: 'file-tree-selection',
+      message: `Select EJS template for {filetype} file`,
+      validate: (item) => path.extname(item) === '.ejs',
+    },
+    output: {
+      type: 'file-tree-selection',
+      message: 'Select directory where {filetype} files should go',
+      onlyShowDir: true,
+    },
+    'import.filePath': {
+      type: 'file-tree-selection',
+      message: `Select {filename} file where you want to put your "imports"`,
+    },
+    'import.search': {
+      type: 'input',
+      message: `Search for a string`,
+      suffix: `This will be use to find last line containing this string`,
+    },
+    'import.append': {
+      type: 'input',
+      message: `Paste new import`,
+      suffix: `Use ${chalk.blueBright('{filename}')}, ${chalk.blueBright(
+        '{modulename}'
+      )} variables if you need to.`,
+    },
+  },
 };
 
 export const printConfig = () => {
   console.log(config);
 };
+

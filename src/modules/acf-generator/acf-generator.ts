@@ -18,15 +18,15 @@ export const acfGenerator = async (): Promise<boolean> => {
     printConfig();
 
     const overwrittenConfig = await overwriteConfig();
-    await checkConfig(overwrittenConfig);
+    // await checkConfig(overwrittenConfig);
 
-    const acfModules = await getAcfModules(
-      overwrittenConfig.modulesFilePath,
-      overwrittenConfig.modulesFieldName
-    );
+    // const acfModules = await getAcfModules(
+    //   overwrittenConfig.modulesFilePath,
+    //   overwrittenConfig.modulesFieldName
+    // );
 
-    // Create files
-    await writeModules(acfModules, overwrittenConfig);
+    // // Create files
+    // await writeModules(acfModules, overwrittenConfig);
   } catch (error) {
     logger.error((error as Error)?.message);
   }

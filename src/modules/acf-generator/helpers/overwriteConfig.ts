@@ -1,30 +1,24 @@
 import inquirer from 'inquirer';
-import commentJSON from 'comment-json';
 import { AcfGeneratorConfig, config, configDescriptions } from '../acf-generator.config';
-import chalk from 'chalk';
-import { logger } from '../../../utils/logger';
-import { fileExists } from '../../../utils/fileExist';
-import { relativeToAbsolutePath } from '../../../utils/relativeToAbsolutePath';
 
-const configWithDescriptions = (
-  configObject: AcfGeneratorConfig,
-  descriptions: Record<string, string>
-): string => {
-  let stringifiedConfig = JSON.stringify(configObject, null, 2);
+const overwrite = async (
+  configObject = config,
+  descriptions = configDescriptions,
+  parentKey = null
+) => {
+  const newConfig = { ...configObject };
+  for (const [configKey, inquirerQuestion] of Object.entries(descriptions)) {
+    if (inquirerQuestion.hasOwnProperty('type')) {
+      inquirerQuestion.name = configKey;
+      const answers = await inquirer.prompt([inquirerQuestion]);
+      console.log(answers);
+    }
+    // if(typeof inquirerQuestion === 'object' && !inquirerQuestion.hasOwnProperty('type') ) {
 
-  Object.keys(configObject).forEach((key) => {
-    const formattedDescription = descriptions[key]
-      .split('\n')
-      .map((line) => `  // ${line.trim()}`)
-      .join('\n');
+    // }
+  }
 
-    stringifiedConfig = stringifiedConfig.replace(
-      `"${key}":`,
-      `\n${formattedDescription}\n  "${key}":`
-    );
-  });
-
-  return stringifiedConfig;
+  return newConfig;
 };
 
 export const overwriteConfig = async (): Promise<AcfGeneratorConfig> => {
@@ -41,19 +35,8 @@ export const overwriteConfig = async (): Promise<AcfGeneratorConfig> => {
     return config;
   }
 
-  const { overwrittenConfig } = await inquirer.prompt([
-    {
-      type: 'editor',
-      name: 'overwrittenConfig',
-      message: `Update config in the IDE of your choice.`,
-      default: configWithDescriptions(config, configDescriptions),
-      validate: async (answer) => {
-        return !!commentJSON.parse(answer, undefined, true);
-      },
-      postfix: '.jsonc',
-    },
-  ]);
+  const overwrittenConfig = await overwrite(config, configDescriptions);
 
-  return commentJSON.parse(overwrittenConfig, undefined, true) as AcfGeneratorConfig;
+  return overwrittenConfig as AcfGeneratorConfig;
 };
 
