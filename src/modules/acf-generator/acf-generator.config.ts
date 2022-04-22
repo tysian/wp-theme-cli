@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { QuestionCollection } from 'inquirer';
+import { Answers, QuestionCollection } from 'inquirer';
 import path from 'path';
 
 type FileTypeKey = 'php' | 'scss' | 'js';
@@ -69,20 +69,28 @@ export const configDescriptions: ConfigDescription = {
     suffix: `Accepting values: 'ignore' | 'overwrite'`,
   },
   fileTypes: Object.keys(config.fileTypes).reduce((acc, fileType) => {
+    const when = (answers: Answers) => answers[`create${fileType}`];
     return {
       ...acc,
       [fileType]: {
-        [`create${fileType}`]: {},
+        [`create${fileType}`]: {
+          type: 'confirm',
+          message: `Do you want to create ${fileType} files?`,
+          default: ['php', 'scss'].includes(fileType),
+        },
         template: {
           type: 'file-tree-selection',
           message: `Select EJS template for ${fileType.toUpperCase()} file`,
-          validate: (item: string) => path.extname(item) === '.ejs',
+          validate: (item: string) =>
+            path.extname(item) === '.ejs' ? true : 'Wrong file extension.',
           default: config.fileTypes[fileType as FileTypeKey]?.template,
+          when: when,
         },
         output: {
           type: 'file-tree-selection',
           message: `Select directory where ${fileType.toUpperCase()} files should go`,
           onlyShowDir: true,
+          when: when,
         },
         import: {
           filePath: {
@@ -93,6 +101,7 @@ export const configDescriptions: ConfigDescription = {
             type: 'input',
             message: `Search for a string`,
             suffix: `This will be use to find last line containing this string`,
+            when: when,
           },
           append: {
             type: 'input',
@@ -100,6 +109,7 @@ export const configDescriptions: ConfigDescription = {
             suffix: `Use ${chalk.blueBright('{filename}')}, ${chalk.blueBright(
               '{modulename}'
             )} variables if you need to.`,
+            when: when,
           },
         },
       },
@@ -110,3 +120,4 @@ export const configDescriptions: ConfigDescription = {
 export const printConfig = () => {
   console.dir(config, { depth: null });
 };
+

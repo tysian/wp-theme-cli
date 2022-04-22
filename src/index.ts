@@ -9,6 +9,7 @@ import { logger } from './utils/logger';
 
 async function bootstrap() {
   inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
+
   const program = new Command();
   program
     .name('wp-theme-cli')
@@ -32,3 +33,4 @@ async function bootstrap() {
 }
 
 export default bootstrap;
+

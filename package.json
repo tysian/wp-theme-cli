@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "bin": {
-    "wp-theme": "./dist/bin/run.js"
+    "wp-theme": "./dist/bin/wp-theme.js"
   },
   "scripts": {
     "build": "tsc-esm",
