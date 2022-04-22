@@ -1,51 +1,48 @@
-import inquirer from 'inquirer';
+import { set } from 'lodash-es';
+import inquirer, { QuestionCollection } from 'inquirer';
 import {
   AcfGeneratorConfig,
   config,
   ConfigDescription,
   configDescriptions,
+  FileTypeKey,
 } from '../acf-generator.config';
 
-type OverwriteOptions = { parentKey: string | null; fileType: string | null };
-
-const overwrite = async (
-  configObject = config,
-  descriptions = configDescriptions,
-  options: OverwriteOptions = {
-    parentKey: null,
-    fileType: null,
-  }
-) => {
+const overwrite = async (configObject = config, descriptions = configDescriptions) => {
   let newConfig = { ...configObject };
-  const { parentKey = null, fileType = null } = options;
+
   for (const [configKey, inquirerQuestion] of Object.entries(descriptions)) {
-    if (inquirerQuestion.hasOwnProperty('type') && parentKey === null) {
-      const answers = await inquirer.prompt([{ ...inquirerQuestion, name: configKey }]);
+    if (inquirerQuestion.hasOwnProperty('type')) {
+      const answers = await inquirer.prompt({
+        ...inquirerQuestion,
+        name: configKey,
+      });
       newConfig = { ...newConfig, ...answers };
-    } else {
-      if (configKey === 'fileTypes') {
-        const subfieldAnswers = overwrite(
-          newConfig[configKey as keyof AcfGeneratorConfig] as AcfGeneratorConfig,
-          descriptions[configKey as keyof AcfGeneratorConfig] as ConfigDescription,
-          { parentKey: configKey, fileType: null }
-        );
-        newConfig = { ...newConfig, [configKey as keyof AcfGeneratorConfig]: subfieldAnswers };
-      } else {
-        if (parentKey === 'fileTypes') {
-          for (const fileType of Object.keys(config.fileTypes)) {
-            const subfieldAnswers = overwrite(
-              newConfig[configKey as keyof AcfGeneratorConfig] as AcfGeneratorConfig,
-              descriptions[configKey as keyof AcfGeneratorConfig] as ConfigDescription,
-              {
-                parentKey: fileType,
-                fileType,
-              }
-            );
-          }
+    } else if (configKey === 'fileTypes') {
+      const { selectFileTypes } = newConfig as AcfGeneratorConfig & { selectFileTypes: string[] };
+
+      if (Array.isArray(selectFileTypes)) {
+        const fileTypeConfig = {};
+
+        for (const fileType of selectFileTypes) {
+          const questions = descriptions[configKey][fileType];
+          const answers = await inquirer.prompt(questions);
+          Object.entries(answers).forEach(([key, value]) => {
+            if (!['haveImports', 'customTemplate'].includes(key)) {
+              set(fileTypeConfig, `${fileType}.${key}`, value);
+            } else if (key === 'customTemplate' && value === false) {
+              set(
+                fileTypeConfig,
+                `${fileType}.template`,
+                config.fileTypes?.[fileType as FileTypeKey]?.template ?? 'default'
+              );
+            }
+          });
         }
+
+        newConfig = { ...newConfig, [configKey]: fileTypeConfig };
       }
     }
-    return newConfig;
   }
 
   return newConfig;
@@ -66,6 +63,7 @@ export const overwriteConfig = async (): Promise<AcfGeneratorConfig> => {
   }
 
   const overwrittenConfig = await overwrite(config, configDescriptions);
+  console.dir(overwrittenConfig, { depth: null });
 
   return overwrittenConfig as AcfGeneratorConfig;
 };

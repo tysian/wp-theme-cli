@@ -33,4 +33,3 @@ export const acfGenerator = async (): Promise<boolean> => {
 
   return true;
 };
-
