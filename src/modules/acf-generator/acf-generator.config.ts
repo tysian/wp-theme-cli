@@ -2,9 +2,12 @@ import chalk from 'chalk';
 import { Answers, QuestionCollection } from 'inquirer';
 import path from 'path';
 
+export const fileTypeLabel = (fileType: string) => `[${chalk.cyanBright(fileType.toUpperCase())}]`;
+
 export type FileTypeKey = 'php' | 'scss' | 'js';
 
 export type FileType = {
+  active: boolean;
   // 'default' -> use default template
   // path -> provide path to custom template
   template: 'default' | string;
@@ -20,7 +23,7 @@ export type AcfGeneratorConfig = {
   modulesFilePath: string;
   modulesFieldName: string;
   conflictAction: 'ignore' | 'overwrite';
-  fileTypes: Partial<Record<FileTypeKey, FileType>>;
+  fileTypes: Record<FileTypeKey, FileType>;
 };
 
 export const config: AcfGeneratorConfig = {
@@ -29,19 +32,30 @@ export const config: AcfGeneratorConfig = {
   conflictAction: 'ignore',
   fileTypes: {
     php: {
+      active: true,
       template: 'default',
       output: './modules',
     },
     scss: {
+      active: true,
       template: 'default',
       output: './src/scss/modules',
       import: {
         filePath: './src/scss/main.scss',
         search: '@import "modules/',
-        append: '@import "modules/{filename}',
+        append: '@import "modules/{file_name}',
       },
     },
-    js: undefined,
+    js: {
+      active: false,
+      template: 'default',
+      output: './src/js/modules',
+      import: {
+        filePath: './src/js/modules/index.js',
+        search: 'export',
+        append: `export { {module_variable_name} } from './{file_name}.js';`,
+      },
+    },
   },
 };
 
@@ -77,7 +91,6 @@ export const configDescriptions: ConfigDescription = {
     validate: (answer) => (answer.length > 0 ? true : 'You must select at least'),
   },
   fileTypes: Object.keys(config.fileTypes).reduce((acc, fileType) => {
-    const label = `[${chalk.cyanBright(fileType.toUpperCase())}]`;
     return {
       ...acc,
       [fileType]: [
@@ -85,38 +98,36 @@ export const configDescriptions: ConfigDescription = {
           name: 'customTemplate',
           type: 'confirm',
           default: fileType !== 'php',
-          message: `${label} Do you want to use custom EJS template?`,
+          message: `${fileTypeLabel(fileType)} Do you want to use custom EJS template?`,
         },
         {
           name: 'template',
           type: 'file-tree-selection',
-          message: `${label} Select EJS template for ${fileType.toUpperCase()} file`,
+          message: `${fileTypeLabel(fileType)} Select EJS template`,
           validate: (item: string) =>
             path.extname(item) === '.ejs' ? true : `You need .ejs extension`,
-          default: config.fileTypes[fileType as FileTypeKey]?.template,
+          default: config.fileTypes[fileType as FileTypeKey].template,
           when: ({ customTemplate = false }) => customTemplate,
         },
         {
           name: 'output',
           type: 'file-tree-selection',
-          message: `${label} Select directory where ${fileType.toUpperCase()} files should go`,
+          message: `${fileTypeLabel(fileType)} Select directory where files should go`,
           onlyShowDir: true,
-          default: path.resolve(config.fileTypes?.[fileType as FileTypeKey]?.output ?? ''),
+          default: path.resolve(config.fileTypes[fileType as FileTypeKey].output),
         },
         {
           name: 'haveImports',
           type: 'confirm',
           default: false,
-          message: `${label} Do ${fileType.toUpperCase()} need any imports?`,
+          message: `${fileTypeLabel(fileType)} Do ${fileType.toUpperCase()} need any imports?`,
         },
         {
           name: 'import.filePath',
           type: 'file-tree-selection',
-          message: `${label} Select ${fileType.toUpperCase()} file where you want to put your "imports"`,
+          message: `${fileTypeLabel(fileType)} Select file where you want to put your "imports"`,
           when: ({ haveImports = false }) => haveImports,
-          default: path.resolve(
-            config.fileTypes?.[fileType as FileTypeKey]?.import?.filePath ?? ''
-          ),
+          default: path.resolve(config.fileTypes[fileType as FileTypeKey]?.import?.filePath ?? ''),
           validate: (item: string) =>
             path.extname(item) === `.${fileType.toLowerCase()}`
               ? true
@@ -125,26 +136,26 @@ export const configDescriptions: ConfigDescription = {
         {
           name: 'import.search',
           type: 'input',
-          message: `${label} Search for a string`,
+          message: `${fileTypeLabel(fileType)} Search for a string`,
           suffix: ` This will be use to find last line containing this string`,
           when: ({ haveImports = false }) => haveImports,
-          default: config.fileTypes?.[fileType as FileTypeKey]?.import?.search ?? '',
+          default: config.fileTypes[fileType as FileTypeKey]?.import?.search ?? '',
         },
         {
           name: 'import.append',
           type: 'input',
-          message: `${label} Provide "import" text which will be added to ${fileType.toUpperCase()} file`,
-          suffix: `\nYou may use ${chalk.blueBright('{filename}')}, ${chalk.blueBright(
-            '{modulename}'
-          )} as variables`,
+          message: `${fileTypeLabel(fileType)} Provide "import" text which will be added to a file`,
+          suffix: `\nYou may use ${['file_name', 'module_name', 'module_variable_name']
+            .map((s) => chalk.blue(s))
+            .join(', ')} as variables`,
           when: ({ haveImports = false }) => haveImports,
-          default: config.fileTypes?.[fileType as FileTypeKey]?.import?.append ?? '',
+          default: config.fileTypes[fileType as FileTypeKey]?.import?.append ?? '',
         },
       ],
     };
   }, {} as Record<string, QuestionCollection[]>),
 };
 
-export const printConfig = () => {
-  console.dir(config, { depth: null });
+export const printConfig = (configToPrint = config) => {
+  console.dir(configToPrint, { depth: null });
 };

@@ -24,6 +24,7 @@
     "inquirer-file-tree-selection-prompt": "^1.0.19",
     "is-unicode-supported": "^1.2.0",
     "lodash-es": "^4.17.21",
+    "log-update": "^5.0.1",
     "simple-git": "^3.6.0",
     "trace": "^3.1.1"
   },

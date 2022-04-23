@@ -18,7 +18,7 @@ export const acfGenerator = async (): Promise<boolean> => {
     printConfig();
 
     const overwrittenConfig = await overwriteConfig();
-    // await checkConfig(overwrittenConfig);
+    await checkConfig(overwrittenConfig);
 
     // const acfModules = await getAcfModules(
     //   overwrittenConfig.modulesFilePath,

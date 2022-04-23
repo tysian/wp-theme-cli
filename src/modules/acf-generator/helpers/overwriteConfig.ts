@@ -3,10 +3,11 @@ import inquirer, { QuestionCollection } from 'inquirer';
 import {
   AcfGeneratorConfig,
   config,
-  ConfigDescription,
   configDescriptions,
   FileTypeKey,
+  printConfig,
 } from '../acf-generator.config';
+import { logger } from '../../../utils/logger';
 
 const overwrite = async (configObject = config, descriptions = configDescriptions) => {
   let newConfig = { ...configObject };
@@ -24,9 +25,16 @@ const overwrite = async (configObject = config, descriptions = configDescription
       if (Array.isArray(selectFileTypes)) {
         const fileTypeConfig = {};
 
+        // Set active for selected items
+        Object.keys(config.fileTypes).forEach((fileType) => {
+          set(fileTypeConfig, `${fileType}.active`, selectFileTypes.includes(fileType));
+        });
+
+        // Overwrite config
         for (const fileType of selectFileTypes) {
           const questions = descriptions[configKey][fileType];
           const answers = await inquirer.prompt(questions);
+
           Object.entries(answers).forEach(([key, value]) => {
             if (!['haveImports', 'customTemplate'].includes(key)) {
               set(fileTypeConfig, `${fileType}.${key}`, value);
@@ -34,13 +42,13 @@ const overwrite = async (configObject = config, descriptions = configDescription
               set(
                 fileTypeConfig,
                 `${fileType}.template`,
-                config.fileTypes?.[fileType as FileTypeKey]?.template ?? 'default'
+                config.fileTypes[fileType as FileTypeKey].template
               );
             }
           });
         }
 
-        newConfig = { ...newConfig, [configKey]: fileTypeConfig };
+        newConfig = { ...newConfig, [configKey as FileTypeKey]: fileTypeConfig };
       }
     }
   }
@@ -63,7 +71,8 @@ export const overwriteConfig = async (): Promise<AcfGeneratorConfig> => {
   }
 
   const overwrittenConfig = await overwrite(config, configDescriptions);
-  console.dir(overwrittenConfig, { depth: null });
+  logger.info('This is your overwritten config.');
+  printConfig(overwrittenConfig);
 
   return overwrittenConfig as AcfGeneratorConfig;
 };
