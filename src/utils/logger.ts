@@ -1,5 +1,6 @@
 import chalk, { Chalk } from 'chalk';
 import isUnicodeSupported from 'is-unicode-supported';
+import logUpdate from 'log-update';
 
 type LogTypes =
   | 'none'
@@ -41,7 +42,7 @@ const types: TypesMap = {
 };
 
 // Return string of formatted message
-const logMessage = (message: string, logType: LogTypes): string => {
+export const logMessage = (message: string, logType: LogTypes): string => {
   const finalLabel = [];
   const desiredType = types[logType] ?? null;
   if (!desiredType) {
@@ -69,12 +70,26 @@ export const log = (message: string, type: LogTypes): void => {
   console.log(logMessage(message, type));
 };
 
-type Logger = Record<LogTypes, (message: any) => void>;
+type Logger = Record<LogTypes, (message?: any) => void>;
 
 export const logger = Object.keys(types).reduce(
   (acc, type) => ({
     ...acc,
-    [type]: (message: any) => log(message, type as LogTypes),
+    [type]: (message: any = '') => log(message, type as LogTypes),
   }),
   {} as Logger
+);
+
+export const updateLogger = [...Object.keys(types), 'done'].reduce(
+  (acc, type) => ({
+    ...acc,
+    [type]: (message: any = '') => {
+      if (type === 'done') {
+        return logUpdate.done();
+      } else {
+        return logUpdate(logMessage(message, type as LogTypes));
+      }
+    },
+  }),
+  {} as Logger & { done: () => void }
 );

@@ -1,12 +1,16 @@
 import chalk from 'chalk';
 import { fileExists } from '../../../utils/fileExist';
-import { logger } from '../../../utils/logger';
+import { logger, updateLogger } from '../../../utils/logger';
 import { readStream } from '../../../utils/readStream';
 import { AcfGeneratorConfig, fileTypeLabel } from '../acf-generator.config';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {
   try {
     logger.start('Checking config...');
+    updateLogger.awaiting('Checking if modules JSON file exists...');
+    await fileExists(config.modulesFilePath);
+    updateLogger.success(`Module JSON file exist - OK`);
+    updateLogger.done();
 
     if (!['ignore', 'overwrite'].includes(config.conflictAction)) {
       throw new Error(
@@ -20,32 +24,36 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
     for (const [fileType, configOptions] of Object.entries(config.fileTypes).filter(
       ([_, configOption]) => configOption.active
     )) {
-      logger.awaiting(`${fileTypeLabel(fileType)} Checking existence of output files...`);
+      updateLogger.awaiting(`${fileTypeLabel(fileType)} Checking existence of output files...`);
       await fileExists(configOptions.output);
-      logger.success(`${fileTypeLabel(fileType)} Output files - OK`);
+      updateLogger.success(`${fileTypeLabel(fileType)} Output files - OK`);
+      updateLogger.done();
 
-      logger.awaiting(`${fileTypeLabel(fileType)} Checking existence of template files...`);
+      updateLogger.awaiting(`${fileTypeLabel(fileType)} Checking existence of template files...`);
       if (configOptions.template !== 'default') {
         await fileExists(configOptions.template);
       }
-      logger.success(`${fileTypeLabel(fileType)} Templates - OK`);
+      updateLogger.success(`${fileTypeLabel(fileType)} Templates - OK`);
+      updateLogger.done();
 
       if (configOptions?.import) {
         const { filePath, search } = configOptions.import;
 
-        logger.awaiting(`${fileTypeLabel(fileType)} Checking import file path...`);
+        updateLogger.awaiting(`${fileTypeLabel(fileType)} Checking import file path...`);
         await fileExists(filePath);
-        logger.success(`${fileTypeLabel(fileType)} Import file - OK`);
+        updateLogger.success(`${fileTypeLabel(fileType)} Import file - OK`);
+        updateLogger.done();
 
-        logger.awaiting(`${fileTypeLabel(fileType)} Checking import file...`);
-        await fileExists(filePath);
+        updateLogger.awaiting(`${fileTypeLabel(fileType)} Checking import search string...`);
         const importFileContent = await readStream(filePath);
         if (!importFileContent.includes(search)) {
+          updateLogger.done();
           throw new Error(
             `${chalk.green(`'${filePath}'`)} file doesn't have ${chalk.green(`'${search}'`)} in it.`
           );
         }
-        logger.success(`${fileTypeLabel(fileType)} Import file - OK`);
+        updateLogger.success(`${fileTypeLabel(fileType)} Search string - OK`);
+        updateLogger.done();
       }
     }
 

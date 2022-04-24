@@ -31,20 +31,11 @@ export type AcfGroup = {
 };
 
 export const getAcfModules = async (
-  jsonPath = config.modulesFilePath,
+  filePath = config.modulesFilePath,
   fieldName = config.modulesFieldName
 ): Promise<AcfLayout[]> => {
-  // Check if modulesFilePath exists
-  const modulesFilePath = path.resolve(jsonPath);
-  const modulesFilePathFileExists = await fileExists(modulesFilePath);
-
-  if (!modulesFilePathFileExists) {
-    logger.debug(config.modulesFieldName);
-    throw new Error(`modulesFieldName JSON file doesn't exist.`);
-  }
-
-  // Check if modules field here exists
-  const modulesFileContent: AcfGroup = await readStream(modulesFilePath).then((c) => JSON.parse(c));
+  // Check if modules field exists
+  const modulesFileContent: AcfGroup = await readStream(filePath).then((c) => JSON.parse(c));
   if (
     !modulesFileContent ||
     !modulesFileContent.hasOwnProperty('fields') ||
@@ -58,6 +49,9 @@ export const getAcfModules = async (
   }
 
   const modulesField = modulesFileContent.fields.find((field) => field.name === fieldName);
+  if (!modulesField) {
+    throw new Error(`There is no ${fieldName} field.`);
+  }
 
   if (
     !modulesField?.layouts ||
@@ -69,4 +63,3 @@ export const getAcfModules = async (
 
   return Object.values(modulesField.layouts) as AcfLayout[];
 };
-
