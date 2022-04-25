@@ -86,9 +86,8 @@ export const updateLogger = [...Object.keys(types), 'done'].reduce(
     [type]: (message: any = '') => {
       if (type === 'done') {
         return logUpdate.done();
-      } else {
-        return logUpdate(logMessage(message, type as LogTypes));
       }
+      return logUpdate(logMessage(message, type as LogTypes));
     },
   }),
   {} as Logger & { done: () => void }

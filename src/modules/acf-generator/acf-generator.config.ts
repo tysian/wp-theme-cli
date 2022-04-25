@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { Answers, QuestionCollection } from 'inquirer';
+import { QuestionCollection } from 'inquirer';
 import path from 'path';
 
 export const fileTypeLabel = (fileType: string) => `[${chalk.cyanBright(fileType.toUpperCase())}]`;
@@ -90,8 +90,8 @@ export const configDescriptions: ConfigDescription = {
     message: `Select which file types you want to generate`,
     validate: (answer) => (answer.length > 0 ? true : 'You must select at least'),
   },
-  fileTypes: Object.keys(config.fileTypes).reduce((acc, fileType) => {
-    return {
+  fileTypes: Object.keys(config.fileTypes).reduce(
+    (acc, fileType) => ({
       ...acc,
       [fileType]: [
         {
@@ -152,8 +152,9 @@ export const configDescriptions: ConfigDescription = {
           default: config.fileTypes[fileType as FileTypeKey]?.import?.append ?? '',
         },
       ],
-    };
-  }, {} as Record<string, QuestionCollection[]>),
+    }),
+    {} as Record<string, QuestionCollection[]>
+  ),
 };
 
 export const printConfig = (configToPrint = config) => {

@@ -1,4 +1,4 @@
-import { logger } from '../../utils/logger';
+import { logger, updateLogger } from '../../utils/logger';
 import { gitCheck } from '../../utils/gitCheck';
 import { printConfig } from './acf-generator.config';
 import { overwriteConfig } from './helpers/overwriteConfig';
@@ -28,7 +28,8 @@ export const acfGenerator = async (): Promise<boolean> => {
     // Create files
     await writeModules(acfModules, overwrittenConfig);
   } catch (error) {
-    logger.error((error as Error)?.message);
+    updateLogger.error((error as Error)?.message);
+    updateLogger.done();
   }
 
   return true;

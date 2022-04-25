@@ -1,5 +1,5 @@
 import { set } from 'lodash-es';
-import inquirer, { QuestionCollection } from 'inquirer';
+import inquirer from 'inquirer';
 import {
   AcfGeneratorConfig,
   config,
@@ -13,7 +13,7 @@ const overwrite = async (configObject = config, descriptions = configDescription
   let newConfig = { ...configObject };
 
   for (const [configKey, inquirerQuestion] of Object.entries(descriptions)) {
-    if (inquirerQuestion.hasOwnProperty('type')) {
+    if (Object.prototype.hasOwnProperty.call(inquirerQuestion, 'type')) {
       const answers = await inquirer.prompt({
         ...inquirerQuestion,
         name: configKey,

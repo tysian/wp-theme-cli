@@ -1,9 +1,0 @@
-<% if(data.subfields) { %>
-  <?php 
-  <% data.subfields.forEach((subfield) =>{ %> 
-    $<%= subfield.variable_name %> = get_sub_field('<%= subfield.name %>');
-  <% }) %> 
-  ?>
-<% } %>
-<section class="module <%= data.className %>">
-</section>

@@ -57,10 +57,12 @@ export const gitCheck = async (): Promise<boolean> => {
     logger.complete('Changes commited successfully!');
 
     return true;
-  } else if (shouldCommit === 'continue') {
+  }
+  if (shouldCommit === 'continue') {
     logger.skip('Continuing without commiting.');
     return true;
-  } else if (shouldCommit === 'abort') {
+  }
+  if (shouldCommit === 'abort') {
     throw new Error('Abort!');
   }
 

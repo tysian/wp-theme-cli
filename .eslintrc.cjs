@@ -17,12 +17,13 @@ module.exports = {
     ecmaVersion: 12,
   },
   rules: {
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': ['error'],
     'no-restricted-syntax': 0,
     'no-await-in-loop': 0,
     'linebreak-style': 'off',
     'func-names': 'off',
     strict: 'off',
-    'no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
     'import/no-commonjs': 0,
     'no-underscore-dangle': 0,
     'no-console': 0,
@@ -38,6 +39,7 @@ module.exports = {
       },
     ],
     'guard-for-in': 0,
+    'no-continue': 0,
   },
   settings: {
     'import/resolver': {

@@ -4,11 +4,10 @@ import path from 'path';
 
 export const fileExists = async (filePath: string) => {
   const resolvedPath = path.resolve(filePath);
-  return await fs
+  return fs
     .stat(resolvedPath)
     .then(() => resolvedPath)
     .catch(() => {
       throw new Error(`${chalk.green.italic(`'${filePath}'`)} does not exist.`);
     });
 };
-

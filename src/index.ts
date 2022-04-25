@@ -1,10 +1,12 @@
 import 'trace';
 import 'clarify';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import inquirer from 'inquirer';
 import inquirerFileTreeSelection from 'inquirer-file-tree-selection-prompt';
-import { acfGenerator } from './modules/acf-generator';
 import { Command } from 'commander';
 import chalk from 'chalk';
+import { acfGenerator } from './modules/acf-generator';
 import { logger } from './utils/logger';
 
 async function bootstrap() {
@@ -34,3 +36,4 @@ async function bootstrap() {
 
 export default bootstrap;
 
+export const root = path.dirname(fileURLToPath(import.meta.url));

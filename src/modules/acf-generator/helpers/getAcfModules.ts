@@ -1,6 +1,4 @@
 import chalk from 'chalk';
-import path from 'path';
-import { fileExists } from '../../../utils/fileExist';
 import { logger } from '../../../utils/logger';
 import { readStream } from '../../../utils/readStream';
 import { config } from '../acf-generator.config';
@@ -38,7 +36,7 @@ export const getAcfModules = async (
   const modulesFileContent: AcfGroup = await readStream(filePath).then((c) => JSON.parse(c));
   if (
     !modulesFileContent ||
-    !modulesFileContent.hasOwnProperty('fields') ||
+    !Object.prototype.hasOwnProperty.call(modulesFileContent, 'fields') ||
     !Array.isArray(modulesFileContent.fields) ||
     modulesFileContent.fields.length === 0
   ) {
@@ -55,7 +53,7 @@ export const getAcfModules = async (
 
   if (
     !modulesField?.layouts ||
-    !modulesField.hasOwnProperty('layouts') ||
+    !Object.prototype.hasOwnProperty.call(modulesField, 'layouts') ||
     !Object.values(modulesField.layouts)
   ) {
     throw new Error('Modules field have no layouts.');
