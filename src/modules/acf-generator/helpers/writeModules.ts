@@ -2,7 +2,7 @@ import path from 'path';
 import slugify from 'slugify';
 import ejs from 'ejs';
 import chalk from 'chalk';
-import { kebabCase, snakeCase } from 'lodash-es';
+import { kebabCase, replace, snakeCase, update } from 'lodash-es';
 import { performance } from 'perf_hooks';
 import { root } from '../../..';
 import { fileExists } from '../../../utils/fileExist';
@@ -11,6 +11,7 @@ import { AcfGeneratorConfig, FileType, FileTypeKey } from '../acf-generator.conf
 import { AcfLayout } from './getAcfModules';
 import { writeStream } from '../../../utils/writeStream';
 import { readStream } from '../../../utils/readStream';
+import { replaceAll } from '../../../utils/replaceAll';
 
 type Module = {
   layout: AcfLayout;
@@ -52,8 +53,10 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
 
     // Prepare output path
     const outputPath = path.resolve(output, moduleData.fileName);
+
     // Render tempalte using EJS
     const renderedTemplate = await ejs.renderFile(template, { data: moduleData }, { async: true });
+
     // Check if output exists and proceed conflictAction if necessary
     const outputExists = await fileExists(outputPath).catch(() => false);
     if (outputExists) {
@@ -69,6 +72,7 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
         updateLogger.done();
       }
     }
+
     // Create module file
     if (!outputExists || (outputExists && conflictAction === 'overwrite')) {
       await writeStream(outputPath, renderedTemplate);
@@ -78,10 +82,50 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
 
     // Handle imports
     if (moduleImport) {
+      updateLogger.pending(`Including imports for ${chalk.green(`${moduleData.fileName}`)}...`);
+
       const importFileContent = await readStream(moduleImport.filePath);
+
+      // remove starting `_` and ending `.scss`
+      let { fileName } = moduleData;
+      if (fileName.startsWith('_') && fileName.endsWith('.scss')) {
+        fileName = fileName.substring(1).slice(0, -5);
+      }
+
+      let textToAppend = moduleImport.append;
+      textToAppend = textToAppend
+        .replace('{file_name}', fileName)
+        .replace('{module_name}', moduleData.name)
+        .replace('{module_variable_name}', moduleData.variableName);
+
+      const isImported = replaceAll(`"`, `'`, importFileContent).includes(
+        replaceAll(`"`, `'`, textToAppend)
+      );
+      if (isImported) {
+        updateLogger.skip(`Already imported (${chalk.green(`${moduleData.fileName}`)}).`);
+        updateLogger.done();
+        return true;
+      }
+
+      // Find last index
       const contentArray = importFileContent.split('\n');
-      const lastIndex = contentArray.lastIndexOf(moduleImport.search);
-      contentArray.splice(lastIndex, 0, ...['123', '432', '233', '98']);
+      const lastIndex = [...contentArray].reduce(
+        (acc, row, idx) =>
+          replaceAll(`"`, `'`, row).includes(replaceAll(`"`, `'`, moduleImport.search)) ? idx : acc,
+        -1
+      );
+
+      if (lastIndex < 0) {
+        updateLogger.skip(`This should never happen, but didn't found ${moduleImport.search}.`);
+        updateLogger.done();
+        return true;
+      }
+
+      contentArray.splice(lastIndex + 1, 0, textToAppend);
+      const contentWithImports = contentArray.join('\n');
+      await writeStream(path.resolve(moduleImport.filePath), contentWithImports);
+      updateLogger.success(` Added import for ${chalk.green(`${moduleData.fileName}`)} file`);
+      updateLogger.done();
     }
   }
 
@@ -101,8 +145,4 @@ export const writeModules = async (acfModules: AcfLayout[], config: AcfGenerator
   logger.complete(
     `Created files, which took ${chalk.blue(`${(timeEnd - timeStart).toFixed(3)}ms`)}`
   );
-
-  // create files in loop
-  //    if has imports - additionaly add perform an import action
 };
-

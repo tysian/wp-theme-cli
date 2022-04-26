@@ -51,7 +51,7 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
       if (!importFileContent.includes(search)) {
         updateLogger.done();
         throw new Error(
-          `${chalk.green(`'${filePath}'`)} file doesn't have ${chalk.green(`'${search}'`)} in it.`
+          `${chalk.green(`'${filePath}'`)} file doesn't have ${chalk.green(`${search}`)} in it.`
         );
       }
       updateLogger.success(`${fileTypeLabel(fileType)} Search string - OK`);

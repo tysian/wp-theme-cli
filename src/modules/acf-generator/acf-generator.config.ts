@@ -42,8 +42,8 @@ export const config: AcfGeneratorConfig = {
       output: './src/scss/modules',
       import: {
         filePath: './src/scss/main.scss',
-        search: '@import "modules/',
-        append: '@import "modules/{file_name}',
+        search: `@import 'modules/`,
+        append: `@import 'modules/{file_name}';`,
       },
     },
     js: {
