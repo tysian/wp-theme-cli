@@ -2,7 +2,8 @@ import chalk from 'chalk';
 import { fileExists } from '../../../utils/fileExist';
 import { logger, updateLogger } from '../../../utils/logger';
 import { readStream } from '../../../utils/readStream';
-import { AcfGeneratorConfig, fileTypeLabel } from '../acf-generator.config';
+import { AcfGeneratorConfig, FileTypeKey, fileTypeLabel } from '../acf-generator.config';
+import { getDefaultTemplate } from './writeModules';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {
   logger.start('Checking config...');
@@ -26,10 +27,14 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
     updateLogger.success(`${fileTypeLabel(fileType)} Output files - OK`);
     updateLogger.done();
 
+    // Check if template exists
     updateLogger.awaiting(`${fileTypeLabel(fileType)} Checking existence of template files...`);
-    if (configOptions.template !== 'default') {
-      await fileExists(configOptions.template);
-    }
+    const template =
+      configOptions.template === 'default'
+        ? getDefaultTemplate(fileType as FileTypeKey)
+        : configOptions.template;
+    await fileExists(template);
+
     updateLogger.success(`${fileTypeLabel(fileType)} Templates - OK`);
     updateLogger.done();
 

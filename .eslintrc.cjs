@@ -17,6 +17,7 @@ module.exports = {
     ecmaVersion: 12,
   },
   rules: {
+    '@typescript-eslint/no-explicit-any': 0,
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
     'no-restricted-syntax': 0,
@@ -50,3 +51,4 @@ module.exports = {
     },
   },
 };
+

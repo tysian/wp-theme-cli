@@ -10,6 +10,7 @@ import { logger, updateLogger } from '../../../utils/logger';
 import { AcfGeneratorConfig, FileType, FileTypeKey } from '../acf-generator.config';
 import { AcfLayout } from './getAcfModules';
 import { writeStream } from '../../../utils/writeStream';
+import { readStream } from '../../../utils/readStream';
 
 type Module = {
   layout: AcfLayout;
@@ -17,21 +18,23 @@ type Module = {
   conflictAction: 'overwrite' | 'ignore';
 };
 
-const getDefaultTemplate = (fileType: FileTypeKey) =>
+export const getDefaultTemplate = (fileType: FileTypeKey) =>
   path.resolve(`${root}/../public/templates/template.${fileType.toLowerCase()}.ejs`);
 
 const createModule = async ({ layout, fileTypes, conflictAction }: Module): Promise<boolean> => {
   for (const [fileType, options] of Object.entries(fileTypes)) {
-    const { active, output, template: customTemplate } = options;
+    const { active, output, template: customTemplate, import: moduleImport } = options;
     if (!active) {
       return true;
     }
 
+    // Setup template - use default if default, else use custom template from config
     let template = getDefaultTemplate(fileType as FileTypeKey);
     if (customTemplate && customTemplate !== 'default' && customTemplate !== template) {
       template = customTemplate;
     }
 
+    // Prepare data structure to create modules
     const moduleData = {
       name: layout.name,
       variableName: snakeCase(slugify(layout.name)),
@@ -46,15 +49,17 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
     };
 
     updateLogger.pending(`Creating ${chalk.green(`${moduleData.fileName}`)}...`);
-    await fileExists(template);
+
+    // Prepare output path
     const outputPath = path.resolve(output, moduleData.fileName);
+    // Render tempalte using EJS
     const renderedTemplate = await ejs.renderFile(template, { data: moduleData }, { async: true });
+    // Check if output exists and proceed conflictAction if necessary
     const outputExists = await fileExists(outputPath).catch(() => false);
     if (outputExists) {
       if (conflictAction === 'ignore') {
         updateLogger.skip(`File ${chalk.green(`${moduleData.fileName}`)} already exist.`);
         updateLogger.done();
-        continue;
       }
 
       if (conflictAction === 'overwrite') {
@@ -64,9 +69,20 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
         updateLogger.done();
       }
     }
-    await writeStream(outputPath, renderedTemplate);
-    updateLogger.success(` File ${chalk.green(`${moduleData.fileName}`)} has been created.`);
-    updateLogger.done();
+    // Create module file
+    if (!outputExists || (outputExists && conflictAction === 'overwrite')) {
+      await writeStream(outputPath, renderedTemplate);
+      updateLogger.success(` File ${chalk.green(`${moduleData.fileName}`)} has been created.`);
+      updateLogger.done();
+    }
+
+    // Handle imports
+    if (moduleImport) {
+      const importFileContent = await readStream(moduleImport.filePath);
+      const contentArray = importFileContent.split('\n');
+      const lastIndex = contentArray.lastIndexOf(moduleImport.search);
+      contentArray.splice(lastIndex, 0, ...['123', '432', '233', '98']);
+    }
   }
 
   return true;
@@ -79,7 +95,7 @@ export const writeModules = async (acfModules: AcfLayout[], config: AcfGenerator
   const { fileTypes, conflictAction } = config;
 
   for (const layout of acfModules) {
-    const returnValue = await createModule({ layout, fileTypes, conflictAction });
+    await createModule({ layout, fileTypes, conflictAction });
   }
   const timeEnd = performance.now();
   logger.complete(
@@ -89,3 +105,4 @@ export const writeModules = async (acfModules: AcfLayout[], config: AcfGenerator
   // create files in loop
   //    if has imports - additionaly add perform an import action
 };
+

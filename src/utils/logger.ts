@@ -1,4 +1,4 @@
-import chalk, { Chalk } from 'chalk';
+import chalk, { ChalkInstance } from 'chalk';
 import isUnicodeSupported from 'is-unicode-supported';
 import logUpdate from 'log-update';
 
@@ -20,7 +20,7 @@ type LogTypes =
 type TypesMap = {
   [type in LogTypes]: {
     symbol: string;
-    color: Chalk;
+    color: ChalkInstance;
     label: string;
   };
 };
@@ -64,7 +64,7 @@ export const logMessage = (message: string, logType: LogTypes): string => {
   }
   return `${finalLabelString}${message}`;
 };
-
+chalk.red();
 // Log formatted message
 export const log = (message: string, type: LogTypes): void => {
   console.log(logMessage(message, type));
@@ -92,3 +92,4 @@ export const updateLogger = [...Object.keys(types), 'done'].reduce(
   }),
   {} as Logger & { done: () => void }
 );
+
