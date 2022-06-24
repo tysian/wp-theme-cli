@@ -43,7 +43,7 @@ export const config: AcfGeneratorConfig = {
       import: {
         filePath: './src/scss/main.scss',
         search: `@import 'modules/`,
-        append: `@import 'modules/{file_name}';`,
+        append: `@import "modules/{file_name}";`,
       },
     },
     js: {
@@ -88,7 +88,7 @@ export const configDescriptions: ConfigDescription = {
     choices: Object.keys(config.fileTypes),
     default: ['php', 'scss'],
     message: `Select which file types you want to generate`,
-    validate: (answer) => (answer.length > 0 ? true : 'You must select at least'),
+    validate: (answer) => (answer.length > 0 ? true : 'You must select at least one'),
   },
   fileTypes: Object.keys(config.fileTypes).reduce(
     (acc, fileType) => ({

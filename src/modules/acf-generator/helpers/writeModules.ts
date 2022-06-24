@@ -2,7 +2,7 @@ import path from 'path';
 import slugify from 'slugify';
 import ejs from 'ejs';
 import chalk from 'chalk';
-import { kebabCase, replace, snakeCase, update } from 'lodash-es';
+import { kebabCase, snakeCase } from 'lodash-es';
 import { performance } from 'perf_hooks';
 import { root } from '../../..';
 import { fileExists } from '../../../utils/fileExist';
@@ -101,6 +101,7 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
       const isImported = replaceAll(`"`, `'`, importFileContent).includes(
         replaceAll(`"`, `'`, textToAppend)
       );
+
       if (isImported) {
         updateLogger.skip(`Already imported (${chalk.green(`${moduleData.fileName}`)}).`);
         updateLogger.done();
