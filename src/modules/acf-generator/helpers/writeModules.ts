@@ -54,7 +54,7 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
     // Prepare output path
     const outputPath = path.resolve(output, moduleData.fileName);
 
-    // Render tempalte using EJS
+    // Render template using EJS
     const renderedTemplate = await ejs.renderFile(template, { data: moduleData }, { async: true });
 
     // Check if output exists and proceed conflictAction if necessary
