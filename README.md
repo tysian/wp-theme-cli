@@ -49,8 +49,7 @@ Select which file types you want to generate.
 
 **fileTypes**  
 Accepts: `object`  
-Available keys: 'php' | 'scss' | 'js'
-Fi
+Available keys: `'php'` | `'scss'` | `'js'`
 
 **\[fileType].active**  
 Accepts: `boolean`  
