@@ -2,7 +2,6 @@
   "name": "wp-theme-cli",
   "version": "0.2.0",
   "description": "Generate, update & remove files in our WordPress theme",
-  "exports": "./dist/bin/wp-theme.js",
   "engines": {
     "node": ">=14.17.0"
   },
@@ -16,7 +15,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "chalk": "^5.0.1",
     "clarify": "^2.1.0",

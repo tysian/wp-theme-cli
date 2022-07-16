@@ -14,13 +14,12 @@ export const root = path.dirname(fileURLToPath(import.meta.url));
 
 export const bootstrap = async () => {
   inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
-  const packageData = await readStream(`../package.json`);
-  console.log(packageData);
+  const { bin, description, version } = await readStream(`${root}/../package.json`).then((str) =>
+    JSON.parse(str)
+  );
+
   const program = new Command();
-  program
-    .name('wp-theme-cli')
-    .description('Generate, update & remove files in our WordPress theme')
-    .version('0.2.0');
+  program.name(Object.keys(bin)[0]).description(description).version(version);
 
   const generateAcceptedTypes = ['modules'].map((s) => chalk.green(s)).join(', ');
   program
