@@ -1,8 +1,11 @@
 {
   "name": "wp-theme-cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Generate, update & remove files in our WordPress theme",
-  "main": "index.js",
+  "exports": "./dist/bin/wp-theme.js",
+  "engines": {
+    "node": ">=14.17.0"
+  },
   "type": "module",
   "bin": {
     "wp-theme": "./dist/bin/wp-theme.js"

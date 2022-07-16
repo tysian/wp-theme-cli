@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import bootstrap from '../index';
+import { bootstrap } from '../';
 
 bootstrap();

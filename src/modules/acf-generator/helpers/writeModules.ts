@@ -4,7 +4,7 @@ import ejs from 'ejs';
 import chalk from 'chalk';
 import { kebabCase, snakeCase } from 'lodash-es';
 import { performance } from 'perf_hooks';
-import { root } from '../../..';
+import { root } from '../../../bootstrap';
 import { fileExists } from '../../../utils/fileExist';
 import { logger, updateLogger } from '../../../utils/logger';
 import { AcfGeneratorConfig, FileType, FileTypeKey } from '../acf-generator.config';
@@ -61,7 +61,7 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
     const outputExists = await fileExists(outputPath).catch(() => false);
     if (outputExists) {
       if (conflictAction === 'ignore') {
-        updateLogger.skip(`File ${chalk.green(`${moduleData.fileName}`)} already exist.`);
+        updateLogger.skip(`${chalk.green(`${moduleData.fileName}`)} already exists.`);
         updateLogger.done();
       }
 
@@ -76,7 +76,7 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
     // Create module file
     if (!outputExists || (outputExists && conflictAction === 'overwrite')) {
       await writeStream(outputPath, renderedTemplate);
-      updateLogger.success(` File ${chalk.green(`${moduleData.fileName}`)} has been created.`);
+      updateLogger.success(` ${chalk.green(`${moduleData.fileName}`)} created.`);
       updateLogger.done();
     }
 
@@ -103,7 +103,7 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
       );
 
       if (isImported) {
-        updateLogger.skip(`Already imported (${chalk.green(`${moduleData.fileName}`)}).`);
+        updateLogger.skip(`${chalk.green(`${moduleData.fileName}`)} already imported.`);
         updateLogger.done();
         return true;
       }
@@ -117,7 +117,9 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
       );
 
       if (lastIndex < 0) {
-        updateLogger.skip(`This should never happen, but didn't found ${moduleImport.search}.`);
+        updateLogger.skip(
+          `This should never happen, but didn't found ${chalk.blueBright(moduleImport.search)}.`
+        );
         updateLogger.done();
         return true;
       }
@@ -125,7 +127,7 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
       contentArray.splice(lastIndex + 1, 0, textToAppend);
       const contentWithImports = contentArray.join('\n');
       await writeStream(path.resolve(moduleImport.filePath), contentWithImports);
-      updateLogger.success(` Added import for ${chalk.green(`${moduleData.fileName}`)} file`);
+      updateLogger.success(` ${chalk.green(`${moduleData.fileName}`)} successfully imported.`);
       updateLogger.done();
     }
   }

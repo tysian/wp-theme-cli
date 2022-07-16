@@ -1,7 +1,7 @@
 import { logger, updateLogger } from '../../utils/logger';
 import { gitCheck } from '../../utils/gitCheck';
 import { printConfig } from './acf-generator.config';
-import { overwriteConfig } from './helpers/overwriteConfig';
+import { selectConfig } from './helpers/overwriteConfig';
 import { getAcfModules } from './helpers/getAcfModules';
 import { writeModules } from './helpers/writeModules';
 import { checkConfig } from './helpers/checkConfig';
@@ -17,16 +17,16 @@ export const acfGenerator = async (): Promise<boolean> => {
     logger.info('Here is default config of this generator.');
     printConfig();
 
-    const overwrittenConfig = await overwriteConfig();
-    await checkConfig(overwrittenConfig);
+    const finalConfig = await selectConfig();
+    await checkConfig(finalConfig);
 
     const acfModules = await getAcfModules(
-      overwrittenConfig.modulesFilePath,
-      overwrittenConfig.modulesFieldName
+      finalConfig.modulesFilePath,
+      finalConfig.modulesFieldName
     );
 
     // Create files
-    await writeModules(acfModules, overwrittenConfig);
+    await writeModules(acfModules, finalConfig);
   } catch (error) {
     updateLogger.error((error as Error)?.message);
     updateLogger.done();
