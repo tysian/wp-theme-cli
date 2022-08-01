@@ -1,1 +1,1 @@
-export const EXTERNAL_CONFIG_PATH = './acf-generator.config.json';
+export const EXTERNAL_CONFIG_PATH = './.configs/acf-generator.config.json';

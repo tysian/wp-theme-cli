@@ -1,82 +1,35 @@
-# ACF Flexible field files generator
+# WP-Theme CLI
 
 ## Goal
 
-Generate, update & remove files in our WordPress theme
+Starting new WP projects can be time consuming. I've decided to create this CLI to automate some of tasks.  
+For now, I'm focusing on files operations, such as removing unnecessary files or creating new ones.
 
-## How to start
+> ⚠ Warning
+>
+> This package is still in beta, and some of features are about removing or modifying files.  
+> Please, make sure that you are in correct folder and you are using version control system (eg. git).  
+> You are using this tool for your own responsibility.
 
-> Required: Node >= 14.17.0
+## Requirements
 
-### Installation
+- Node >= 14.17.0
 
-1. Clone repository
-2. Run `npm install` or `yarn install` to install dependencies
-3. Install this module globally `npm i -g .`
-4. Use it everywhere `wp-theme`
-5. To remove this module, just run `npm uninstall -g wp-theme`
+## Available options
 
-## Usage
+Check all commands available using help command
 
-Simply use `wp-theme` command.<br />
-Feel free to use also `wp-theme --help` or `wp-theme help [command]` to get more informations.
+```bash
+wp-theme --help
+```
 
-### Generating modules
+### Generate modules
 
-Run `wp-theme generate modules` to generate/update ACF modules files.<br />
-Now you'll see a default config, but you can easily overwrite it by answering questions via CLI.
+In my company, the **modules** are simply a flexible field rows, and we are using separate file for each module.  
+You can use this command to generate files for flexible field.
 
-**modulesFilePath**  
-Accepts: `string`  
-This is the path to ACF JSON file.
+```bash
+wp-theme generate modules
+```
 
-> You might need to enable json sync feature in your WordPress ACF settings.\
-> This field group **MUST** have at least one flexible field at the root level.
-
-**modulesFieldName**  
-Accepts: `string`  
-The flexible field name.
-
-**conflictAction**  
-Accepts: `string`  
-Options: `ignore` | `overwrite`  
-Action when file already exists.
-
-**selectFileTypes**  
-Accepts: `string`  
-Currently available: `php`, `scss`, `js`  
-Select which file types you want to generate.
-
-**fileTypes**  
-Accepts: `object`  
-Available keys: `'php'` | `'scss'` | `'js'`
-
-**\[fileType].active**  
-Accepts: `boolean`  
-If `true` - creates files for this file type.
-
-**\[fileType].template**  
-Accepts: `string`  
-Default: `'default'`  
-EJS template file, should have `.ejs` extension.
-
-**\[fileType].output**  
-Accepts: `string`  
-Select directory where files should go.
-
-**\[fileType].import**  
-Accepts: `object`  
-Options for importing feature.
-
-**\[fileType].import.filePath**  
-Accepts: `string`  
-Path to main import file, where imports are stored.
-
-**\[fileType].import.search**  
-Accepts: `string`  
-Search for the last line containing this string, new imports will be added under this one.  
-The `"` character will be replaced with `'` while searching (only).
-
-**\[fileType].import.append**  
-Accepts: `string`  
-String to append in main import file. You can use variables such as: `file_name`, `module_name`, `module_variable_name`.
+For more informations, please check [this](/docs/acf-generator.md).
