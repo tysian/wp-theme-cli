@@ -1,7 +1,8 @@
 import { logger, updateLogger } from '../../utils/logger';
 import { gitCheck } from '../../utils/gitCheck';
 import { printConfig } from './acf-generator.config';
-import { selectConfig } from './helpers/overwriteConfig';
+import type { AcfGeneratorConfig } from './acf-generator.config';
+import { selectConfig } from './helpers/selectConfig';
 import { getAcfModules } from './helpers/getAcfModules';
 import { writeModules } from './helpers/writeModules';
 import { checkConfig } from './helpers/checkConfig';
@@ -17,7 +18,7 @@ export const acfGenerator = async (): Promise<boolean> => {
     logger.info('Here is default config of this generator.');
     printConfig();
 
-    const finalConfig = await selectConfig();
+    const finalConfig = await selectConfig<AcfGeneratorConfig>();
     await checkConfig(finalConfig);
 
     const acfModules = await getAcfModules(

@@ -1,21 +1,18 @@
-import path from 'path';
 import { set } from 'lodash-es';
+import chalk from 'chalk';
 import inquirer from 'inquirer';
 import {
   AcfGeneratorConfig,
   config,
   configDescriptions,
   FileTypeKey,
-  printConfig,
 } from '../acf-generator.config';
 import { EXTERNAL_CONFIG_PATH } from '../acf-generator.const';
 import { logger, updateLogger } from '../../../utils/logger';
 import { fileExists } from '../../../utils/fileExist';
-import { readStream } from '../../../utils/readStream';
-import chalk from 'chalk';
 import { writeStream } from '../../../utils/writeStream';
 
-const overwriteConfig = async (configObject = config, descriptions = configDescriptions) => {
+export const overwriteConfig = async (configObject = config, descriptions = configDescriptions) => {
   let newConfig = { ...configObject };
 
   for (const [configKey, inquirerQuestion] of Object.entries(descriptions)) {
@@ -105,61 +102,4 @@ const overwriteConfig = async (configObject = config, descriptions = configDescr
   }
 
   return newConfig;
-};
-
-export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
-  const { configType } = await inquirer.prompt([
-    {
-      type: 'list',
-      message: 'Select config type',
-      name: 'configType',
-      default: 'default',
-      choices: [
-        {
-          name: 'Default config',
-          value: 'default',
-          short: 'default',
-        },
-        {
-          name: 'Overwrite default config',
-          value: 'overwrite',
-          short: 'overwrite',
-        },
-        {
-          name: 'External config file',
-          value: 'external-config-file',
-          short: 'external',
-        },
-      ],
-    },
-  ]);
-
-  if (configType === 'default') {
-    return config;
-  } else if (configType === 'overwrite') {
-    const overwrittenConfig = await overwriteConfig(config, configDescriptions);
-
-    return overwrittenConfig as AcfGeneratorConfig;
-  } else if (configType === 'external-config-file') {
-    // Ask for external config path
-    const externalConfigFilePath = await fileExists(EXTERNAL_CONFIG_PATH).catch(() => '');
-    const { externalConfigFile } = await inquirer.prompt([
-      {
-        type: 'file-tree-selection',
-        message: 'Select external config file',
-        name: 'externalConfigFile',
-        default: externalConfigFilePath || null,
-        validate: (item: string) => path.extname(item) === '.json' || `You need json extension`,
-      },
-    ]);
-    const externalConfigContent = await readStream(externalConfigFile);
-    try {
-      const parsedConfig = JSON.parse(externalConfigContent);
-      return parsedConfig;
-    } catch (e) {
-      throw new Error(`Invalid JSON file - ${externalConfigFile}`);
-    }
-  }
-
-  return config;
 };
