@@ -10,8 +10,8 @@
     "wp-theme": "./dist/bin/wp-theme.js"
   },
   "scripts": {
-    "build": "tsc-esm",
-    "dev": "nodemon --watch \"src/**\" --ext \"js,ts,ejs,json\" --exec \"tsc-esm\""
+    "build": "tsc ./src/bin/wp-theme.ts",
+    "dev": "tsc -w ./src/bin/wp-theme.ts"
   },
   "keywords": [],
   "author": "",
@@ -32,7 +32,6 @@
     "trace": "^3.1.1"
   },
   "devDependencies": {
-    "@digitak/tsc-esm": "^3.1.2",
     "@types/ejs": "^3.1.0",
     "@types/inquirer": "^8.2.1",
     "@types/lodash": "^4.14.182",
@@ -47,6 +46,6 @@
     "eslint-plugin-import": "^2.25.2",
     "nodemon": "^2.0.14",
     "prettier": "^2.4.1",
-    "typescript": "^4.6.3"
+    "typescript": "^4.7.4"
   }
 }
