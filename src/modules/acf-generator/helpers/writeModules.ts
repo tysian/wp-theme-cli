@@ -1,17 +1,17 @@
-import path from 'path';
-import slugify from 'slugify';
-import ejs from 'ejs';
 import chalk from 'chalk';
+import ejs from 'ejs';
 import { kebabCase, snakeCase } from 'lodash-es';
+import path from 'path';
 import { performance } from 'perf_hooks';
-import { root } from '../../../bootstrap';
-import { fileExists } from '../../../utils/fileExist';
-import { logger, updateLogger } from '../../../utils/logger';
-import { AcfGeneratorConfig, FileType, FileTypeKey } from '../acf-generator.config';
-import { AcfLayout } from './getAcfModules';
-import { writeStream } from '../../../utils/writeStream';
-import { readStream } from '../../../utils/readStream';
-import { replaceAll } from '../../../utils/replaceAll';
+import slugify from 'slugify';
+import { root } from '../../../bootstrap.js';
+import { fileExists } from '../../../utils/fileExist.js';
+import { logger, updateLogger } from '../../../utils/logger.js';
+import { readStream } from '../../../utils/readStream.js';
+import { replaceAll } from '../../../utils/replaceAll.js';
+import { writeStream } from '../../../utils/writeStream.js';
+import { AcfGeneratorConfig, FileType, FileTypeKey } from '../acf-generator.config.js';
+import { AcfLayout } from './getAcfModules.js';
 
 type Module = {
   layout: AcfLayout;

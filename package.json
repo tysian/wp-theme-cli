@@ -10,8 +10,8 @@
     "wp-theme": "./dist/bin/wp-theme.js"
   },
   "scripts": {
-    "build": "tsc ./src/bin/wp-theme.ts",
-    "dev": "tsc -w ./src/bin/wp-theme.ts"
+    "build": "tsc",
+    "dev": "tsc -w"
   },
   "keywords": [],
   "author": "",

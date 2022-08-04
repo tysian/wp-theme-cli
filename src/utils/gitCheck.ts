@@ -1,15 +1,17 @@
 import inquirer from 'inquirer';
-import git from 'simple-git';
-import { logger } from './logger';
+import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
+import { logger } from './logger.js';
+
+const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
 export const gitCheck = async (): Promise<boolean> => {
-  const isRepo = await git().checkIsRepo();
+  const isRepo = await git.checkIsRepo();
   if (!isRepo) {
     logger.warn('No repo found.');
     return true;
   }
 
-  const status = await git().status();
+  const status = await git.status();
   if (status.isClean()) {
     logger.skip('Nothing to commit, continuing...');
     return true;
@@ -52,8 +54,8 @@ export const gitCheck = async (): Promise<boolean> => {
     ]);
 
     logger.start('Commiting');
-    await git().add('.');
-    await git().commit(commitMessage);
+    await git.add('.');
+    await git.commit(commitMessage);
     logger.complete('Changes commited successfully!');
 
     return true;

@@ -1,10 +1,10 @@
-import { logger, updateLogger } from '../../utils/logger';
-import { gitCheck } from '../../utils/gitCheck';
-import { printConfig } from './acf-generator.config';
-import { selectConfig } from './helpers/overwriteConfig';
-import { getAcfModules } from './helpers/getAcfModules';
-import { writeModules } from './helpers/writeModules';
-import { checkConfig } from './helpers/checkConfig';
+import { gitCheck } from '../../utils/gitCheck.js';
+import { logger, updateLogger } from '../../utils/logger.js';
+import { printConfig } from './acf-generator.config.js';
+import { checkConfig } from './helpers/checkConfig.js';
+import { getAcfModules } from './helpers/getAcfModules.js';
+import { selectConfig } from './helpers/overwriteConfig.js';
+import { writeModules } from './helpers/writeModules.js';
 
 export const acfGenerator = async (): Promise<boolean> => {
   logger.none('ACF Flexible field files generator!');
