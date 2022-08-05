@@ -4,7 +4,6 @@ import { kebabCase, snakeCase } from 'lodash-es';
 import path from 'path';
 import { performance } from 'perf_hooks';
 import slugify from 'slugify';
-import { root } from '../../../bootstrap.js';
 import { fileExists } from '../../../utils/fileExist.js';
 import { logger, updateLogger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
@@ -12,15 +11,13 @@ import { replaceAll } from '../../../utils/replaceAll.js';
 import { writeStream } from '../../../utils/writeStream.js';
 import { AcfGeneratorConfig, FileType, FileTypeKey } from '../acf-generator.config.js';
 import { AcfLayout } from './getAcfModules.js';
+import { getDefaultTemplate } from './getDefaultTemplate.js';
 
 type Module = {
   layout: AcfLayout;
   fileTypes: Record<FileTypeKey, FileType>;
   conflictAction: 'overwrite' | 'ignore';
 };
-
-export const getDefaultTemplate = (fileType: FileTypeKey) =>
-  path.resolve(`${root}/../public/templates/template.${fileType.toLowerCase()}.ejs`);
 
 const createModule = async ({ layout, fileTypes, conflictAction }: Module): Promise<boolean> => {
   for (const [fileType, options] of Object.entries(fileTypes)) {
