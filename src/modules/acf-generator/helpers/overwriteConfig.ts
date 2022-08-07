@@ -11,6 +11,7 @@ import {
   config,
   configDescriptions,
   FileTypeKey,
+  printConfig,
 } from '../acf-generator.config.js';
 import { EXTERNAL_CONFIG_PATH } from '../acf-generator.const.js';
 
@@ -134,13 +135,31 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
   ]);
 
   if (configType === 'default') {
-    return config;
+    // Show current config and ask for overwrite
+    logger.info('Here is default config of this generator.');
+    printConfig();
+    const { confirmDefaultConfig } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        message: 'Are you sure you want to use default config?',
+        name: 'confirmDefaultConfig',
+        default: true,
+      },
+    ]);
+
+    if (confirmDefaultConfig) {
+      return config;
+    }
+
+    await selectConfig();
   }
+
   if (configType === 'overwrite') {
     const overwrittenConfig = await overwriteConfig(config, configDescriptions);
 
     return overwrittenConfig as AcfGeneratorConfig;
   }
+
   if (configType === 'external-config-file') {
     // Ask for external config path
     const externalConfigFilePath = await fileExists(EXTERNAL_CONFIG_PATH).catch(() => '');
@@ -153,6 +172,7 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
         validate: (item: string) => path.extname(item) === '.json' || `You need json extension`,
       },
     ]);
+
     const externalConfigContent = await readStream(externalConfigFile);
     try {
       const parsedConfig = JSON.parse(externalConfigContent);
