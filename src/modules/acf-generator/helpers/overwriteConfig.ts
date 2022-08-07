@@ -1,6 +1,7 @@
 import path from 'path';
 import { set } from 'lodash-es';
 import inquirer from 'inquirer';
+import chalk from 'chalk';
 import {
   AcfGeneratorConfig,
   config,
@@ -12,7 +13,6 @@ import { EXTERNAL_CONFIG_PATH } from '../acf-generator.const';
 import { logger, updateLogger } from '../../../utils/logger';
 import { fileExists } from '../../../utils/fileExist';
 import { readStream } from '../../../utils/readStream';
-import chalk from 'chalk';
 import { writeStream } from '../../../utils/writeStream';
 
 const overwriteConfig = async (configObject = config, descriptions = configDescriptions) => {
@@ -135,12 +135,32 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
   ]);
 
   if (configType === 'default') {
-    return config;
-  } else if (configType === 'overwrite') {
+    // Show current config and ask for overwrite
+    logger.info('Here is default config of this generator.');
+    printConfig();
+    const { confirmDefaultConfig } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        message: 'Are you sure you want to use default config?',
+        name: 'confirmDefaultConfig',
+        default: true,
+      },
+    ]);
+
+    if (confirmDefaultConfig) {
+      return config;
+    }
+
+    await selectConfig();
+  }
+
+  if (configType === 'overwrite') {
     const overwrittenConfig = await overwriteConfig(config, configDescriptions);
 
     return overwrittenConfig as AcfGeneratorConfig;
-  } else if (configType === 'external-config-file') {
+  }
+
+  if (configType === 'external-config-file') {
     // Ask for external config path
     const externalConfigFilePath = await fileExists(EXTERNAL_CONFIG_PATH).catch(() => '');
     const { externalConfigFile } = await inquirer.prompt([
@@ -152,6 +172,7 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
         validate: (item: string) => path.extname(item) === '.json' || `You need json extension`,
       },
     ]);
+
     const externalConfigContent = await readStream(externalConfigFile);
     try {
       const parsedConfig = JSON.parse(externalConfigContent);

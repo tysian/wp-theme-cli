@@ -13,10 +13,6 @@ export const acfGenerator = async (): Promise<boolean> => {
     // Check if there are any uncommited changes
     await gitCheck();
 
-    // Show current config and ask for overwrite
-    logger.info('Here is default config of this generator.');
-    printConfig();
-
     const finalConfig = await selectConfig();
     await checkConfig(finalConfig);
 
