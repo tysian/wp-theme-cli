@@ -3,7 +3,7 @@ import ejs from 'ejs';
 import { kebabCase, snakeCase } from 'lodash-es';
 import path from 'path';
 import { performance } from 'perf_hooks';
-import slugify from 'slugify';
+import filenamify from 'filenamify';
 import { fileExists } from '../../../utils/fileExist.js';
 import { logger, updateLogger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
@@ -35,14 +35,14 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
     // Prepare data structure to create modules
     const moduleData = {
       name: layout.name,
-      variableName: snakeCase(slugify(layout.name)),
+      variableName: snakeCase(filenamify(layout.name)),
       fileName: `${fileType === 'scss' ? '_' : ''}${layout.name}.${fileType}`,
-      className: kebabCase(slugify(layout.name)),
+      className: kebabCase(filenamify(layout.name)),
       subfields: layout.sub_fields
         .filter((subfield) => subfield?.name)
         .map((subfield) => ({
           name: subfield.name,
-          variableName: snakeCase(slugify(subfield.name)),
+          variableName: snakeCase(filenamify(subfield.name)),
         })),
     };
 

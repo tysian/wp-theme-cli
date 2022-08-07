@@ -22,13 +22,13 @@
     "commander": "^9.4.0",
     "comment-json": "^4.2.2",
     "ejs": "^3.1.8",
+    "filenamify": "^5.1.1",
     "inquirer": "^9.1.0",
     "inquirer-file-tree-selection-prompt": "^2.0.4",
     "is-unicode-supported": "^1.2.0",
     "lodash-es": "^4.17.21",
     "log-update": "^5.0.1",
     "simple-git": "^3.11.0",
-    "slugify": "^1.6.5",
     "trace": "^3.1.1"
   },
   "devDependencies": {
