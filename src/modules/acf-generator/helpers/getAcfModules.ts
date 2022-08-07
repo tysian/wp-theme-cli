@@ -1,7 +1,7 @@
 import chalk from 'chalk';
-import { logger } from '../../../utils/logger';
-import { readStream } from '../../../utils/readStream';
-import { config } from '../acf-generator.config';
+import { logger } from '../../../utils/logger.js';
+import { readStream } from '../../../utils/readStream.js';
+import { config } from '../acf-generator.config.js';
 
 export type AcfLayout = {
   key: string;

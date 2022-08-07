@@ -1,19 +1,19 @@
-import path from 'path';
-import { set } from 'lodash-es';
-import inquirer from 'inquirer';
 import chalk from 'chalk';
+import inquirer from 'inquirer';
+import { set } from 'lodash-es';
+import path from 'path';
+import { fileExists } from '../../../utils/fileExist.js';
+import { logger, updateLogger } from '../../../utils/logger.js';
+import { readStream } from '../../../utils/readStream.js';
+import { writeStream } from '../../../utils/writeStream.js';
 import {
   AcfGeneratorConfig,
   config,
   configDescriptions,
   FileTypeKey,
   printConfig,
-} from '../acf-generator.config';
-import { EXTERNAL_CONFIG_PATH } from '../acf-generator.const';
-import { logger, updateLogger } from '../../../utils/logger';
-import { fileExists } from '../../../utils/fileExist';
-import { readStream } from '../../../utils/readStream';
-import { writeStream } from '../../../utils/writeStream';
+} from '../acf-generator.config.js';
+import { EXTERNAL_CONFIG_PATH } from '../acf-generator.const.js';
 
 const overwriteConfig = async (configObject = config, descriptions = configDescriptions) => {
   let newConfig = { ...configObject };

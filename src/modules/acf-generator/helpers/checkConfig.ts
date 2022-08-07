@@ -1,9 +1,9 @@
 import chalk from 'chalk';
-import { fileExists } from '../../../utils/fileExist';
-import { logger, updateLogger } from '../../../utils/logger';
-import { readStream } from '../../../utils/readStream';
-import { AcfGeneratorConfig, FileTypeKey, fileTypeLabel } from '../acf-generator.config';
-import { getDefaultTemplate } from './writeModules';
+import { fileExists } from '../../../utils/fileExist.js';
+import { logger, updateLogger } from '../../../utils/logger.js';
+import { readStream } from '../../../utils/readStream.js';
+import { AcfGeneratorConfig, FileTypeKey, fileTypeLabel } from '../acf-generator.config.js';
+import { getDefaultTemplate } from './getDefaultTemplate.js';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {
   logger.start('Checking config...');

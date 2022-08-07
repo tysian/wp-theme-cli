@@ -1,26 +1,23 @@
-import path from 'path';
-import slugify from 'slugify';
-import ejs from 'ejs';
 import chalk from 'chalk';
+import ejs from 'ejs';
 import { kebabCase, snakeCase } from 'lodash-es';
+import path from 'path';
 import { performance } from 'perf_hooks';
-import { root } from '../../../bootstrap';
-import { fileExists } from '../../../utils/fileExist';
-import { logger, updateLogger } from '../../../utils/logger';
-import { AcfGeneratorConfig, FileType, FileTypeKey } from '../acf-generator.config';
-import { AcfLayout } from './getAcfModules';
-import { writeStream } from '../../../utils/writeStream';
-import { readStream } from '../../../utils/readStream';
-import { replaceAll } from '../../../utils/replaceAll';
+import filenamify from 'filenamify';
+import { fileExists } from '../../../utils/fileExist.js';
+import { logger, updateLogger } from '../../../utils/logger.js';
+import { readStream } from '../../../utils/readStream.js';
+import { replaceAll } from '../../../utils/replaceAll.js';
+import { writeStream } from '../../../utils/writeStream.js';
+import { AcfGeneratorConfig, FileType, FileTypeKey } from '../acf-generator.config.js';
+import { AcfLayout } from './getAcfModules.js';
+import { getDefaultTemplate } from './getDefaultTemplate.js';
 
 type Module = {
   layout: AcfLayout;
   fileTypes: Record<FileTypeKey, FileType>;
   conflictAction: 'overwrite' | 'ignore';
 };
-
-export const getDefaultTemplate = (fileType: FileTypeKey) =>
-  path.resolve(`${root}/../public/templates/template.${fileType.toLowerCase()}.ejs`);
 
 const createModule = async ({ layout, fileTypes, conflictAction }: Module): Promise<boolean> => {
   for (const [fileType, options] of Object.entries(fileTypes)) {
@@ -38,14 +35,14 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
     // Prepare data structure to create modules
     const moduleData = {
       name: layout.name,
-      variableName: snakeCase(slugify(layout.name)),
+      variableName: snakeCase(filenamify(layout.name)),
       fileName: `${fileType === 'scss' ? '_' : ''}${layout.name}.${fileType}`,
-      className: kebabCase(slugify(layout.name)),
+      className: kebabCase(filenamify(layout.name)),
       subfields: layout.sub_fields
         .filter((subfield) => subfield?.name)
         .map((subfield) => ({
           name: subfield.name,
-          variableName: snakeCase(slugify(subfield.name)),
+          variableName: snakeCase(filenamify(subfield.name)),
         })),
     };
 

@@ -1,25 +1,21 @@
 module.exports = {
+  root: true,
   env: {
     commonjs: true,
     es2021: true,
     node: true,
   },
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
-  extends: [
-    'airbnb-base',
-    'node',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-  ],
+  plugins: ['@typescript-eslint', 'import'],
+  extends: ['airbnb-base', 'node', 'plugin:@typescript-eslint/recommended', 'prettier'],
   parserOptions: {
     ecmaVersion: 12,
   },
   rules: {
     '@typescript-eslint/no-explicit-any': 0,
-    'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
+    'import/no-unresolved': 'error',
+    'no-use-before-define': 'off',
     'no-restricted-syntax': 0,
     'no-await-in-loop': 0,
     'linebreak-style': 'off',
@@ -43,7 +39,13 @@ module.exports = {
     'no-continue': 0,
   },
   settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
+    },
     'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+      },
       node: {
         paths: ['src'],
         extensions: ['.js', '.ts'],
@@ -51,4 +53,3 @@ module.exports = {
     },
   },
 };
-
