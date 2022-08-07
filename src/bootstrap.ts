@@ -7,11 +7,11 @@ import inquirerFileTreeSelection from 'inquirer-file-tree-selection-prompt';
 import { acfGenerator } from './modules/acf-generator/acf-generator.js';
 import { logger } from './utils/logger.js';
 import { readStream } from './utils/readStream.js';
-import { rootDirectory } from './utils/constants.js';
+import { ROOT_DIR } from './constants.js';
 
 export const bootstrap = async () => {
   inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
-  const { bin, description, version } = await readStream(`${rootDirectory}/../package.json`).then(
+  const { bin, description, version } = await readStream(`${ROOT_DIR}/../package.json`).then(
     (str) => JSON.parse(str)
   );
 

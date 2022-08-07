@@ -2,10 +2,6 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { set } from 'lodash-es';
 import path from 'path';
-import { fileExists } from '../../../utils/fileExist.js';
-import { logger, updateLogger } from '../../../utils/logger.js';
-import { readStream } from '../../../utils/readStream.js';
-import { writeStream } from '../../../utils/writeStream.js';
 import {
   AcfGeneratorConfig,
   config,
@@ -13,7 +9,11 @@ import {
   FileTypeKey,
   printConfig,
 } from '../acf-generator.config.js';
-import { EXTERNAL_CONFIG_PATH } from '../acf-generator.const.js';
+import { fileExists } from '../../../utils/fileExist.js';
+import { logger, updateLogger } from '../../../utils/logger.js';
+import { readStream } from '../../../utils/readStream.js';
+import { writeStream } from '../../../utils/writeStream.js';
+import { ACF_GENERATOR_DEFAULT_CONFIG } from '../../../constants.js';
 
 const overwriteConfig = async (configObject = config, descriptions = configDescriptions) => {
   let newConfig = { ...configObject };
@@ -85,7 +85,7 @@ const overwriteConfig = async (configObject = config, descriptions = configDescr
         type: 'input',
         message: 'Pass the config file name',
         name: 'configFileName',
-        default: EXTERNAL_CONFIG_PATH.split('/').reverse()[0],
+        default: ACF_GENERATOR_DEFAULT_CONFIG.split('/').reverse()[0],
         validate(input: string) {
           return new Promise((resolve, reject) => {
             fileExists(`./${handleFileName(input)}`)
@@ -162,7 +162,7 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
 
   if (configType === 'external-config-file') {
     // Ask for external config path
-    const externalConfigFilePath = await fileExists(EXTERNAL_CONFIG_PATH).catch(() => '');
+    const externalConfigFilePath = await fileExists(ACF_GENERATOR_DEFAULT_CONFIG).catch(() => '');
     const { externalConfigFile } = await inquirer.prompt([
       {
         type: 'file-tree-selection',

@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
-import { logger } from './logger.js';
+import { logger, updateLogger } from './logger.js';
 
 const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
 
@@ -53,15 +53,17 @@ export const gitCheck = async (): Promise<boolean> => {
       },
     ]);
 
-    logger.start('Commiting');
+    updateLogger.start('Commiting');
     await git.add('.');
     await git.commit(commitMessage);
-    logger.complete('Changes commited successfully!');
+    updateLogger.complete('Changes commited successfully!');
+    updateLogger.done();
 
     return true;
   }
   if (shouldCommit === 'continue') {
-    logger.skip('Continuing without commiting.');
+    updateLogger.skip('Continuing without commiting.');
+    updateLogger.done();
     return true;
   }
   if (shouldCommit === 'abort') {
