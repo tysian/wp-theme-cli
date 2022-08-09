@@ -61,11 +61,13 @@ export const gitCheck = async (): Promise<boolean> => {
 
     return true;
   }
+
   if (shouldCommit === 'continue') {
     updateLogger.skip('Continuing without commiting.');
     updateLogger.done();
     return true;
   }
+
   if (shouldCommit === 'abort') {
     throw new Error('Abort!');
   }

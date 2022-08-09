@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import { fileExists } from '../../../utils/fileExist.js';
 import { logger, updateLogger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
+import { replaceAll } from '../../../utils/replaceAll.js';
 import { AcfGeneratorConfig, FileTypeKey, fileTypeLabel } from '../acf-generator.config.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
 
@@ -48,7 +49,7 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
 
       updateLogger.awaiting(`${fileTypeLabel(fileType)} Checking import search string...`);
       const importFileContent = await readStream(filePath);
-      if (!importFileContent.includes(search)) {
+      if (!replaceAll(`"`, `'`, importFileContent).includes(replaceAll(`"`, `'`, search))) {
         updateLogger.done();
         throw new Error(
           `${chalk.green(`'${filePath}'`)} file doesn't have ${chalk.green(`${search}`)} in it.`
