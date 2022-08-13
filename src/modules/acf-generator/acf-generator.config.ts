@@ -97,7 +97,7 @@ export const configDescriptions: ConfigDescription = {
         {
           name: 'customTemplate',
           type: 'confirm',
-          default: fileType !== 'php',
+          default: false,
           message: `${fileTypeLabel(fileType)} Do you want to use custom EJS template?`,
         },
         {
@@ -119,7 +119,7 @@ export const configDescriptions: ConfigDescription = {
         {
           name: 'haveImports',
           type: 'confirm',
-          default: false,
+          default: fileType !== 'php',
           message: `${fileTypeLabel(fileType)} Do ${fileType.toUpperCase()} need any imports?`,
         },
         {

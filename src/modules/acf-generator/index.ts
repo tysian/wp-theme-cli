@@ -1,2 +1,2 @@
-export { config } from './acf-generator.config';
-export { acfGenerator } from './acf-generator';
+export { config } from './acf-generator.config.js';
+export { acfGenerator } from './acf-generator.js';

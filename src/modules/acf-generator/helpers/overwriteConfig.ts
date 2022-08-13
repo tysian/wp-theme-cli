@@ -1,16 +1,19 @@
-import { set } from 'lodash-es';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
+import { set } from 'lodash-es';
+import path from 'path';
 import {
   AcfGeneratorConfig,
   config,
   configDescriptions,
   FileTypeKey,
-} from '../acf-generator.config';
-import { EXTERNAL_CONFIG_PATH } from '../acf-generator.const';
-import { logger, updateLogger } from '../../../utils/logger';
-import { fileExists } from '../../../utils/fileExist';
-import { writeStream } from '../../../utils/writeStream';
+  printConfig,
+} from '../acf-generator.config.js';
+import { fileExists } from '../../../utils/fileExist.js';
+import { logger, updateLogger } from '../../../utils/logger.js';
+import { readStream } from '../../../utils/readStream.js';
+import { writeStream } from '../../../utils/writeStream.js';
+import { ACF_GENERATOR_DEFAULT_CONFIG } from '../../../constants.js';
 
 export const overwriteConfig = async (configObject = config, descriptions = configDescriptions) => {
   let newConfig = { ...configObject };
@@ -82,7 +85,7 @@ export const overwriteConfig = async (configObject = config, descriptions = conf
         type: 'input',
         message: 'Pass the config file name',
         name: 'configFileName',
-        default: EXTERNAL_CONFIG_PATH.split('/').reverse()[0],
+        default: ACF_GENERATOR_DEFAULT_CONFIG.split('/').reverse()[0],
         validate(input: string) {
           return new Promise((resolve, reject) => {
             fileExists(`./${handleFileName(input)}`)
@@ -102,4 +105,82 @@ export const overwriteConfig = async (configObject = config, descriptions = conf
   }
 
   return newConfig;
+};
+
+export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
+  const { configType } = await inquirer.prompt([
+    {
+      type: 'list',
+      message: 'Select config type',
+      name: 'configType',
+      default: 'default',
+      choices: [
+        {
+          name: 'Default config',
+          value: 'default',
+          short: 'default',
+        },
+        {
+          name: 'Overwrite default config',
+          value: 'overwrite',
+          short: 'overwrite',
+        },
+        {
+          name: 'External config file',
+          value: 'external-config-file',
+          short: 'external',
+        },
+      ],
+    },
+  ]);
+
+  if (configType === 'default') {
+    // Show current config and ask for overwrite
+    logger.info('Here is default config of this generator.');
+    printConfig();
+    const { confirmDefaultConfig } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        message: 'Are you sure you want to use default config?',
+        name: 'confirmDefaultConfig',
+        default: true,
+      },
+    ]);
+
+    if (confirmDefaultConfig) {
+      return config;
+    }
+
+    await selectConfig();
+  }
+
+  if (configType === 'overwrite') {
+    const overwrittenConfig = await overwriteConfig(config, configDescriptions);
+
+    return overwrittenConfig as AcfGeneratorConfig;
+  }
+
+  if (configType === 'external-config-file') {
+    // Ask for external config path
+    const externalConfigFilePath = await fileExists(ACF_GENERATOR_DEFAULT_CONFIG).catch(() => '');
+    const { externalConfigFile } = await inquirer.prompt([
+      {
+        type: 'file-tree-selection',
+        message: 'Select external config file',
+        name: 'externalConfigFile',
+        default: externalConfigFilePath || null,
+        validate: (item: string) => path.extname(item) === '.json' || `You need json extension`,
+      },
+    ]);
+
+    const externalConfigContent = await readStream(externalConfigFile);
+    try {
+      const parsedConfig = JSON.parse(externalConfigContent);
+      return parsedConfig;
+    } catch (e) {
+      throw new Error(`Invalid JSON file - ${externalConfigFile}`);
+    }
+  }
+
+  return config;
 };

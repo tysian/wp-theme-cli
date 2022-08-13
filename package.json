@@ -1,6 +1,6 @@
 {
   "name": "wp-theme-cli",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "description": "Generate, update & remove files in your WordPress theme",
   "engines": {
     "node": ">=14.17.0"
@@ -10,8 +10,8 @@
     "wp-theme": "./dist/bin/wp-theme.js"
   },
   "scripts": {
-    "build": "tsc-esm",
-    "dev": "nodemon --watch \"src/**\" --ext \"js,ts,ejs,json\" --exec \"tsc-esm\""
+    "build": "tsc",
+    "dev": "tsc -w"
   },
   "keywords": [],
   "author": "",
@@ -19,35 +19,34 @@
   "dependencies": {
     "chalk": "^5.0.1",
     "clarify": "^2.1.0",
-    "commander": "^9.2.0",
+    "commander": "^9.4.0",
     "comment-json": "^4.2.2",
-    "ejs": "^3.1.7",
-    "inquirer": "^8.2.0",
-    "inquirer-file-tree-selection-prompt": "^1.0.19",
+    "ejs": "^3.1.8",
+    "filenamify": "^5.1.1",
+    "inquirer": "^9.1.0",
+    "inquirer-file-tree-selection-prompt": "^2.0.4",
     "is-unicode-supported": "^1.2.0",
     "lodash-es": "^4.17.21",
     "log-update": "^5.0.1",
-    "simple-git": "^3.7.1",
-    "slugify": "^1.6.5",
+    "simple-git": "^3.11.0",
     "trace": "^3.1.1",
-    "zod": "^3.17.10"
+    "zod": "^3.18.0"
   },
   "devDependencies": {
-    "@digitak/tsc-esm": "^3.1.2",
-    "@types/ejs": "^3.1.0",
-    "@types/inquirer": "^8.2.1",
+    "@types/ejs": "^3.1.1",
+    "@types/inquirer": "^9.0.0",
     "@types/lodash": "^4.14.182",
     "@types/lodash-es": "^4.17.6",
-    "@types/node": "^17.0.27",
-    "@typescript-eslint/eslint-plugin": "^5.21.0",
-    "@typescript-eslint/parser": "^5.21.0",
-    "eslint": "^8.14.0",
+    "@types/node": "^18.6.4",
+    "@typescript-eslint/eslint-plugin": "^5.32.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "eslint": "^8.21.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-node": "^4.1.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.25.2",
-    "nodemon": "^2.0.14",
-    "prettier": "^2.4.1",
-    "typescript": "^4.6.3"
+    "eslint-import-resolver-typescript": "^3.4.0",
+    "eslint-plugin-import": "^2.26.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4"
   }
 }
