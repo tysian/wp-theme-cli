@@ -1,23 +1,14 @@
 import fs from 'fs/promises';
-import { OPERATION_TYPE } from '../cleaner.const.js';
-import { AppResult } from '../helpers/AppResult.js';
+import { fileExists } from '../../../utils/fileExist.js';
 
-export const removeFile = async (file, options = {}) => {
-  const { disableLogging = [] } = options;
-  const result = new AppResult(OPERATION_TYPE.REMOVE_FILE, disableLogging);
-
+export const removeFile = async (file: string) => {
+  // Use try..catch here, because if file doesn't exist, we can simply return null and skip operation
   try {
-    await fs.access(file);
-    try {
-      await fs.unlink(file);
-      result.success = true;
-    } catch (e) {
-      result.errorMessage = e.message;
-    }
+    await fileExists(file);
   } catch (e) {
-    result.success = null;
+    return null;
   }
 
-  result.log(file);
-  return result.success;
+  await fs.unlink(file);
+  return true;
 };
