@@ -1,10 +1,10 @@
 import fs from 'fs/promises';
-import { OPERATION_TYPE } from '../cleaner.const.js';
+import { OperationType } from '../cleaner.const.js';
 import { AppResult } from '../helpers/AppResult.js';
 
 export const removeDirectory = async (file, options = {}) => {
   const { disableLogging = [] } = options;
-  const result = new AppResult(OPERATION_TYPE.REMOVE_DIRECTORY, disableLogging);
+  const result = new AppResult(OperationType.REMOVE_DIRECTORY, disableLogging);
 
   try {
     await fs.access(file);

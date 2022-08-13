@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import { log } from '../../../utils/logger.js';
-import { OPERATION_TYPE } from '../cleaner.const.js';
+import { OperationType } from '../cleaner.const.js';
 
 export class AppResult {
-  constructor(operationType = OPERATION_TYPE.DEFAULT, disableLogging = []) {
+  constructor(operationType = OperationType.DEFAULT, disableLogging = []) {
     this._success = null;
     this._errorMessage = '';
     this._operationType = operationType;
@@ -41,23 +41,23 @@ export class AppResult {
     if (shouldLog) {
       let type = 'Processing';
       switch (this._operationType) {
-        case OPERATION_TYPE.REMOVE_FILE:
+        case OperationType.REMOVE_FILE:
           type = 'Remove file';
           break;
 
-        case OPERATION_TYPE.REMOVE_FILE_LINE:
+        case OperationType.REMOVE_FILE_LINE:
           type = 'Remove line';
           break;
 
-        case OPERATION_TYPE.BATCH_FILES:
+        case OperationType.BATCH_FILES:
           type = 'Modify multiple files';
           break;
 
-        case OPERATION_TYPE.MODIFY_JSON:
+        case OperationType.MODIFY_JSON:
           type = 'Update JSON';
           break;
 
-        case OPERATION_TYPE.REMOVE_DIRECTORY:
+        case OperationType.REMOVE_DIRECTORY:
           type = 'Remove directory';
           break;
 

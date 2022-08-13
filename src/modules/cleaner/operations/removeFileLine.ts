@@ -1,13 +1,13 @@
 import chalk from 'chalk';
 import { readStream } from '../../../utils/readStream.js';
 import { writeStream } from '../../../utils/writeStream.js';
-import { OPERATION_TYPE } from '../cleaner.const.js';
+import { OperationType } from '../cleaner.const.js';
 import { AppResult } from '../helpers/AppResult.js';
 import { removeLineInText } from '../helpers/removeLineInText.js';
 
 export const removeFileLine = async (file = '', options = {}) => {
   const { search = '', disableLogging = [] } = options;
-  const result = new AppResult(OPERATION_TYPE.REMOVE_FILE_LINE, disableLogging);
+  const result = new AppResult(OperationType.REMOVE_FILE_LINE, disableLogging);
 
   if (search.length && file.length) {
     try {

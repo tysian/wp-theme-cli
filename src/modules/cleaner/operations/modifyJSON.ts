@@ -1,12 +1,12 @@
 import chalk from 'chalk';
 import { readStream } from '../../../utils/readStream.js';
 import { writeStream } from '../../../utils/writeStream.js';
-import { OPERATION_TYPE } from '../cleaner.const.js';
+import { OperationType } from '../cleaner.const.js';
 import { AppResult } from '../helpers/AppResult.js';
 
 export const modifyJSON = async (file = '', options = {}) => {
   const { callback, disableLogging = [] } = options;
-  const result = new AppResult(OPERATION_TYPE.MODIFY_JSON, disableLogging);
+  const result = new AppResult(OperationType.MODIFY_JSON, disableLogging);
   const fileExt = file.split('.')[file.split('.').length - 1];
 
   if (
