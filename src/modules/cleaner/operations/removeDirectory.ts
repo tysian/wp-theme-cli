@@ -1,23 +1,15 @@
 import fs from 'fs/promises';
-import { OperationType } from '../cleaner.const.js';
-import { AppResult } from '../helpers/AppResult.js';
+import path from 'path';
+import { fileExists } from '../../../utils/fileExist.js';
 
-export const removeDirectory = async (file, options = {}) => {
-  const { disableLogging = [] } = options;
-  const result = new AppResult(OperationType.REMOVE_DIRECTORY, disableLogging);
-
+export const removeDirectory = async (file: string) => {
   try {
-    await fs.access(file);
-    try {
-      await fs.rmdir(file, { recursive: true });
-      result.success = true;
-    } catch (e) {
-      result.errorMessage = e.message;
-    }
+    await fileExists(file);
   } catch (e) {
-    result.success = null;
+    return null;
   }
 
-  result.log(file);
-  return result.success;
+  const fullPath = path.resolve(file);
+  await fs.rmdir(fullPath, { recursive: true });
+  return true;
 };

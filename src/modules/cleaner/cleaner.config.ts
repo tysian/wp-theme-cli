@@ -2,6 +2,7 @@ import { OperationType } from './cleaner.const';
 
 type BaseOperation = {
   input: string | string[];
+  exclude?: string | string[];
 };
 
 type RemoveDirectoryOperation = BaseOperation & {
@@ -12,12 +13,14 @@ type RemoveFileOperation = BaseOperation & {
   operationType: OperationType.REMOVE_FILE;
 };
 
+export type ModifyJSONCallback = {
+  functionName: 'deleteInACFModulesJSON' | 'deleteInJSON';
+  args: any[];
+};
+
 type ModifyJSONOperation = BaseOperation & {
   operationType: OperationType.MODIFY_JSON;
-  callback: {
-    functionName: 'deleteInACFModulesJSON' | 'deleteInJSON';
-    args: any[];
-  };
+  callback: ModifyJSONCallback;
 };
 
 type RemoveFileLineOperation = BaseOperation & {
@@ -251,6 +254,7 @@ export const configs: Record<string, Operation[]> = {
     {
       operationType: OperationType.REMOVE_FILE_LINE,
       input: '**/*.php',
+      exclude: ['class-wp-bootstrap-navwalker.php'],
       search: [
         'get_sidebar()',
         'partials/notes-tool',

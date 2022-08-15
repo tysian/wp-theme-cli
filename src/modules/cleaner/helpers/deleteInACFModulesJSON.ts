@@ -1,29 +1,20 @@
-import chalk from 'chalk';
+import { cloneDeep } from 'lodash-es';
+import type { AcfGroup } from '../../../types.js';
+import { deleteInJSON } from './deleteInJSON.js';
 
-export const deleteInACFModulesJSON = (acfModulesGroup, acfModulesToRemove = []) => {
-  const outputObject = JSON.parse(JSON.stringify(acfModulesGroup));
-  const acfModulesIndex = outputObject.fields.findIndex((field) => field.name === 'modules');
+export const deleteInACFModulesJSON = (acfModulesGroup: AcfGroup, acfModulesToRemove: string[]) => {
+  const outputObject = cloneDeep(acfModulesGroup);
+  const acfModulesIndex = outputObject.fields.findIndex(({ name = '' }) => name === 'modules');
   const acfModule = acfModulesIndex > -1 ? outputObject.fields[acfModulesIndex] : null;
 
-  try {
-    if (acfModule && acfModule?.type === 'flexible_content' && acfModule?.layouts) {
-      const removeKeys = Object.values(acfModule.layouts).filter((l) =>
-        acfModulesToRemove.includes(l.name)
-      );
-
-      removeKeys.forEach(({ key }) => {
-        if (outputObject?.fields?.[acfModulesIndex]?.layouts?.[key]) {
-          delete outputObject.fields[acfModulesIndex].layouts[key];
-        } else {
-          throw new Error(`fields[${acfModulesIndex}].layouts[${key}] not found.`);
-        }
-      });
-    } else {
-      throw new Error('No flexible_content module field.');
-    }
-  } catch (errorMessage) {
-    console.log(`${chalk.red('[Callback Error]')}: ${errorMessage}.`);
+  if (!acfModule || acfModule?.type !== 'flexible_content' || !acfModule?.layouts) {
+    throw new Error('No flexible_content module field.');
   }
 
-  return outputObject;
+  const removeKeys = Object.values(acfModule.layouts).filter(({ name = '' }) =>
+    acfModulesToRemove.includes(name)
+  );
+
+  const removePaths = removeKeys.map(({ key }) => `fields[${acfModulesIndex}].layouts[${key}]`);
+  return deleteInJSON(outputObject, removePaths);
 };

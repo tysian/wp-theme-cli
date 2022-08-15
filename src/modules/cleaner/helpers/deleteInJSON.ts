@@ -1,15 +1,12 @@
-export const deleteInJSON = (_property = [], json) => {
-  const jsonFile = JSON.parse(JSON.stringify(json));
-  const propertyArray = ['jsonFile', ..._property].map((prop, index) =>
-    index > 0 ? `['${prop}']` : prop
-  );
+import { cloneDeep, unset } from 'lodash-es';
 
-  const property = propertyArray.join('');
-  const propertyExists = propertyArray.join('?.');
+export const deleteInJSON = (json: object, _properties: string[]) => {
+  const clonedJSON = cloneDeep(json);
+  const properties = Array.isArray(_properties) ? _properties : [_properties];
 
-  if (eval(propertyExists)) {
-    delete eval(`delete ${property}`);
-  }
+  properties.forEach((property) => {
+    unset(clonedJSON, property);
+  });
 
-  return jsonFile;
+  return clonedJSON;
 };
