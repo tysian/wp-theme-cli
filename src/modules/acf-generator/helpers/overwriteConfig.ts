@@ -13,7 +13,7 @@ import { fileExists } from '../../../utils/fileExist.js';
 import { logger, updateLogger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
 import { writeStream } from '../../../utils/writeStream.js';
-import { ACF_GENERATOR_DEFAULT_CONFIG } from '../../../constants.js';
+import { ACF_GENERATOR_DEFAULT_CONFIG_PATH } from '../../../constants.js';
 
 export const overwriteConfig = async (configObject = config, descriptions = configDescriptions) => {
   let newConfig = { ...configObject };
@@ -85,13 +85,13 @@ export const overwriteConfig = async (configObject = config, descriptions = conf
         type: 'input',
         message: 'Pass the config file name',
         name: 'configFileName',
-        default: ACF_GENERATOR_DEFAULT_CONFIG.split('/').reverse()[0],
-        validate(input: string) {
-          return new Promise((resolve, reject) => {
-            fileExists(`./${handleFileName(input)}`)
-              .then(() => reject('File with this name already exists'))
-              .catch(() => resolve(true));
-          });
+        default: ACF_GENERATOR_DEFAULT_CONFIG_PATH.split('/').reverse()[0],
+        validate: async (input: string) => {
+          const exists = await fileExists(`./${handleFileName(input)}`)
+            .then(() => 'File already exists')
+            .catch(() => true);
+          console.log('exists', exists);
+          return exists;
         },
       },
     ]);
@@ -162,7 +162,9 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
 
   if (configType === 'external-config-file') {
     // Ask for external config path
-    const externalConfigFilePath = await fileExists(ACF_GENERATOR_DEFAULT_CONFIG).catch(() => '');
+    const externalConfigFilePath = await fileExists(ACF_GENERATOR_DEFAULT_CONFIG_PATH).catch(
+      () => ''
+    );
     const { externalConfigFile } = await inquirer.prompt([
       {
         type: 'file-tree-selection',
