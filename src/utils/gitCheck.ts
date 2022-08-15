@@ -48,7 +48,7 @@ export const gitCheck = async (): Promise<boolean> => {
         type: 'input',
         name: 'commitMessage',
         message: 'Provide commit message.',
-        default: () => 'Changes before generating ACF modules files',
+        default: 'Changes made before running script',
         validate: (input) => input.trim().length > 0,
       },
     ]);
