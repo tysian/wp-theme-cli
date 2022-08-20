@@ -8,6 +8,7 @@ import { acfGenerator } from './modules/acf-generator/acf-generator.js';
 import { logger } from './utils/logger.js';
 import { readStream } from './utils/readStream.js';
 import { ROOT_DIR } from './constants.js';
+import { cleaner } from './modules/cleaner/cleaner.js';
 
 export const bootstrap = async () => {
   inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
@@ -29,6 +30,15 @@ export const bootstrap = async () => {
       else {
         logger.none(`Wrong type, accepting only: ${generateAcceptedTypes}`);
       }
+    });
+
+  program
+    .command('clean')
+    .description('Update and remove files using provided config')
+    .option('--force', 'Run cleaning outside of current working directory')
+    .action((options) => {
+      global.cleanerOptions.force = options.force;
+      cleaner();
     });
 
   program.parse();

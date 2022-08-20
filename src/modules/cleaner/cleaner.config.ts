@@ -28,7 +28,7 @@ type RemoveFileLineOperation = BaseOperation & {
   search: string | string[];
 };
 
-type Operation =
+export type Operation =
   | RemoveDirectoryOperation
   | RemoveFileOperation
   | ModifyJSONOperation

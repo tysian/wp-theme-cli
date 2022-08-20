@@ -8,12 +8,12 @@ import { modifyJSON } from './modifyJSON.js';
 import { removeDirectory } from './removeDirectory.js';
 import { removeFile } from './removeFile.js';
 import { removeFileLine } from './removeFileLine.js';
+import { getGlobFiles } from '../helpers/getGlobFiles.js';
+import type { Operation } from '../cleaner.config.js';
 
-export const batchFiles = async (
-  fileRaw = '',
-  operationType = OperationType.DEFAULT,
-  options = {}
-) => {
+export const batchFiles = async ({ input }: Operation) => {
+  const files = getGlobFiles(input);
+
   const file = (Array.isArray(fileRaw) ? fileRaw : [fileRaw]).map((p) => path.posix.join('./', p));
 
   const { search = '', disableLogging = [], glob: isSearchGlob = false } = options;
@@ -48,10 +48,7 @@ export const batchFiles = async (
       for await (const singleFile of searchFiles) {
         let handler = null;
         if (operationType === OperationType.REMOVE_FILE_LINE) {
-          handler = await removeFileLine(singleFile, {
-            search,
-            disableLogging: isSearchGlob ? ['unchanged'] : [],
-          });
+          handler = await removeFileLine(singleFile, search);
           if (handler) statistics.modified += 1;
         } else if (operationType === OperationType.REMOVE_FILE) {
           handler = await removeFile(singleFile);

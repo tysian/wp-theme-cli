@@ -5,9 +5,9 @@ import { logger, updateLogger } from '../../utils/logger.js';
 import { batchFiles } from './operations/batchFiles.js';
 import { selectConfig } from './helpers/selectConfig.js';
 import { installDependencies } from '../../utils/installDependencies.js';
-import { Statistics, StatisticsCollection } from '../../utils/Statistics.js';
+import { Statistics } from '../../utils/Statistics.js';
 
-export const cleaner = async (): Promise<void> => {
+export const cleaner = async (force = false): Promise<void> => {
   logger.none('WordPress template cleaner!');
 
   try {
@@ -37,11 +37,9 @@ export const cleaner = async (): Promise<void> => {
     });
 
     stat.startTimer();
-    for await (const fileElement of finalConfig) {
-      const { file, operationType, options = {} } = fileElement;
-
+    for await (const operation of finalConfig) {
       // TODO: Use Promise.all() here?
-      const handler = await batchFiles(file, operationType, options);
+      const handler = await batchFiles(operation);
     }
 
     stat.stopTimer();

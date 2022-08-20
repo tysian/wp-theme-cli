@@ -1,8 +1,9 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { configs } from '../cleaner.config.js';
+import type { Operation } from '../cleaner.config.js';
 
-export const selectConfig = async () => {
+export const selectConfig = async (): Promise<Operation[]> => {
   const { categories } = await inquirer.prompt([
     {
       type: 'checkbox',
@@ -24,8 +25,9 @@ export const selectConfig = async () => {
     },
   ]);
 
-  return categories.reduce(
-    (acc, category) => (configs[category] ? [...acc, ...configs[category]] : acc),
-    []
+  return Object.entries(configs).reduce(
+    (acc, [configKey, configValue]) =>
+      categories.includes(configKey) ? [...acc, ...configValue] : acc,
+    [] as Operation[]
   );
 };

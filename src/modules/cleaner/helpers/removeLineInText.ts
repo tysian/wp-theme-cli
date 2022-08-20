@@ -1,3 +1,4 @@
+import { asArray } from '../../../utils/asArray.js';
 import { getEOL } from '../../../utils/getEOL.js';
 
 export const removeLineInText = (text: string, search: string): string => {
@@ -5,7 +6,7 @@ export const removeLineInText = (text: string, search: string): string => {
     return text;
   }
 
-  const searchPhrases = Array.isArray(search) ? search : [search];
+  const searchPhrases = asArray(search);
   const EOL = getEOL(text);
 
   return text
