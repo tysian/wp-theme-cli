@@ -16,11 +16,11 @@ export class Statistics {
 
   constructor(private statistics: StatisticsCollection) {}
 
-  startTimer() {
+  startTimer(): void {
     this.startTime = performance.now();
   }
 
-  stopTimer() {
+  stopTimer(): void {
     if (this.startTime <= 0) {
       throw new Error('You need to start your timer first');
     }
@@ -28,22 +28,26 @@ export class Statistics {
     this.timeElapsed = performance.now() - this.startTime;
   }
 
-  getFormattedTimer() {
+  getFormattedTimer(): string {
     if (this.timeElapsed <= 0) {
       throw new Error('You need to start and stop your timer properly.');
     }
     return `${this.timeElapsed.toFixed(3)}ms`;
   }
 
-  incrementStat(type: keyof typeof this.statistics, amount = 1) {
+  incrementStat(type: keyof typeof this.statistics, amount = 1): void {
     this.statistics[type].value += amount;
   }
 
-  getStat(type: keyof typeof this.statistics) {
+  getAllStats(): typeof this.statistics {
+    return this.statistics;
+  }
+
+  getStat(type: keyof typeof this.statistics): StatisticProp {
     return this.statistics[type];
   }
 
-  getFormattedStats() {
+  getFormattedStats(): string {
     const formattedStats = Object.values(this.statistics).map((props) => {
       const finalText = [];
       if (props.description.trim()) {

@@ -1,11 +1,13 @@
 import chalk from 'chalk';
-import { performance } from 'perf_hooks';
 import { gitCheck } from '../../utils/gitCheck.js';
 import { logger, updateLogger } from '../../utils/logger.js';
-import { batchFiles } from './operations/batchFiles.js';
 import { selectConfig } from './helpers/selectConfig.js';
 import { installDependencies } from '../../utils/installDependencies.js';
-import { Statistics } from '../../utils/Statistics.js';
+import { Statistics, StatisticsCollection } from '../../utils/Statistics.js';
+import { handleOperations } from './helpers/handleOperations.js';
+import type { Operation } from './cleaner.config.js';
+import { filterOperations } from './helpers/filterOperations.js';
+import { cleanerStats } from './cleaner.const.js';
 
 export const cleaner = async (force = false): Promise<void> => {
   logger.none('WordPress template cleaner!');
@@ -15,35 +17,16 @@ export const cleaner = async (force = false): Promise<void> => {
     await gitCheck();
 
     const finalConfig = await selectConfig();
+    const filteredOperations: Operation[] = await filterOperations(finalConfig);
 
-    const stat = new Statistics({
-      unchanged: {
-        value: 0,
-        description: `Files unchanged`,
-      },
-      modified: {
-        value: 0,
-        description: `Files removed`,
-      },
-      removed: {
-        value: 0,
-        description: `Files modified`,
-      },
-      errors: {
-        value: 0,
-        description: `Errors`,
-        color: chalk.red,
-      },
-    });
+    // TODO: Typescript refactor needed?
+    const statistics = new Statistics(cleanerStats);
 
-    stat.startTimer();
-    for await (const operation of finalConfig) {
-      // TODO: Use Promise.all() here?
-      const handler = await batchFiles(operation);
-    }
+    statistics.startTimer();
+    await handleOperations(filteredOperations, statistics);
 
-    stat.stopTimer();
-    logger.none(stat.getFormattedStats());
+    statistics.stopTimer();
+    logger.none(statistics.getFormattedStats());
 
     await installDependencies();
   } catch (error) {
