@@ -1,12 +1,18 @@
-import path from 'path';
 import inquirer from 'inquirer';
-import { config, configDescriptions } from '../acf-generator.config';
-import { fileExists } from '../../../utils/fileExist';
-import { readStream } from '../../../utils/readStream';
-import { overwriteConfig } from './overwriteConfig';
+import path from 'path';
 import { ACF_GENERATOR_DEFAULT_CONFIG_PATH } from '../../../constants.js';
+import { fileExists } from '../../../utils/fileExist.js';
+import { logger } from '../../../utils/logger.js';
+import { readStream } from '../../../utils/readStream.js';
+import {
+  AcfGeneratorConfig,
+  config,
+  configDescriptions,
+  printConfig,
+} from '../acf-generator.config.js';
+import { overwriteConfig } from './overwriteConfig.js';
 
-export const selectConfig = async <ConfigType>(): Promise<ConfigType> => {
+export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
   const { configType } = await inquirer.prompt([
     {
       type: 'list',
@@ -34,13 +40,29 @@ export const selectConfig = async <ConfigType>(): Promise<ConfigType> => {
   ]);
 
   if (configType === 'default') {
-    return config as ConfigType;
+    // Show current config and ask for overwrite
+    logger.info('Here is default config of this generator.');
+    printConfig();
+    const { confirmDefaultConfig } = await inquirer.prompt([
+      {
+        type: 'confirm',
+        message: 'Are you sure you want to use default config?',
+        name: 'confirmDefaultConfig',
+        default: true,
+      },
+    ]);
+
+    if (confirmDefaultConfig) {
+      return config;
+    }
+
+    await selectConfig();
   }
 
   if (configType === 'overwrite') {
     const overwrittenConfig = await overwriteConfig(config, configDescriptions);
 
-    return overwrittenConfig as ConfigType;
+    return overwrittenConfig as AcfGeneratorConfig;
   }
 
   if (configType === 'external-config-file') {
@@ -67,5 +89,6 @@ export const selectConfig = async <ConfigType>(): Promise<ConfigType> => {
     }
   }
 
-  return config as ConfigType;
+  return config;
 };
+
