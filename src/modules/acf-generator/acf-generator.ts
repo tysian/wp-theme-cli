@@ -2,7 +2,7 @@ import { gitCheck } from '../../utils/gitCheck.js';
 import { logger, updateLogger } from '../../utils/logger.js';
 import { checkConfig } from './helpers/checkConfig.js';
 import { getAcfModules } from './helpers/getAcfModules.js';
-import { selectConfig } from './helpers/overwriteConfig.js';
+import { selectConfig } from './helpers/selectConfig.js';
 import { writeModules } from './helpers/writeModules.js';
 
 export const acfGenerator = async (): Promise<boolean> => {
