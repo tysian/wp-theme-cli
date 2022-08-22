@@ -34,28 +34,28 @@ export const handleOperations = async (
         continue;
       }
 
-      // for await (const file of files) {
-      //   try {
-      //     switch (operationType) {
-      //       case OperationType.MODIFY_JSON:
-      //         await modifyJSON(file, operation, statistics);
-      //         break;
-      //       case OperationType.REMOVE_FILE_LINE:
-      //         await removeFileLine(file, operation, statistics);
-      //         break;
-      //       case OperationType.REMOVE_DIRECTORY:
-      //         await removeDirectory(file, statistics);
-      //         break;
-      //       case OperationType.REMOVE_FILE:
-      //         await removeFile(file, statistics);
-      //         break;
-      //       default:
-      //         break;
-      //     }
-      //   } catch (error) {
-      //     handleError(error as Error);
-      //   }
-      // }
+      for await (const file of files) {
+        try {
+          switch (operationType) {
+            case OperationType.MODIFY_JSON:
+              await modifyJSON(file, operation, statistics);
+              break;
+            case OperationType.REMOVE_FILE_LINE:
+              await removeFileLine(file, operation, statistics);
+              break;
+            case OperationType.REMOVE_DIRECTORY:
+              await removeDirectory(file, statistics);
+              break;
+            case OperationType.REMOVE_FILE:
+              await removeFile(file, statistics);
+              break;
+            default:
+              break;
+          }
+        } catch (error) {
+          handleError(error as Error);
+        }
+      }
     } catch (error) {
       handleError(error as Error);
     }

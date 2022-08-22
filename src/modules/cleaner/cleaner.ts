@@ -13,21 +13,20 @@ export const cleaner = async (): Promise<void> => {
 
   try {
     // Check if there are any uncommited changes
-    // await gitCheck();
+    await gitCheck();
 
     const finalConfig = await selectConfig();
-    console.log(finalConfig);
-    // const filteredOperations: Operation[] = await filterOperations(finalConfig);
+    const filteredOperations: Operation[] = await filterOperations(finalConfig);
 
-    // const statistics = new Statistics(cleanerStats) as CleanerStatistics;
+    const statistics = new Statistics(cleanerStats) as CleanerStatistics;
 
-    // statistics.startTimer();
-    // await handleOperations(filteredOperations, statistics);
+    statistics.startTimer();
+    await handleOperations(filteredOperations, statistics);
 
-    // statistics.stopTimer();
-    // logger.none(statistics.getFormattedStats());
+    statistics.stopTimer();
+    logger.none(statistics.getFormattedStats());
 
-    // await installDependencies();
+    await installDependencies();
   } catch (error) {
     updateLogger.error((error as Error)?.message);
     updateLogger.done();

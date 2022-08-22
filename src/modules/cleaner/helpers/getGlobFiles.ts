@@ -1,6 +1,5 @@
 import fastGlob, { Options } from 'fast-glob';
-import path from 'path';
-import normalize from 'normalize-path';
+import normalizePath from 'normalize-path';
 import { asArray } from '../../../utils/asArray.js';
 
 export const getGlobFiles = async (
@@ -12,23 +11,16 @@ export const getGlobFiles = async (
   let files = asArray(glob);
   const ignore = asArray(exclude);
 
-  console.log({ files, ignore });
-
   // Make them unique, relative & posix-type path
-  files = [...new Set(files)].map(normalize);
-
-  console.log('after unique, relative, posix', files);
+  files = [...new Set(files)].map((p) => normalizePath(p));
 
   files = await fastGlob([...files, '!**/(node_modules|vendor)/**'], {
-    // ignore,
-    // dot: true,
-    // onlyFiles: false,
+    ignore,
+    dot: true,
+    onlyFiles: false,
     absolute: true,
-    // ...globOptions,
+    ...globOptions,
   });
-
-  console.log('after glob', files);
-  console.log('--------');
 
   return files;
 };

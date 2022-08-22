@@ -1,8 +1,8 @@
 import inquirer from 'inquirer';
-import { simpleGit, SimpleGit, CleanOptions } from 'simple-git';
+import { simpleGit, SimpleGit } from 'simple-git';
 import { logger, updateLogger } from './logger.js';
 
-const git: SimpleGit = simpleGit().clean(CleanOptions.FORCE);
+const git: SimpleGit = simpleGit();
 
 export const gitCheck = async (): Promise<boolean> => {
   const isRepo = await git.checkIsRepo();
