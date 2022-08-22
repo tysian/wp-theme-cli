@@ -29,6 +29,7 @@
     "is-unicode-supported": "^1.2.0",
     "lodash-es": "^4.17.21",
     "log-update": "^5.0.1",
+    "normalize-path": "^3.0.0",
     "simple-git": "^3.11.0",
     "trace": "^3.1.1",
     "zod": "^3.18.0"

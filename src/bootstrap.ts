@@ -37,7 +37,8 @@ export const bootstrap = async () => {
     .description('Update and remove files using provided config')
     .option('--force', 'Run cleaning outside of current working directory')
     .action((options) => {
-      global.cleanerOptions.force = options.force;
+      // global.cleanerOptions.force = options?.force ?? false;
+      console.log(options);
       cleaner();
     });
 

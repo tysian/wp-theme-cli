@@ -7,14 +7,14 @@ export type StatisticProp = {
   color?: ChalkInstance;
 };
 
-export type StatisticsCollection = Record<string, StatisticProp>;
+export type StatisticsCollection<K extends string = string> = Record<K, StatisticProp>;
 
-export class Statistics {
+export class Statistics<T extends StatisticsCollection> {
   private startTime = 0;
 
   private timeElapsed = 0;
 
-  constructor(private statistics: StatisticsCollection) {}
+  constructor(private statistics: T) {}
 
   startTimer(): void {
     this.startTime = performance.now();

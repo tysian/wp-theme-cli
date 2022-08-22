@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { spawn } from 'child_process';
 import inquirer from 'inquirer';
-import { logger } from './logger';
+import { logger } from './logger.js';
 
 export const installDependencies = async () => {
   const { runInstall } = await inquirer.prompt([

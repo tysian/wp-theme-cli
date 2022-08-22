@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { StatisticsCollection } from '../../utils/Statistics.js';
+import { Statistics, StatisticsCollection } from '../../utils/Statistics.js';
 
 export enum OperationType {
   REMOVE_FILE = 'REMOVE_FILE',
@@ -8,7 +8,7 @@ export enum OperationType {
   REMOVE_DIRECTORY = 'REMOVE_DIRECTORY',
 }
 
-export const cleanerStats: StatisticsCollection = {
+export const cleanerStats = {
   unchanged: {
     value: 0,
     description: `Files unchanged`,
@@ -21,9 +21,11 @@ export const cleanerStats: StatisticsCollection = {
     value: 0,
     description: `Files modified`,
   },
-  errors: {
+  error: {
     value: 0,
     description: `Errors`,
     color: chalk.red,
   },
 };
+
+export type CleanerStatistics = Statistics<StatisticsCollection<keyof typeof cleanerStats>>;

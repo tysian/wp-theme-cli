@@ -1,15 +1,15 @@
-import { OperationType } from './cleaner.const';
+import { OperationType } from './cleaner.const.js';
 
-type BaseOperation = {
+export type BaseOperation = {
   input: string | string[];
   exclude?: string | string[];
 };
 
-type RemoveDirectoryOperation = BaseOperation & {
+export type RemoveDirectoryOperation = BaseOperation & {
   operationType: OperationType.REMOVE_DIRECTORY;
 };
 
-type RemoveFileOperation = BaseOperation & {
+export type RemoveFileOperation = BaseOperation & {
   operationType: OperationType.REMOVE_FILE;
 };
 
@@ -18,12 +18,12 @@ export type ModifyJSONCallback = {
   args: any[];
 };
 
-type ModifyJSONOperation = BaseOperation & {
+export type ModifyJSONOperation = BaseOperation & {
   operationType: OperationType.MODIFY_JSON;
   callback: ModifyJSONCallback;
 };
 
-type RemoveFileLineOperation = BaseOperation & {
+export type RemoveFileLineOperation = BaseOperation & {
   operationType: OperationType.REMOVE_FILE_LINE;
   search: string | string[];
 };
