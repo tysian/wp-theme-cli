@@ -31,6 +31,7 @@
     "log-update": "^5.0.1",
     "normalize-path": "^3.0.0",
     "simple-git": "^3.11.0",
+    "speakingurl": "^14.0.1",
     "trace": "^3.1.1",
     "zod": "^3.18.0"
   },
@@ -41,6 +42,7 @@
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^18.6.4",
     "@types/normalize-path": "^3.0.0",
+    "@types/speakingurl": "^13.0.3",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
     "eslint": "^8.21.0",

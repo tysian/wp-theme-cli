@@ -44,6 +44,7 @@ export type Operation =
 
 export type OperationGroup = {
   key: string;
+  name: string;
   operations: Operation[];
 };
 
@@ -59,6 +60,7 @@ export const temporaryConfig: CleanerConfig = {
   groups: [
     {
       key: 'ir',
+      name: 'IR Stuff',
       operations: [
         // remove dist
         {
@@ -168,6 +170,7 @@ export const temporaryConfig: CleanerConfig = {
     },
     {
       key: 'report',
+      name: 'Report stuff',
       operations: [
         // remove dist
         {

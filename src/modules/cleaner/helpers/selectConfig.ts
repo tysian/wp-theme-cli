@@ -60,7 +60,7 @@ export const selectConfig = async (): Promise<CleanerConfig> => {
 
   if (configType === 'overwrite') {
     const config = await overwriteConfig();
-    console.dir(config);
+    console.dir(config, { depth: null });
     return temporaryConfig as CleanerConfig;
   }
 
