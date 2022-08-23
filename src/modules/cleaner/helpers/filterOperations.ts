@@ -27,9 +27,7 @@ export const filterOperations = async (_config: CleanerConfig) => {
     },
   ]);
 
-  return Object.entries(config.operations).reduce(
-    (acc, [configKey, configValue]) =>
-      categories.includes(configKey) ? [...acc, ...configValue] : acc,
-    [] as Operation[]
-  );
+  return config.groups
+    .filter((group) => categories.includes(group.key))
+    .reduce((operations, group) => [...operations, ...group.operations], [] as Operation[]);
 };
