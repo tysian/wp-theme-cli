@@ -3,7 +3,7 @@ import path from 'path';
 import { fileExists } from '../../../utils/fileExist.js';
 import { logger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
-import { CleanerConfig } from '../cleaner.config.js';
+import { CleanerConfig, temporaryConfig } from '../cleaner.config.js';
 import { DEFAULT_CONFIG_PATH } from '../cleaner.const.js';
 import { overwriteConfig } from './overwriteConfig.js';
 
@@ -60,7 +60,8 @@ export const selectConfig = async (): Promise<CleanerConfig> => {
 
   if (configType === 'overwrite') {
     const config = await overwriteConfig();
-    return config as CleanerConfig;
+    console.dir(config);
+    return temporaryConfig as CleanerConfig;
   }
 
   if (configType === 'external-config-file') {

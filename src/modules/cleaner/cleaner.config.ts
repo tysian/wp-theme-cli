@@ -1,4 +1,6 @@
 import { OperationType } from './cleaner.const.js';
+import { deleteInACFModulesJSON } from './helpers/deleteInACFModulesJSON.js';
+import { deleteInJSON } from './helpers/deleteInJSON.js';
 
 export type BaseOperation = {
   description?: string;
@@ -14,8 +16,13 @@ export type RemoveFileOperation = BaseOperation & {
   operationType: OperationType.REMOVE_FILE;
 };
 
+export const ModifyJSONAvailableCallbacks = {
+  deleteInACFModulesJSON,
+  deleteInJSON,
+};
+
 export type ModifyJSONCallback = {
-  functionName: 'deleteInACFModulesJSON' | 'deleteInJSON';
+  functionName: keyof typeof ModifyJSONAvailableCallbacks;
   args: any[];
 };
 
