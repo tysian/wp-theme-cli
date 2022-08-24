@@ -1,6 +1,5 @@
 import inquirer from 'inquirer';
 import path from 'path';
-import { ACF_GENERATOR_DEFAULT_CONFIG_PATH } from '../../../constants.js';
 import { fileExists } from '../../../utils/fileExist.js';
 import { logger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
@@ -10,6 +9,7 @@ import {
   configDescriptions,
   printConfig,
 } from '../acf-generator.config.js';
+import { DEFAULT_CONFIG_PATH } from '../acf-generator.const.js';
 import { overwriteConfig } from './overwriteConfig.js';
 
 export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
@@ -67,9 +67,7 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
 
   if (configType === 'external-config-file') {
     // Ask for external config path
-    const externalConfigFilePath = await fileExists(ACF_GENERATOR_DEFAULT_CONFIG_PATH).catch(
-      () => ''
-    );
+    const externalConfigFilePath = await fileExists(DEFAULT_CONFIG_PATH).catch(() => '');
     const { externalConfigFile } = await inquirer.prompt([
       {
         type: 'file-tree-selection',
@@ -91,4 +89,3 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
 
   return config;
 };
-
