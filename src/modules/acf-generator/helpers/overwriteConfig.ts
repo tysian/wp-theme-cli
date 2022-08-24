@@ -1,19 +1,24 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { set } from 'lodash-es';
+import { cloneDeep, set } from 'lodash-es';
 import {
   AcfGeneratorConfig,
   config,
+  ConfigDescription,
   configDescriptions,
   FileTypeKey,
 } from '../acf-generator.config.js';
 import { fileExists } from '../../../utils/fileExist.js';
 import { logger, updateLogger } from '../../../utils/logger.js';
 import { writeStream } from '../../../utils/writeStream.js';
-import { ACF_GENERATOR_DEFAULT_CONFIG_PATH } from '../../../constants.js';
+import { saveConfig } from '../../../utils/saveConfig.js';
+import { DEFAULT_CONFIG_FILENAME } from '../acf-generator.const.js';
 
-export const overwriteConfig = async (configObject = config, descriptions = configDescriptions) => {
-  let newConfig = { ...configObject };
+export const overwriteConfig = async (
+  configObject: AcfGeneratorConfig = config,
+  descriptions: ConfigDescription = configDescriptions
+) => {
+  let newConfig = cloneDeep(configObject);
 
   for (const [configKey, inquirerQuestion] of Object.entries(descriptions)) {
     // Add name to each question
@@ -60,46 +65,7 @@ export const overwriteConfig = async (configObject = config, descriptions = conf
     }
   }
 
-  // Ask user if they want to save this config
-  const { wannaSave } = await inquirer.prompt([
-    {
-      type: 'confirm',
-      message: 'Do you want to save this config?',
-      name: 'wannaSave',
-      default: false,
-    },
-  ]);
-
-  if (wannaSave) {
-    logger.info('New config will be saved in current working directory.');
-    const handleFileName = (filename: string) => {
-      const cleanFilename = filename.trim().toLowerCase();
-      return cleanFilename.endsWith('.json') ? cleanFilename : `${cleanFilename}.json`;
-    };
-
-    const { configFileName } = await inquirer.prompt([
-      {
-        type: 'input',
-        message: 'Pass the config file name',
-        name: 'configFileName',
-        default: ACF_GENERATOR_DEFAULT_CONFIG_PATH.split('/').reverse()[0],
-        validate: async (input: string) => {
-          const exists = await fileExists(`./${handleFileName(input)}`)
-            .then(() => 'File already exists')
-            .catch(() => true);
-          console.log('exists', exists);
-          return exists;
-        },
-      },
-    ]);
-
-    updateLogger.start(`Creating ${chalk.green(handleFileName(configFileName))}`);
-    await writeStream(handleFileName(configFileName), JSON.stringify(newConfig, null, 2));
-    updateLogger.success(
-      `Config ${chalk.green(handleFileName(configFileName))} saved successfully.`
-    );
-    updateLogger.done();
-  }
+  await saveConfig<AcfGeneratorConfig>(DEFAULT_CONFIG_FILENAME, newConfig);
 
   return newConfig;
 };
