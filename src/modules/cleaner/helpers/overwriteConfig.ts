@@ -9,8 +9,9 @@ import {
   Operation,
   OperationGroup,
 } from '../cleaner.config.js';
-import { OperationType } from '../cleaner.const.js';
+import { DEFAULT_CONFIG_FILENAME, OperationType } from '../cleaner.const.js';
 import { logger } from '../../../utils/logger.js';
+import { saveConfig } from '../../../utils/saveConfig.js';
 
 const addMultipleEntries = async (entryName = 'entry'): Promise<string[]> => {
   let stop = false;
@@ -209,6 +210,8 @@ export const overwriteConfig = async (): Promise<CleanerConfig> => {
   }
 
   const newConfig: CleanerConfig = { name, description, groups };
+
+  await saveConfig<CleanerConfig>(DEFAULT_CONFIG_FILENAME, newConfig);
 
   return newConfig;
 };

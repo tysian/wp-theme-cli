@@ -7,6 +7,8 @@ import { handleOperations } from './helpers/handleOperations.js';
 import type { Operation } from './cleaner.config.js';
 import { filterOperations } from './helpers/filterOperations.js';
 import { CleanerStatistics, cleanerStats } from './cleaner.const.js';
+import { checkConfig } from './helpers/checkConfig.js';
+import { handleError } from '../../utils/handleError.js';
 
 export const cleaner = async (): Promise<void> => {
   logger.none('WordPress template cleaner!');
@@ -16,6 +18,7 @@ export const cleaner = async (): Promise<void> => {
     await gitCheck();
 
     const finalConfig = await selectConfig();
+    await checkConfig(finalConfig);
     const filteredOperations: Operation[] = await filterOperations(finalConfig);
 
     const statistics = new Statistics(cleanerStats) as CleanerStatistics;
@@ -28,7 +31,6 @@ export const cleaner = async (): Promise<void> => {
 
     await installDependencies();
   } catch (error) {
-    updateLogger.error((error as Error)?.message);
-    updateLogger.done();
+    handleError(error as Error);
   }
 };

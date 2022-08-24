@@ -1,21 +1,11 @@
 import inquirer from 'inquirer';
-import path from 'path';
 import { fileExists } from '../../../utils/fileExist.js';
+import { getConfigFromFile } from '../../../utils/getConfigFromFile.js';
+import { getExternalConfig } from '../../../utils/getExternalConfig.js';
 import { logger } from '../../../utils/logger.js';
-import { readStream } from '../../../utils/readStream.js';
-import { CleanerConfig, temporaryConfig } from '../cleaner.config.js';
+import { CleanerConfig } from '../cleaner.config.js';
 import { DEFAULT_CONFIG_PATH } from '../cleaner.const.js';
 import { overwriteConfig } from './overwriteConfig.js';
-
-const getConfigFromFile = async (file: string = DEFAULT_CONFIG_PATH) => {
-  const config = await readStream(file);
-  try {
-    const parsedConfig = JSON.parse(config);
-    return parsedConfig;
-  } catch (error) {
-    throw new Error(`Invalid JSON file - ${DEFAULT_CONFIG_PATH}`);
-  }
-};
 
 export const selectConfig = async (): Promise<CleanerConfig> => {
   const defaultConfigExists = await fileExists(DEFAULT_CONFIG_PATH).catch(() => '');
@@ -60,23 +50,11 @@ export const selectConfig = async (): Promise<CleanerConfig> => {
 
   if (configType === 'overwrite') {
     const config = await overwriteConfig();
-    console.dir(config, { depth: null });
-    return temporaryConfig as CleanerConfig;
+    return config as CleanerConfig;
   }
 
   if (configType === 'external-config-file') {
-    // Ask for external config path
-    const { externalConfigFile } = await inquirer.prompt([
-      {
-        type: 'file-tree-selection',
-        message: 'Select external config file',
-        name: 'externalConfigFile',
-        default: defaultConfigExists ? DEFAULT_CONFIG_PATH : null,
-        validate: (item: string) => path.extname(item) === '.json' || `You need json extension`,
-      },
-    ]);
-
-    const config = await getConfigFromFile(externalConfigFile);
+    const config = await getExternalConfig<CleanerConfig>(DEFAULT_CONFIG_PATH);
     return config as CleanerConfig;
   }
 
