@@ -1,6 +1,6 @@
 {
   "name": "wp-theme-cli",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "Generate, update & remove files in your WordPress theme",
   "engines": {
     "node": ">=14.17.0"
