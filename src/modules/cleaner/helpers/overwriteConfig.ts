@@ -208,5 +208,7 @@ export const overwriteConfig = async (): Promise<CleanerConfig> => {
     completed = whatsNext === 'finish';
   }
 
-  return { name, description, groups };
+  const newConfig: CleanerConfig = { name, description, groups };
+
+  return newConfig;
 };
