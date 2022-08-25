@@ -1,9 +1,10 @@
 import chalk from 'chalk';
 import { fileExists } from '../../../utils/fileExist.js';
+import { loggerPrefix } from '../../../utils/logger-utils.js';
 import { logger, updateLogger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
 import { replaceAll } from '../../../utils/replaceAll.js';
-import { AcfGeneratorConfig, FileTypeKey, loggerPrefix } from '../acf-generator.config.js';
+import { AcfGeneratorConfig, FileTypeKey } from '../acf-generator.config.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {
