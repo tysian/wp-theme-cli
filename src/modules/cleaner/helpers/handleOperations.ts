@@ -30,7 +30,11 @@ export const handleOperations = async (
         logger.skip(
           loggerMergeMessages([
             groupKey ? loggerPrefix(groupKey) : '',
-            `${asArray(input).length} files not found`,
+            `${asArray(input).length} ${
+              operationType === OperationType.REMOVE_DIRECTORY
+                ? `director${asArray(input).length > 1 ? 'ies' : 'y'}`
+                : `file${asArray(input).length > 1 ? 's' : ''}`
+            } not found`,
             `for operation (${chalk.green(description || operationType)})`,
           ])
         );

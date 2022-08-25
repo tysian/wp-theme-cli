@@ -10,8 +10,8 @@ export const filterOperations = async (_config: CleanerConfig) => {
     .map((group) => (group.key !== 'common' ? { name: group.name, value: group.key } : false))
     .filter(Boolean);
 
-  const hasCommon = config.groups.findIndex((group) => group.key === 'common');
-  if (hasCommon > -1) {
+  const commonIndex = config.groups.findIndex((group) => group.key === 'common');
+  if (commonIndex > -1) {
     logger.info(`${chalk.green('Common')} operation will be added automatically.`);
   }
 
@@ -24,6 +24,10 @@ export const filterOperations = async (_config: CleanerConfig) => {
       validate: (input) => !!input.length || 'You must choose at least one option',
     },
   ]);
+
+  if (commonIndex > -1) {
+    categories.unshift('common');
+  }
 
   return config.groups
     .filter((group) => categories.includes(group.key))
