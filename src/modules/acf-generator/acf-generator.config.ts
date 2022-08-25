@@ -1,8 +1,7 @@
 import chalk from 'chalk';
 import { QuestionCollection } from 'inquirer';
 import path from 'path';
-
-export const loggerPrefix = (fileType: string) => `[${chalk.cyanBright(fileType.toUpperCase())}]`;
+import { loggerPrefix } from '../../utils/logger-utils.js';
 
 export type FileTypeKey = 'php' | 'scss' | 'js';
 
