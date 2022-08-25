@@ -1,21 +1,33 @@
+import { z } from 'zod';
 import { OperationType } from './cleaner.const.js';
 import { deleteInACFModulesJSON } from './helpers/deleteInACFModulesJSON.js';
 import { deleteInJSON } from './helpers/deleteInJSON.js';
 
-export type BaseOperation = {
-  description?: string;
-  input: string | string[];
-  exclude?: string | string[];
-};
+// Base operation
+export const baseOperationSchema = z.object({
+  description: z.string().optional(),
+  input: z.union([z.string(), z.string().array()]),
+  exclude: z.union([z.string(), z.string().array()]).optional(),
+});
+export type BaseOperation = z.infer<typeof baseOperationSchema>;
 
-export type RemoveDirectoryOperation = BaseOperation & {
-  operationType: OperationType.REMOVE_DIRECTORY;
-};
+// Remove directory operation
+export const removeDirectoryOperationSchema = baseOperationSchema.and(
+  z.object({
+    operationType: z.literal(OperationType.REMOVE_DIRECTORY),
+  })
+);
+export type RemoveDirectoryOperation = z.infer<typeof removeDirectoryOperationSchema>;
 
-export type RemoveFileOperation = BaseOperation & {
-  operationType: OperationType.REMOVE_FILE;
-};
+// Remove file operation
+export const removeFileOperationSchema = baseOperationSchema.and(
+  z.object({
+    operationType: z.literal(OperationType.REMOVE_FILE),
+  })
+);
+export type RemoveFileOperation = z.infer<typeof removeFileOperationSchema>;
 
+// Modify JSON Operation
 export const ModifyJSONAvailableCallbacks = {
   deleteInACFModulesJSON,
   deleteInJSON,
