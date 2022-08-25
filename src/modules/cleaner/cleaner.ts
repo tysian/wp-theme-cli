@@ -1,5 +1,5 @@
 import { gitCheck } from '../../utils/gitCheck.js';
-import { logger, updateLogger } from '../../utils/logger.js';
+import { logger } from '../../utils/logger.js';
 import { selectConfig } from './helpers/selectConfig.js';
 import { installDependencies } from '../../utils/installDependencies.js';
 import { Statistics } from '../../utils/Statistics.js';
@@ -22,10 +22,8 @@ export const cleaner = async (): Promise<void> => {
     const filteredOperations: Operation[] = await filterOperations(finalConfig);
 
     const statistics = new Statistics(cleanerStats) as CleanerStatistics;
-
     statistics.startTimer();
     await handleOperations(filteredOperations, statistics);
-
     statistics.stopTimer();
     logger.none(statistics.getFormattedStats());
 

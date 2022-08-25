@@ -4,7 +4,7 @@ import { OperationType } from './cleaner.const.js';
 // Base operation
 export const baseOperationSchema = z.object({
   operationType: z.nativeEnum(OperationType),
-  groupName: z.string().optional(),
+  groupKey: z.string().optional(),
   description: z.string().optional(),
   input: z.union([z.string(), z.string().array()]),
   exclude: z.union([z.string(), z.string().array()]).optional(),

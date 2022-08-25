@@ -1,25 +1,31 @@
 import { AcfGroup } from '../../../types.js';
-import { loggerRelativePath } from '../../../utils/loggerRelativePath.js';
 import { getObjectFromJSON } from '../../../utils/getObjectFromJSON.js';
 import { handleError } from '../../../utils/handleError.js';
 import { updateLogger } from '../../../utils/logger.js';
 import { writeStream } from '../../../utils/writeStream.js';
-import { loggerPrefix } from '../../acf-generator/acf-generator.config.js';
 import { RemoveACFLayoutOperation } from '../cleaner.config.js';
 import { CleanerStatistics } from '../cleaner.const.js';
 import { unsetInObject } from '../helpers/unsetInObject.js';
+import {
+  loggerListElements,
+  loggerMergeMessages,
+  loggerPrefix,
+  loggerRelativePath,
+} from '../../../utils/logger-utils.js';
 
 export const removeACFLayout = async (
   file: string,
-  { groupName = '', description = '', layouts = [] }: RemoveACFLayoutOperation,
+  { groupKey = '', description = '', layouts = [] }: RemoveACFLayoutOperation,
   statistics: CleanerStatistics
 ) => {
-  try {
-    const prefix = groupName ? loggerPrefix(groupName) : '';
-    const message = description || 'Removed ACF Layout';
-    const relativePath = loggerRelativePath(file);
+  const relativePath = loggerRelativePath(file);
+  const prefix = groupKey ? loggerPrefix(groupKey) : '';
+  const message = description || 'Removed ACF Layout';
 
-    updateLogger.start('Removing ACF Layout');
+  try {
+    updateLogger.start(
+      loggerMergeMessages([prefix, `Removing ACF Layouts`, loggerListElements(layouts)])
+    );
 
     const acfModulesGroup: AcfGroup = await getObjectFromJSON(file);
 
@@ -42,16 +48,21 @@ export const removeACFLayout = async (
     // If something was changed - update file
     if (stringifiedContent.length !== stringifiedModifiedContent.length) {
       await writeStream(file, stringifiedModifiedContent);
+
+      updateLogger.complete(loggerMergeMessages([prefix, message, relativePath]));
+      updateLogger.done();
       statistics.incrementStat('modified');
       return true;
     }
   } catch (error) {
-    handleError(error as Error);
+    handleError(error as Error, prefix);
     statistics.incrementStat('error');
     return false;
   }
 
-  updateLogger.skip([prefix, message]);
+  updateLogger.skip(
+    loggerMergeMessages([prefix, `Didn't remove any layout`, loggerListElements(layouts)])
+  );
   updateLogger.done();
   statistics.incrementStat('unchanged');
   return null;

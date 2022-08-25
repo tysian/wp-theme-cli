@@ -10,6 +10,7 @@ import { asArray } from '../../../utils/asArray.js';
 import { handleError } from '../../../utils/handleError.js';
 import { removeFromJSON } from '../operations/removeFromJSON.js';
 import { removeACFLayout } from '../operations/removeACFLayout.js';
+import { loggerMergeMessages, loggerPrefix } from '../../../utils/logger-utils.js';
 
 export const handleOperations = async (
   operations: Operation[],
@@ -17,19 +18,21 @@ export const handleOperations = async (
 ): Promise<void> => {
   for await (const operation of operations) {
     try {
-      const { input, operationType } = operation;
+      const { input, operationType, description = '', groupKey = '' } = operation;
       const files = await getGlobFiles(input);
 
       const outsideOfCwd = files.filter((file) => !file.includes(process.cwd()));
       if (outsideOfCwd.length > 0) {
-        throw new Error('outside of cwd!');
+        throw new Error('Operation outside of current working directory!');
       }
 
       if (!files.length) {
-        logger.warn(
-          `Files (${asArray(input)
-            .map((inp) => chalk.green(inp))
-            .join(',')}) not found for operation ${chalk.blue(operationType)}`
+        logger.skip(
+          loggerMergeMessages([
+            groupKey ? loggerPrefix(groupKey) : '',
+            `${asArray(input).length} files not found`,
+            `for operation (${chalk.green(description || operationType)})`,
+          ])
         );
 
         continue;
@@ -48,10 +51,10 @@ export const handleOperations = async (
               await removeFileLine(file, operation, statistics);
               break;
             case OperationType.REMOVE_DIRECTORY:
-              await removeDirectory(file, statistics);
+              await removeDirectory(file, operation, statistics);
               break;
             case OperationType.REMOVE_FILE:
-              await removeFile(file, statistics);
+              await removeFile(file, operation, statistics);
               break;
             default:
               break;

@@ -1,33 +1,37 @@
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { cloneDeep } from 'lodash-es';
+import { logger } from '../../../utils/logger.js';
 import type { CleanerConfig, Operation } from '../cleaner.config.js';
 
 export const filterOperations = async (_config: CleanerConfig) => {
   const config = cloneDeep(_config);
+  const choices = config.groups
+    .map((group) => (group.key !== 'common' ? { name: group.name, value: group.key } : false))
+    .filter(Boolean);
+
+  const hasCommon = config.groups.findIndex((group) => group.key === 'common');
+  if (hasCommon > -1) {
+    logger.info(`${chalk.green('Common')} operation will be added automatically.`);
+  }
 
   const { categories } = await inquirer.prompt([
     {
       type: 'checkbox',
-      message: `Select category of files (selected category will be ${chalk.bold.red('REMOVED')}):`,
+      message: `Select operations group (checked groups will be ${chalk.bold.red('REMOVED')}):`,
       name: 'categories',
-      choices: [
-        {
-          name: 'IR stuff',
-          value: 'ir',
-          short: 'IR',
-        },
-        {
-          name: 'Report stuff',
-          value: 'report',
-          short: 'Report',
-        },
-      ],
-      validate: (input) => (input.length === 0 ? 'You must choose at least one option' : true),
+      choices,
+      validate: (input) => !!input.length || 'You must choose at least one option',
     },
   ]);
 
   return config.groups
     .filter((group) => categories.includes(group.key))
-    .reduce((operations, group) => [...operations, ...group.operations], [] as Operation[]);
+    .reduce(
+      (operations, group) => [
+        ...operations,
+        ...group.operations.map((op) => ({ ...op, groupKey: group.key })),
+      ],
+      [] as Operation[]
+    );
 };
