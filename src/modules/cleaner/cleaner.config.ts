@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { OperationType } from './cleaner.const.js';
-import { deleteInACFModulesJSON } from './helpers/deleteInACFModulesJSON.js';
-import { deleteInJSON } from './helpers/deleteInJSON.js';
 
 // Base operation
 export const baseOperationSchema = z.object({
+  operationType: z.nativeEnum(OperationType),
+  groupName: z.string().optional(),
   description: z.string().optional(),
   input: z.union([z.string(), z.string().array()]),
   exclude: z.union([z.string(), z.string().array()]).optional(),
@@ -27,20 +27,14 @@ export const removeFileOperationSchema = baseOperationSchema.and(
 );
 export type RemoveFileOperation = z.infer<typeof removeFileOperationSchema>;
 
-// Modify JSON Operation
-export const ModifyJSONAvailableCallbacks = {
-  deleteInACFModulesJSON,
-  deleteInJSON,
+export type RemoveFromJSONOperation = BaseOperation & {
+  operationType: OperationType.REMOVE_FROM_JSON;
+  propertyPaths: string[];
 };
 
-export type ModifyJSONCallback = {
-  functionName: keyof typeof ModifyJSONAvailableCallbacks;
-  args: any[];
-};
-
-export type ModifyJSONOperation = BaseOperation & {
-  operationType: OperationType.MODIFY_JSON;
-  callback: ModifyJSONCallback;
+export type RemoveACFLayoutOperation = BaseOperation & {
+  operationType: OperationType.REMOVE_ACF_LAYOUT;
+  layouts: string[];
 };
 
 export type RemoveFileLineOperation = BaseOperation & {
@@ -51,8 +45,9 @@ export type RemoveFileLineOperation = BaseOperation & {
 export type Operation =
   | RemoveDirectoryOperation
   | RemoveFileOperation
-  | ModifyJSONOperation
-  | RemoveFileLineOperation;
+  | RemoveFileLineOperation
+  | RemoveFromJSONOperation
+  | RemoveACFLayoutOperation;
 
 export type OperationGroup = {
   key: string;
@@ -71,16 +66,27 @@ export const temporaryConfig: CleanerConfig = {
   description: 'Description for temporary config',
   groups: [
     {
-      key: 'ir',
-      name: 'IR Stuff',
+      key: 'common',
+      name: 'Common',
       operations: [
-        // remove dist
         {
+          description: 'Remove dist folder',
           operationType: OperationType.REMOVE_DIRECTORY,
           input: ['dist'],
         },
-        // ACF
         {
+          description: 'Remove lock file',
+          operationType: OperationType.REMOVE_FILE,
+          input: ['yarn.lock'],
+        },
+      ],
+    },
+    {
+      key: 'ir',
+      name: 'IR Stuff',
+      operations: [
+        {
+          description: 'Remove ACF modules',
           operationType: OperationType.REMOVE_FILE,
           input: [
             'includes/acf-json/group_5a82d35e01c17.json',
@@ -89,24 +95,19 @@ export const temporaryConfig: CleanerConfig = {
             'includes/acf-json/group_5a8374445b2be.json',
           ],
         },
-        // remove IR modules from modules field
         {
-          operationType: OperationType.MODIFY_JSON,
+          description: 'Remove modules from ACF JSON modules field',
+          operationType: OperationType.REMOVE_ACF_LAYOUT,
           input: 'includes/acf-json/group_5d380bc6e0ae8.json',
-          callback: {
-            functionName: 'deleteInACFModulesJSON',
-            args: ['quarterly-data-table'],
-          },
+          layouts: ['quarterly-data-table'],
         },
-
-        // Modules
         {
+          description: 'Remove modules',
           operationType: OperationType.REMOVE_FILE,
           input: ['modules/quarterly-data-table.php'],
         },
-
-        // Templates
         {
+          description: 'Remove WP templates',
           operationType: OperationType.REMOVE_FILE,
           input: [
             'templates/template-calendar.php',
@@ -114,9 +115,8 @@ export const temporaryConfig: CleanerConfig = {
             'templates/template-reports.php',
           ],
         },
-
-        // gulpfile
         {
+          description: 'Update gulpfile config',
           operationType: OperationType.REMOVE_FILE_LINE,
           input: 'gulpfile.js',
           search: [
@@ -125,9 +125,8 @@ export const temporaryConfig: CleanerConfig = {
             '/moment/min/moment.min.js',
           ],
         },
-
-        // scss
         {
+          description: 'Remove SCSS files',
           operationType: OperationType.REMOVE_FILE,
           input: [
             'src/scss/pages/_calendars.scss',
@@ -136,47 +135,37 @@ export const temporaryConfig: CleanerConfig = {
           ],
         },
         {
+          description: 'Update main.scss imports',
           operationType: OperationType.REMOVE_FILE_LINE,
           input: 'src/scss/main.scss',
           search: ['modules/quarterly-data-table', 'pages/reports', 'pages/calendars'],
         },
-
-        // js
         {
+          description: 'Remove JS files',
           operationType: OperationType.REMOVE_FILE,
           input: ['src/js/filters.js', 'src/js/ics.js', 'src/js/ir.js'],
         },
-
-        // images
         {
+          description: 'Remove images',
           operationType: OperationType.REMOVE_FILE,
           input: ['src/images/outlook.svg'],
         },
-
-        // cpt
         {
+          description: 'Remove Custom Post Type files',
           operationType: OperationType.REMOVE_FILE,
           input: ['includes/functions/custom-post-types/cpt-raporty_biezace.php'],
         },
         {
+          description: 'Remove Custom Post Type imports',
           operationType: OperationType.REMOVE_FILE_LINE,
           input: 'includes/functions/custom-post-types.php',
           search: 'custom-post-types/cpt-raporty_biezace.php',
         },
-        // package.json
         {
-          operationType: OperationType.MODIFY_JSON,
+          description: 'Update package.json',
+          operationType: OperationType.REMOVE_FROM_JSON,
           input: 'package.json',
-          callback: {
-            functionName: 'deleteInJSON',
-            args: ['dependencies.bootstrap-datepicker', 'dependencies.moment'],
-          },
-        },
-
-        // remove files
-        {
-          operationType: OperationType.REMOVE_FILE,
-          input: ['yarn.lock'],
+          propertyPaths: ['dependencies.bootstrap-datepicker', 'dependencies.moment'],
         },
       ],
     },
@@ -184,39 +173,30 @@ export const temporaryConfig: CleanerConfig = {
       key: 'report',
       name: 'Report stuff',
       operations: [
-        // remove dist
         {
-          operationType: OperationType.REMOVE_DIRECTORY,
-          input: ['dist'],
-        },
-        // ACF
-        {
+          description: 'Remove ACF modules',
           operationType: OperationType.REMOVE_FILE,
           input: 'includes/acf-json/group_60794bf92f64a.json',
         },
-        // remove report modules from modules field
         {
-          operationType: OperationType.MODIFY_JSON,
+          description: 'Remove modules from ACF JSON modules field',
+          operationType: OperationType.REMOVE_ACF_LAYOUT,
           input: 'includes/acf-json/group_5d380bc6e0ae8.json',
-          callback: {
-            functionName: 'deleteInACFModulesJSON',
-            args: ['gri_text'],
-          },
+          layouts: ['gri_text'],
         },
-
-        // remove directories
         {
+          description: 'Remove report related directories',
           operationType: OperationType.REMOVE_DIRECTORY,
           input: ['includes/dictionary', 'includes/gri-admin'],
         },
         {
+          description: 'Remove report related imports',
           operationType: OperationType.REMOVE_FILE_LINE,
           input: 'functions.php',
           search: ['includes/gri-admin/gri-admin', 'includes/dictionary/dictionary-admin'],
         },
-
-        // cpt
         {
+          description: 'Remove Custom Post Type files',
           operationType: OperationType.REMOVE_FILE,
           input: [
             'includes/functions/custom-post-types/cpt-gri_indicator.php',
@@ -225,6 +205,7 @@ export const temporaryConfig: CleanerConfig = {
           ],
         },
         {
+          description: 'Remove Custom Post Type imports',
           operationType: OperationType.REMOVE_FILE_LINE,
           input: 'includes/functions/custom-post-types.php',
           search: [
@@ -233,15 +214,13 @@ export const temporaryConfig: CleanerConfig = {
             'custom-post-types/tax-dictionary',
           ],
         },
-
-        // modules
         {
+          description: 'Remove report modules files',
           operationType: OperationType.REMOVE_FILE,
           input: ['modules/gri_text.php'],
         },
-
-        // partials
         {
+          description: 'Remove partials',
           operationType: OperationType.REMOVE_FILE,
           input: [
             'partials/gri_indexes.php',
@@ -249,9 +228,8 @@ export const temporaryConfig: CleanerConfig = {
             'partials/search-modal.php',
           ],
         },
-
-        // scss
         {
+          description: 'Remove SCSS files',
           operationType: OperationType.REMOVE_FILE,
           input: [
             'src/scss/modules/_gri.scss',
@@ -262,6 +240,7 @@ export const temporaryConfig: CleanerConfig = {
           ],
         },
         {
+          description: 'Update main.scss imports',
           operationType: OperationType.REMOVE_FILE_LINE,
           input: 'src/scss/main.scss',
           search: [
@@ -272,15 +251,13 @@ export const temporaryConfig: CleanerConfig = {
             'pages/sections/sidebar',
           ],
         },
-
-        // js
         {
+          description: 'Remove JS files',
           operationType: OperationType.REMOVE_FILE,
           input: ['src/js/tools-reports.js', 'src/js/tools-a11y.js'],
         },
-
-        // templates
         {
+          description: 'Remove WP templates',
           operationType: OperationType.REMOVE_FILE,
           input: [
             'templates/template-notes.php',
@@ -289,15 +266,13 @@ export const temporaryConfig: CleanerConfig = {
             'templates/template-gritable.php',
           ],
         },
-
-        // remove files
         {
+          description: 'Remove additional files',
           operationType: OperationType.REMOVE_FILE,
-          input: ['sidebar.php', 'single-noty_objasniajace.php', 'yarn.lock'],
+          input: ['sidebar.php', 'single-noty_objasniajace.php'],
         },
-
-        // remove in all files
         {
+          description: 'Update PHP file ({filename})',
           operationType: OperationType.REMOVE_FILE_LINE,
           input: '**/*.php',
           exclude: ['class-wp-bootstrap-navwalker.php'],

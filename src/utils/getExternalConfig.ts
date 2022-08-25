@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import path from 'path';
-import { getConfigFromFile } from './getConfigFromFile.js';
+import { getObjectFromJSON } from './getObjectFromJSON.js';
 
 export const getExternalConfig = async <Config>(defaultConfig: string) => {
   // Ask for external config path
@@ -14,6 +14,6 @@ export const getExternalConfig = async <Config>(defaultConfig: string) => {
     },
   ]);
 
-  const config = await getConfigFromFile<Config>(externalConfigFile);
+  const config = await getObjectFromJSON<Config>(externalConfigFile);
   return config as Config;
 };

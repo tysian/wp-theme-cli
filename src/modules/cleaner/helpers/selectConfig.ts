@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
 import { fileExists } from '../../../utils/fileExist.js';
-import { getConfigFromFile } from '../../../utils/getConfigFromFile.js';
 import { getExternalConfig } from '../../../utils/getExternalConfig.js';
+import { getObjectFromJSON } from '../../../utils/getObjectFromJSON.js';
 import { logger } from '../../../utils/logger.js';
 import { CleanerConfig } from '../cleaner.config.js';
 import { DEFAULT_CONFIG_PATH } from '../cleaner.const.js';
@@ -44,7 +44,7 @@ export const selectConfig = async (): Promise<CleanerConfig> => {
   if (configType === 'default') {
     // Show current config and ask for overwrite
     logger.info(`Using config found in ${DEFAULT_CONFIG_PATH}`);
-    const config = await getConfigFromFile(DEFAULT_CONFIG_PATH);
+    const config = await getObjectFromJSON(DEFAULT_CONFIG_PATH);
     return config as CleanerConfig;
   }
 

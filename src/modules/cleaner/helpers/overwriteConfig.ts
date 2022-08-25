@@ -4,10 +4,11 @@ import inquirer from 'inquirer';
 import { cloneDeep } from 'lodash-es';
 import {
   CleanerConfig,
-  ModifyJSONAvailableCallbacks,
-  ModifyJSONCallback,
   Operation,
   OperationGroup,
+  RemoveACFLayoutOperation,
+  RemoveFileLineOperation,
+  RemoveFromJSONOperation,
 } from '../cleaner.config.js';
 import { DEFAULT_CONFIG_FILENAME, OperationType } from '../cleaner.const.js';
 import { logger } from '../../../utils/logger.js';
@@ -83,7 +84,8 @@ const createNewGroup = async (allGroups: OperationGroup[]): Promise<OperationGro
 
 const createNewOperation = async (): Promise<Operation> => {
   const messages: { [key in OperationType]: string } = {
-    [OperationType.MODIFY_JSON]: 'Modify JSON file',
+    [OperationType.REMOVE_ACF_LAYOUT]: 'Remove ACF layout',
+    [OperationType.REMOVE_FROM_JSON]: 'Remove from JSON',
     [OperationType.REMOVE_FILE_LINE]: 'Remove line from file',
     [OperationType.REMOVE_FILE]: 'Remove a file',
     [OperationType.REMOVE_DIRECTORY]: 'Remove a directory',
@@ -120,32 +122,25 @@ const createNewOperation = async (): Promise<Operation> => {
     },
   ]);
 
-  const operation: any = { operationType: type, description, input };
+  const operation: Partial<Operation> = { operationType: type, description, input };
 
-  if (type === OperationType.MODIFY_JSON) {
-    // select callback
-    const { functionName } = await inquirer.prompt<{
-      functionName: keyof typeof ModifyJSONAvailableCallbacks;
-    }>([
-      {
-        type: 'list',
-        name: 'functionName',
-        choices: Object.keys(ModifyJSONAvailableCallbacks),
-      },
-    ]);
-    // provide args
-    const args = await addMultipleEntries('function argument');
-    const callback: ModifyJSONCallback = { functionName, args };
-    operation.callback = callback;
+  if (type === OperationType.REMOVE_ACF_LAYOUT) {
+    const layouts = await addMultipleEntries('function argument');
+    (operation as RemoveACFLayoutOperation).layouts = layouts;
+  }
+
+  if (type === OperationType.REMOVE_FROM_JSON) {
+    const propertyPaths = await addMultipleEntries('function argument');
+    (operation as RemoveFromJSONOperation).propertyPaths = propertyPaths;
   }
 
   if (type === OperationType.REMOVE_FILE_LINE) {
     const search = await addMultipleEntries('search value');
-    operation.search = search;
+    (operation as RemoveFileLineOperation).search = search;
   }
 
   logger.info(`New operation ${chalk.cyan(OperationType[type])} created.`);
-  return operation;
+  return operation as Operation;
 };
 
 export const overwriteConfig = async (): Promise<CleanerConfig> => {

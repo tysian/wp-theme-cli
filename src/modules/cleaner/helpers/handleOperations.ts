@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import { logger } from '../../../utils/logger.js';
 import { CleanerStatistics, OperationType } from '../cleaner.const.js';
-import { modifyJSON } from '../operations/modifyJSON.js';
 import { removeDirectory } from '../operations/removeDirectory.js';
 import { removeFile } from '../operations/removeFile.js';
 import { removeFileLine } from '../operations/removeFileLine.js';
@@ -9,6 +8,8 @@ import { getGlobFiles } from './getGlobFiles.js';
 import type { Operation } from '../cleaner.config.js';
 import { asArray } from '../../../utils/asArray.js';
 import { handleError } from '../../../utils/handleError.js';
+import { removeFromJSON } from '../operations/removeFromJSON.js';
+import { removeACFLayout } from '../operations/removeACFLayout.js';
 
 export const handleOperations = async (
   operations: Operation[],
@@ -37,8 +38,11 @@ export const handleOperations = async (
       for await (const file of files) {
         try {
           switch (operationType) {
-            case OperationType.MODIFY_JSON:
-              await modifyJSON(file, operation, statistics);
+            case OperationType.REMOVE_FROM_JSON:
+              await removeFromJSON(file, operation, statistics);
+              break;
+            case OperationType.REMOVE_ACF_LAYOUT:
+              await removeACFLayout(file, operation, statistics);
               break;
             case OperationType.REMOVE_FILE_LINE:
               await removeFileLine(file, operation, statistics);

@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { QuestionCollection } from 'inquirer';
 import path from 'path';
 
-export const fileTypeLabel = (fileType: string) => `[${chalk.cyanBright(fileType.toUpperCase())}]`;
+export const loggerPrefix = (fileType: string) => `[${chalk.cyanBright(fileType.toUpperCase())}]`;
 
 export type FileTypeKey = 'php' | 'scss' | 'js';
 
@@ -98,12 +98,12 @@ export const configDescriptions: ConfigDescription = {
           name: 'customTemplate',
           type: 'confirm',
           default: false,
-          message: `${fileTypeLabel(fileType)} Do you want to use custom EJS template?`,
+          message: `${loggerPrefix(fileType)} Do you want to use custom EJS template?`,
         },
         {
           name: 'template',
           type: 'file-tree-selection',
-          message: `${fileTypeLabel(fileType)} Select EJS template`,
+          message: `${loggerPrefix(fileType)} Select EJS template`,
           validate: (item: string) =>
             path.extname(item) === '.ejs' ? true : `You need .ejs extension`,
           default: config.fileTypes[fileType as FileTypeKey].template,
@@ -112,7 +112,7 @@ export const configDescriptions: ConfigDescription = {
         {
           name: 'output',
           type: 'file-tree-selection',
-          message: `${fileTypeLabel(fileType)} Select directory where files should go`,
+          message: `${loggerPrefix(fileType)} Select directory where files should go`,
           onlyShowDir: true,
           default: path.resolve(config.fileTypes[fileType as FileTypeKey].output),
         },
@@ -120,12 +120,12 @@ export const configDescriptions: ConfigDescription = {
           name: 'haveImports',
           type: 'confirm',
           default: fileType !== 'php',
-          message: `${fileTypeLabel(fileType)} Do ${fileType.toUpperCase()} need any imports?`,
+          message: `${loggerPrefix(fileType)} Do ${fileType.toUpperCase()} need any imports?`,
         },
         {
           name: 'import.filePath',
           type: 'file-tree-selection',
-          message: `${fileTypeLabel(fileType)} Select file where you want to put your "imports"`,
+          message: `${loggerPrefix(fileType)} Select file where you want to put your "imports"`,
           when: ({ haveImports = false }) => haveImports,
           default: path.resolve(config.fileTypes[fileType as FileTypeKey]?.import?.filePath ?? ''),
           validate: (item: string) =>
@@ -136,7 +136,7 @@ export const configDescriptions: ConfigDescription = {
         {
           name: 'import.search',
           type: 'input',
-          message: `${fileTypeLabel(fileType)} Search for a string`,
+          message: `${loggerPrefix(fileType)} Search for a string`,
           suffix: ` This will be use to find last line containing this string`,
           when: ({ haveImports = false }) => haveImports,
           default: config.fileTypes[fileType as FileTypeKey]?.import?.search ?? '',
@@ -144,7 +144,7 @@ export const configDescriptions: ConfigDescription = {
         {
           name: 'import.append',
           type: 'input',
-          message: `${fileTypeLabel(fileType)} Provide "import" text which will be added to a file`,
+          message: `${loggerPrefix(fileType)} Provide "import" text which will be added to a file`,
           suffix: `\nYou may use ${['file_name', 'module_name', 'module_variable_name']
             .map((s) => chalk.blue(s))
             .join(', ')} as variables`,
