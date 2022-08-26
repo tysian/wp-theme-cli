@@ -2,6 +2,7 @@ import chalk from 'chalk';
 import getSlug from 'speakingurl';
 import inquirer from 'inquirer';
 import { cloneDeep } from 'lodash-es';
+import path from 'path';
 import {
   CleanerConfig,
   Operation,
@@ -13,6 +14,7 @@ import {
 import { DEFAULT_CONFIG_FILENAME, OperationType } from '../cleaner.const.js';
 import { logger } from '../../../utils/logger.js';
 import { saveConfig } from '../../../utils/saveConfig.js';
+import { loggerMergeMessages, loggerPrefix } from '../../../utils/logger-utils.js';
 
 const addMultipleEntries = async (entryName = 'entry'): Promise<string[]> => {
   let stop = false;
@@ -82,7 +84,7 @@ const createNewGroup = async (allGroups: OperationGroup[]): Promise<OperationGro
   return { name, key: getSlug(key), operations: [] };
 };
 
-const createNewOperation = async (): Promise<Operation> => {
+const createNewOperation = async (group?: OperationGroup | null): Promise<Operation> => {
   const messages: { [key in OperationType]: string } = {
     [OperationType.REMOVE_ACF_LAYOUT]: 'Remove ACF layout',
     [OperationType.REMOVE_FROM_JSON]: 'Remove from JSON',
@@ -98,7 +100,10 @@ const createNewOperation = async (): Promise<Operation> => {
     {
       type: 'list',
       name: 'type',
-      message: 'Select operation type',
+      message: loggerMergeMessages([
+        loggerPrefix(group && group?.key ? group.key : ''),
+        'Select operation type',
+      ]),
       choices: Object.entries(messages).map(([key, message]) => ({
         name: message,
         value: key,
@@ -118,11 +123,18 @@ const createNewOperation = async (): Promise<Operation> => {
       message: `Select files to process`,
       multiple: true,
       onlyShowDir: type === OperationType.REMOVE_DIRECTORY,
-      default: [],
+      enableGoUpperDirectory: true,
+      validate: (inputPath) =>
+        !!inputPath ||
+        `Select at least one ${type === OperationType.REMOVE_DIRECTORY ? 'directory' : 'file'}`,
     },
   ]);
 
-  const operation: Partial<Operation> = { operationType: type, description, input };
+  const operation: Partial<Operation> = {
+    operationType: type,
+    description,
+    input: input.map((filePath: string) => path.relative(process.cwd(), filePath)),
+  };
 
   if (type === OperationType.REMOVE_ACF_LAYOUT) {
     const layouts = await addMultipleEntries('function argument');
@@ -143,8 +155,8 @@ const createNewOperation = async (): Promise<Operation> => {
   return operation as Operation;
 };
 
-export const overwriteConfig = async (): Promise<CleanerConfig> => {
-  const { name, description } = await inquirer.prompt([
+export const createNewConfig = async (): Promise<CleanerConfig> => {
+  const { name, description } = await inquirer.prompt<{ name: string; description: string }>([
     {
       type: 'input',
       name: 'name',
@@ -165,7 +177,7 @@ export const overwriteConfig = async (): Promise<CleanerConfig> => {
     logger.none(); // just spacer
     const canAddOperation = groups.length === 0 && !currentGroup.key;
     const canAddGroup = currentGroup.key && currentGroup.operations.length === 0;
-    const { whatsNext } = await inquirer.prompt([
+    const { whatsNext } = await inquirer.prompt<{ whatsNext: string }>([
       {
         name: 'whatsNext',
         type: 'list',
@@ -194,7 +206,7 @@ export const overwriteConfig = async (): Promise<CleanerConfig> => {
     }
 
     if (whatsNext === 'operation') {
-      currentOperation = await createNewOperation();
+      currentOperation = await createNewOperation(currentGroup.key ? currentGroup : null);
       currentGroup.operations.push(currentOperation);
     }
 
@@ -206,7 +218,10 @@ export const overwriteConfig = async (): Promise<CleanerConfig> => {
 
   const newConfig: CleanerConfig = { name, description, groups };
 
-  await saveConfig<CleanerConfig>(DEFAULT_CONFIG_FILENAME, newConfig);
+  await saveConfig<CleanerConfig>(
+    name.trim().length ? DEFAULT_CONFIG_FILENAME.replace('default', name) : DEFAULT_CONFIG_FILENAME,
+    newConfig
+  );
 
   return newConfig;
 };

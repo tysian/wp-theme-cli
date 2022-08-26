@@ -9,4 +9,5 @@ export const loggerRelativePath = (file = '') =>
 export const loggerListElements = (elements: string[]) =>
   `(${elements.map((l) => chalk.green(l)).join(', ')})`;
 
-export const loggerMergeMessages = (msgs: string[] = []) => msgs.filter(Boolean).join(' ');
+export const loggerMergeMessages = (msgs: string[] = [], separator = ' ') =>
+  msgs.filter(Boolean).join(separator);

@@ -5,16 +5,16 @@ import { getObjectFromJSON } from '../../../utils/getObjectFromJSON.js';
 import { logger } from '../../../utils/logger.js';
 import { CleanerConfig } from '../cleaner.config.js';
 import { DEFAULT_CONFIG_PATH } from '../cleaner.const.js';
-import { overwriteConfig } from './overwriteConfig.js';
+import { createNewConfig } from './createNewConfig.js';
 
 export const selectConfig = async (): Promise<CleanerConfig> => {
   const defaultConfigExists = await fileExists(DEFAULT_CONFIG_PATH).catch(() => '');
 
   const configTypeChoices = [
     {
-      name: 'Overwrite default config',
-      value: 'overwrite',
-      short: 'overwrite',
+      name: 'Create new config',
+      value: 'create-new-config',
+      short: 'create-new-config',
     },
     {
       name: 'External config file',
@@ -48,8 +48,8 @@ export const selectConfig = async (): Promise<CleanerConfig> => {
     return config as CleanerConfig;
   }
 
-  if (configType === 'overwrite') {
-    const config = await overwriteConfig();
+  if (configType === 'create-new-config') {
+    const config = await createNewConfig();
     return config as CleanerConfig;
   }
 
