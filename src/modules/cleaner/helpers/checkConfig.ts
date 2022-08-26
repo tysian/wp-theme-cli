@@ -1,6 +1,8 @@
-import { CleanerConfig } from '../cleaner.config.js';
+import { updateLogger } from '../../../utils/logger.js';
+import { CleanerConfig, CleanerConfigSchema } from '../cleaner.config.js';
 
-export const checkConfig = async (config: CleanerConfig): Promise<boolean> => {
-  console.log('checking config (TEMP)', config);
-  return true;
+export const checkConfig = async (config: CleanerConfig): Promise<void> => {
+  updateLogger.start('Checking config');
+  CleanerConfigSchema.parse(config);
+  updateLogger.complete('Config is OK');
 };

@@ -12,6 +12,7 @@ import {
   loggerPrefix,
   loggerRelativePath,
 } from '../../../utils/logger-utils.js';
+import { asArray } from '../../../utils/asArray.js';
 
 export const removeACFLayout = async (
   file: string,
@@ -21,10 +22,11 @@ export const removeACFLayout = async (
   const relativePath = loggerRelativePath(file);
   const prefix = groupKey ? loggerPrefix(groupKey) : '';
   const message = description || 'Removed ACF Layout';
+  const layoutsArray = asArray(layouts);
 
   try {
     updateLogger.start(
-      loggerMergeMessages([prefix, `Removing ACF Layouts`, loggerListElements(layouts)])
+      loggerMergeMessages([prefix, `Removing ACF Layouts`, loggerListElements(layoutsArray)])
     );
 
     const acfModulesGroup: AcfGroup = await getObjectFromJSON(file);
@@ -37,7 +39,7 @@ export const removeACFLayout = async (
     }
 
     const removePaths = Object.values(acfModule.layouts)
-      .filter(({ name = '' }) => layouts.includes(name))
+      .filter(({ name = '' }) => layoutsArray.includes(name))
       .map(({ key }) => `fields[${acfModulesIndex}].layouts[${key}]`);
 
     const modifiedAcfGroup = unsetInObject(acfModulesGroup, removePaths);
@@ -61,7 +63,7 @@ export const removeACFLayout = async (
   }
 
   updateLogger.skip(
-    loggerMergeMessages([prefix, `Didn't remove any layout`, loggerListElements(layouts)])
+    loggerMergeMessages([prefix, `Didn't remove any layout`, loggerListElements(layoutsArray)])
   );
   updateLogger.done();
   statistics.incrementStat('unchanged');

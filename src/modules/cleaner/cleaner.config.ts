@@ -27,39 +27,63 @@ export const removeFileOperationSchema = baseOperationSchema.and(
 );
 export type RemoveFileOperation = z.infer<typeof removeFileOperationSchema>;
 
-export type RemoveFromJSONOperation = BaseOperation & {
-  operationType: OperationType.REMOVE_FROM_JSON;
-  propertyPaths: string[];
-};
+// Remove from JSON operation
+export const removeFromJSONOperationSchema = baseOperationSchema.and(
+  z.object({
+    operationType: z.literal(OperationType.REMOVE_FROM_JSON),
+    propertyPaths: z.union([z.string(), z.string().array()]),
+  })
+);
 
-export type RemoveACFLayoutOperation = BaseOperation & {
-  operationType: OperationType.REMOVE_ACF_LAYOUT;
-  layouts: string[];
-};
+export type RemoveFromJSONOperation = z.infer<typeof removeFromJSONOperationSchema>;
 
-export type RemoveFileLineOperation = BaseOperation & {
-  operationType: OperationType.REMOVE_FILE_LINE;
-  search: string | string[];
-};
+// Remove ACF Layout operation
+export const removeACFLayoutOperationSchema = baseOperationSchema.and(
+  z.object({
+    operationType: z.literal(OperationType.REMOVE_ACF_LAYOUT),
+    layouts: z.union([z.string(), z.string().array()]),
+  })
+);
 
-export type Operation =
-  | RemoveDirectoryOperation
-  | RemoveFileOperation
-  | RemoveFileLineOperation
-  | RemoveFromJSONOperation
-  | RemoveACFLayoutOperation;
+export type RemoveACFLayoutOperation = z.infer<typeof removeACFLayoutOperationSchema>;
 
-export type OperationGroup = {
-  key: string;
-  name: string;
-  operations: Operation[];
-};
+// Remove ACF Layout operation
+export const removeFileLineOperationSchema = baseOperationSchema.and(
+  z.object({
+    operationType: z.literal(OperationType.REMOVE_FILE_LINE),
+    search: z.union([z.string(), z.string().array()]),
+  })
+);
 
-export type CleanerConfig = {
-  name?: string;
-  description?: string;
-  groups: OperationGroup[];
-};
+export type RemoveFileLineOperation = z.infer<typeof removeFileLineOperationSchema>;
+
+// Operation
+export const OperationSchema = z.union([
+  removeDirectoryOperationSchema,
+  removeFileLineOperationSchema,
+  removeFileOperationSchema,
+  removeFromJSONOperationSchema,
+  removeACFLayoutOperationSchema,
+]);
+
+export type Operation = z.infer<typeof OperationSchema>;
+
+// Operation group
+export const OperationGroupSchema = z.object({
+  key: z.string(),
+  name: z.string(),
+  operations: OperationSchema.array(),
+});
+export type OperationGroup = z.infer<typeof OperationGroupSchema>;
+
+// Cleaner config
+export const CleanerConfigSchema = z.object({
+  name: z.string().optional(),
+  description: z.string().optional(),
+  groups: OperationGroupSchema.array(),
+});
+
+export type CleanerConfig = z.infer<typeof CleanerConfigSchema>;
 
 export const temporaryConfig: CleanerConfig = {
   name: 'Temporary Config',

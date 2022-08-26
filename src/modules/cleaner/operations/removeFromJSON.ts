@@ -1,3 +1,4 @@
+import { asArray } from '../../../utils/asArray.js';
 import { getObjectFromJSON } from '../../../utils/getObjectFromJSON.js';
 import { handleError } from '../../../utils/handleError.js';
 import {
@@ -13,17 +14,18 @@ import { unsetInObject } from '../helpers/unsetInObject.js';
 
 export const removeFromJSON = async (
   file: string,
-  { groupKey = '', description = '', propertyPaths }: RemoveFromJSONOperation,
+  { groupKey = '', description = '', propertyPaths = [] }: RemoveFromJSONOperation,
   statistics: CleanerStatistics
 ): Promise<boolean | null> => {
   const relativePath = loggerRelativePath(file);
   const prefix = groupKey ? loggerPrefix(groupKey) : '';
   const message = description || 'Removed from JSON';
+  const propertyPathsArray = asArray(propertyPaths);
 
   try {
     updateLogger.start(loggerMergeMessages([prefix, `Removing in JSON`, relativePath]));
     const parsedFileContent: object = await getObjectFromJSON(file);
-    const modifiedFileContent = unsetInObject(parsedFileContent, propertyPaths);
+    const modifiedFileContent = unsetInObject(parsedFileContent, propertyPathsArray);
 
     const stringifiedContent = JSON.stringify(parsedFileContent, null, 2);
     const stringifiedModifiedContent = JSON.stringify(modifiedFileContent, null, 2);
