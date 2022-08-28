@@ -11,7 +11,7 @@ import { replaceAll } from '../../../utils/replaceAll.js';
 import { writeStream } from '../../../utils/writeStream.js';
 import { AcfGeneratorConfig, FileType, FileTypeKey } from '../acf-generator.config.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
-import type { AcfLayout } from '../../../types.js';
+import { AcfLayout } from '../../../types.js';
 
 type Module = {
   layout: AcfLayout;

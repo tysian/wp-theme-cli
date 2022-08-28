@@ -5,7 +5,7 @@ import { removeDirectory } from '../operations/removeDirectory.js';
 import { removeFile } from '../operations/removeFile.js';
 import { removeFileLine } from '../operations/removeFileLine.js';
 import { getGlobFiles } from './getGlobFiles.js';
-import type { Operation } from '../cleaner.config.js';
+import { Operation } from '../cleaner.config.js';
 import { asArray } from '../../../utils/asArray.js';
 import { handleError } from '../../../utils/handleError.js';
 import { removeFromJSON } from '../operations/removeFromJSON.js';

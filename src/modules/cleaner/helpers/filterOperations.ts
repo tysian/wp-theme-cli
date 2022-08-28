@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { cloneDeep } from 'lodash-es';
 import { logger } from '../../../utils/logger.js';
-import type { CleanerConfig, Operation } from '../cleaner.config.js';
+import { CleanerConfig, Operation } from '../cleaner.config.js';
 
 export const filterOperations = async (_config: CleanerConfig) => {
   const config = cloneDeep(_config);

@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import type { AcfGroup, AcfLayout } from '../../../types.js';
+import { AcfGroup, AcfLayout } from '../../../types.js';
 import { logger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
 import { config } from '../acf-generator.config.js';

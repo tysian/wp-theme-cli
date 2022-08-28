@@ -4,7 +4,7 @@ import { selectConfig } from './helpers/selectConfig.js';
 import { installDependencies } from '../../utils/installDependencies.js';
 import { Statistics } from '../../utils/Statistics.js';
 import { handleOperations } from './helpers/handleOperations.js';
-import type { Operation } from './cleaner.config.js';
+import { Operation } from './cleaner.config.js';
 import { filterOperations } from './helpers/filterOperations.js';
 import { CleanerStatistics, cleanerStats } from './cleaner.const.js';
 import { checkConfig } from './helpers/checkConfig.js';

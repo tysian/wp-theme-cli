@@ -137,12 +137,12 @@ const createNewOperation = async (group?: OperationGroup | null): Promise<Operat
   };
 
   if (type === OperationType.REMOVE_ACF_LAYOUT) {
-    const layouts = await addMultipleEntries('function argument');
+    const layouts = await addMultipleEntries('layout name');
     (operation as RemoveACFLayoutOperation).layouts = layouts;
   }
 
   if (type === OperationType.REMOVE_FROM_JSON) {
-    const propertyPaths = await addMultipleEntries('function argument');
+    const propertyPaths = await addMultipleEntries('property path');
     (operation as RemoveFromJSONOperation).propertyPaths = propertyPaths;
   }
 
