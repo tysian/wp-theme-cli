@@ -1,9 +1,9 @@
 {
-  "name": "wp-theme-cli",
+  "name": "wp-theme",
   "version": "0.4.2",
   "description": "Generate, update & remove files in your WordPress theme",
   "engines": {
-    "node": ">=14.17.0"
+    "node": "^14.18.0 || >=16.12.0"
   },
   "type": "module",
   "bin": {
@@ -20,7 +20,6 @@
     "chalk": "^5.0.1",
     "clarify": "^2.1.0",
     "commander": "^9.4.0",
-    "comment-json": "^4.2.2",
     "ejs": "^3.1.8",
     "filenamify": "^5.1.1",
     "inquirer": "^9.1.0",
@@ -28,6 +27,7 @@
     "is-unicode-supported": "^1.2.0",
     "lodash-es": "^4.17.21",
     "log-update": "^5.0.1",
+    "semver": "^7.3.7",
     "simple-git": "^3.11.0",
     "trace": "^3.1.1"
   },
@@ -37,6 +37,7 @@
     "@types/lodash": "^4.14.182",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^18.6.4",
+    "@types/semver": "^7.3.12",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
     "eslint": "^8.21.0",

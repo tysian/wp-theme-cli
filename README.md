@@ -13,7 +13,7 @@ For now, I'm focusing on files operations, such as removing unnecessary files or
 
 ## Requirements
 
-- Node >= 14.17.0
+- Node 14.18.0 or >=16.12.0
 
 ## Available options
 

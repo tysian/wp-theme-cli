@@ -1,14 +1,19 @@
 #!/usr/bin/env node
 
-import { NODE_MINIMUM_VERSION } from '../constants.js';
+import semver from 'semver';
+import pkg from '../../package.json';
 
 const currentVersion = process.versions.node;
-const currentMajorVersion = parseInt(currentVersion.split('.')[0], 10);
+const engines = pkg.engines.node;
+const isSupported = semver.satisfies(currentVersion, engines);
 
-if (currentMajorVersion < NODE_MINIMUM_VERSION) {
+if (!isSupported) {
   console.error(`Your Node.js version (v${currentVersion}) is not supported.`);
-  console.error(`Please use Node.js v${NODE_MINIMUM_VERSION} or higher.`);
+  console.error(`Please use Node.js v${engines} or higher.`);
   process.exit(1);
 }
 
-import('../bootstrap.js').then(({ bootstrap }) => bootstrap());
+import('../bootstrap.js')
+  .then(({ bootstrap }) => bootstrap())
+  .then(process.exit(0))
+  .catch(process.exit(1));
