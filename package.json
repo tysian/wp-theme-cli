@@ -2,6 +2,19 @@
   "name": "wp-theme",
   "version": "0.5.0",
   "description": "Generate, update & remove files in your WordPress theme",
+  "author": {
+    "name": "Jakub Bazgier",
+    "url": "https://github.com/tysian"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tysian/wp-theme.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tysian/wp-theme/issues"
+  },
+  "homepage": "https://github.com/tysian/wp-theme",
+  "license": "MIT",
   "engines": {
     "node": "^14.18.0 || >=16.12.0"
   },
@@ -13,9 +26,10 @@
     "build": "tsc",
     "dev": "tsc -w"
   },
-  "keywords": [],
-  "author": "",
-  "license": "MIT",
+  "files": [
+    "dist/*",
+    "public/*"
+  ],
   "dependencies": {
     "chalk": "^5.0.1",
     "clarify": "^2.1.0",
