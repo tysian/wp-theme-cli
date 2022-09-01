@@ -43,6 +43,7 @@ module.exports = {
     ],
     'guard-for-in': 0,
     'no-continue': 0,
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
   },
   settings: {
     'import/parsers': {
@@ -59,4 +60,3 @@ module.exports = {
     },
   },
 };
-
