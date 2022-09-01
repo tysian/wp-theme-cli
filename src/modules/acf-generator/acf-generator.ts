@@ -16,8 +16,7 @@ export const acfGenerator = async (): Promise<boolean> => {
     const finalConfig = await selectConfig();
     await checkConfig(finalConfig);
 
-    const shouldContinue = await askForContinue();
-    if (!shouldContinue) {
+    if (!(await askForContinue())) {
       return true;
     }
 
