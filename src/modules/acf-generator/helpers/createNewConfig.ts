@@ -4,7 +4,8 @@ import chalk from 'chalk';
 import { AcfGeneratorConfig, AvailableFileType, FileType } from '../acf-generator.config.js';
 import { saveConfig } from '../../../utils/saveConfig.js';
 import { DEFAULT_CONFIG_FILENAME } from '../acf-generator.const.js';
-import { loggerPrefix } from '../../../utils/logger-utils.js';
+import { loggerListElements, loggerPrefix } from '../../../utils/logger-utils.js';
+import { getRelativePath } from '../../../utils/getRelativePath.js';
 
 export const createNewConfig = async () => {
   // Ask for ACF JSON file
@@ -36,15 +37,14 @@ export const createNewConfig = async () => {
       choices: Object.values(AvailableFileType),
       default: ['php', 'scss'],
       message: `Select which file types you want to generate`,
-      validate: (answer) => (answer.length > 0 ? true : 'You must select at least one'),
+      validate: (answer) => answer.length > 0 || 'You must select at least one',
     },
   ]);
 
   const fileTypes = {} as Record<AvailableFileType, FileType>;
 
   for await (const fileType of selectFileTypes) {
-    const { customTemplate, template = 'default' } = await inquirer.prompt<{
-      customTemplate: boolean;
+    const { template = 'default' } = await inquirer.prompt<{
       template?: string;
     }>([
       {
@@ -58,7 +58,7 @@ export const createNewConfig = async () => {
         type: 'file-tree-selection',
         message: `${loggerPrefix(fileType)} Select EJS template`,
         validate: (item: string) => !!(path.extname(item) === '.ejs') || `You need .ejs extension`,
-        when: () => customTemplate,
+        when: (userAnswer: { customTemplate: boolean }) => userAnswer.customTemplate,
       },
     ]);
 
@@ -101,19 +101,20 @@ export const createNewConfig = async () => {
           name: 'append',
           type: 'input',
           message: `${loggerPrefix(fileType)} Provide "import" text which will be added to a file`,
-          suffix: `\nYou may use ${['file_name', 'module_name', 'module_variable_name']
-            .map((s) => chalk.blue(s))
-            .join(', ')} as variables`,
+          suffix: `\nYou may use ${loggerListElements(
+            ['file_name', 'module_name', 'module_variable_name'],
+            { parentheses: false, color: chalk.blue }
+          )} as variables`,
         },
       ]);
 
-      importProperties = imports;
+      importProperties = { ...imports, filePath: getRelativePath(imports.filePath) };
     }
 
     fileTypes[fileType] = {
       active: true,
-      template,
-      output,
+      template: template !== 'default' ? getRelativePath(template) : template,
+      output: getRelativePath(output),
       import: importProperties || undefined,
     };
   }
