@@ -1,21 +1,19 @@
 import 'trace';
 import 'clarify';
-import chalk from 'chalk';
 import { Command } from 'commander';
 import inquirer from 'inquirer';
 import inquirerFileTreeSelection from 'inquirer-file-tree-selection-prompt';
 import semver from 'semver';
-import { PackageJson } from 'type-fest';
 import { acfGenerator } from './modules/acf-generator/acf-generator.js';
 import { logger } from './utils/logger.js';
-import { getObjectFromJSON } from './utils/getObjectFromJSON.js';
 import { loggerListElements } from './utils/logger-utils.js';
+import { getPackageJSON } from './utils/getPackageJSON.js';
 import { readStream } from './utils/readStream.js';
 import { ROOT_DIR } from './constants.js';
 import { cleaner } from './modules/cleaner/cleaner.js';
 
 export const bootstrap = async () => {
-  const pkg = await getObjectFromJSON<PackageJson>('../package.json');
+  const pkg = await getPackageJSON();
   const { bin = '', description = '', version = '', engines: pkgEngines = {} } = pkg;
 
   const currentVersion = process.versions.node;
