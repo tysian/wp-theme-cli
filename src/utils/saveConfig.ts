@@ -3,6 +3,7 @@ import filenamify from 'filenamify';
 import inquirer from 'inquirer';
 import { DEFAULT_CONFIGS_DIR } from '../constants.js';
 import { fileExists } from './fileExist.js';
+import { loggerMergeMessages } from './logger-utils.js';
 import { logger, updateLogger } from './logger.js';
 import { writeStream } from './writeStream.js';
 
@@ -12,9 +13,18 @@ const handleFileName = (filename: string) => {
   return cleanFilename.endsWith('.json') ? cleanFilename : `${cleanFilename}.json`;
 };
 
-export const saveConfig = async <Config>(filename: string, config: Config): Promise<void> => {
-  const defaultFilename = handleFileName(filename);
-  if (!defaultFilename) return;
+export const saveConfig = async <Config>(
+  _defaultFullFilename: string,
+  config: Config
+): Promise<void> => {
+  const defaultFullFilename = handleFileName(_defaultFullFilename);
+  if (!defaultFullFilename) {
+    throw new Error(
+      `Can't save config, the file name is empty or corrupted ${loggerMergeMessages([
+        _defaultFullFilename,
+      ])}`
+    );
+  }
 
   const defaultConfigDir = await fileExists(DEFAULT_CONFIGS_DIR)
     .then(() => DEFAULT_CONFIGS_DIR)
@@ -33,14 +43,18 @@ export const saveConfig = async <Config>(filename: string, config: Config): Prom
   if (!wannaSave) return;
 
   logger.info(`New config will be saved in ${chalk.green(`${defaultConfigDir}/`)}`);
-  const { userFilename } = await inquirer.prompt<{ userFilename: string }>([
+  // Ask user only for a config name, which is better than asking for a full filename
+  const [defaultConfigName] = defaultFullFilename.split('.');
+  const { userConfigName } = await inquirer.prompt<{ userConfigName: string }>([
     {
       type: 'input',
-      message: 'Pass the config file name',
-      name: 'userFilename',
-      default: defaultFilename,
+      message: 'Provide the name of your new config',
+      name: 'userConfigName',
+      default: defaultConfigName,
       validate: async (input: string) => {
-        const exists = await fileExists(`${defaultConfigDir}/${input}`)
+        const exists = await fileExists(
+          `${defaultConfigDir}/${defaultFullFilename.replace(defaultConfigName, input)}`
+        )
           .then(() => 'File already exists')
           .catch(() => true);
         return exists;
@@ -48,7 +62,9 @@ export const saveConfig = async <Config>(filename: string, config: Config): Prom
     },
   ]);
 
-  const finalFilename = handleFileName(userFilename);
+  const finalFilename = handleFileName(
+    defaultFullFilename.replace(defaultConfigName, userConfigName)
+  );
   const finalPath = `${defaultConfigDir}/${finalFilename}`;
 
   updateLogger.start(`Creating ${chalk.green(finalFilename)}`);
