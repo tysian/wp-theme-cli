@@ -1,6 +1,6 @@
 import path from 'path';
 import { ROOT_DIR } from '../../../constants.js';
-import type { FileTypeKey } from '../acf-generator.config.js';
+import { AvailableFileType } from '../acf-generator.config.js';
 
-export const getDefaultTemplate = (fileType: FileTypeKey) =>
+export const getDefaultTemplate = (fileType: AvailableFileType) =>
   path.resolve(`${ROOT_DIR}/../public/templates/template.${fileType.toLowerCase()}.ejs`);

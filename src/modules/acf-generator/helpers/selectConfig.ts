@@ -1,16 +1,10 @@
 import inquirer from 'inquirer';
 import path from 'path';
 import { fileExists } from '../../../utils/fileExist.js';
-import { logger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
-import {
-  AcfGeneratorConfig,
-  config,
-  configDescriptions,
-  printConfig,
-} from '../acf-generator.config.js';
+import { AcfGeneratorConfig } from '../acf-generator.config.js';
 import { DEFAULT_CONFIG_PATH } from '../acf-generator.const.js';
-import { overwriteConfig } from './overwriteConfig.js';
+import { createNewConfig } from './createNewConfig.js';
 
 export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
   const { configType } = await inquirer.prompt([
@@ -21,17 +15,12 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
       default: 'default',
       choices: [
         {
-          name: 'Default config',
-          value: 'default',
-          short: 'default',
+          name: 'Create new config',
+          value: 'create-new',
+          short: 'create new',
         },
         {
-          name: 'Overwrite default config',
-          value: 'overwrite',
-          short: 'overwrite',
-        },
-        {
-          name: 'External config file',
+          name: 'Use external config',
           value: 'external-config-file',
           short: 'external',
         },
@@ -39,30 +28,10 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
     },
   ]);
 
-  if (configType === 'default') {
-    // Show current config and ask for overwrite
-    logger.info('Here is default config of this generator.');
-    printConfig();
-    const { confirmDefaultConfig } = await inquirer.prompt([
-      {
-        type: 'confirm',
-        message: 'Are you sure you want to use default config?',
-        name: 'confirmDefaultConfig',
-        default: true,
-      },
-    ]);
+  if (configType === 'create-new') {
+    const overwrittenConfig = await createNewConfig();
 
-    if (confirmDefaultConfig) {
-      return config;
-    }
-
-    await selectConfig();
-  }
-
-  if (configType === 'overwrite') {
-    const overwrittenConfig = await overwriteConfig(config, configDescriptions);
-
-    return overwrittenConfig as AcfGeneratorConfig;
+    return overwrittenConfig;
   }
 
   if (configType === 'external-config-file') {
@@ -87,5 +56,5 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
     }
   }
 
-  return config;
+  throw new Error('Wrong config type.');
 };

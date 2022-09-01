@@ -4,7 +4,7 @@ import { loggerPrefix } from '../../../utils/logger-utils.js';
 import { logger, updateLogger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
 import { replaceAll } from '../../../utils/replaceAll.js';
-import { AcfGeneratorConfig, FileTypeKey } from '../acf-generator.config.js';
+import { AcfGeneratorConfig, AvailableFileType } from '../acf-generator.config.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {
@@ -33,7 +33,7 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
     updateLogger.awaiting(`${loggerPrefix(fileType)} Checking existence of template files...`);
     const template =
       configOptions.template === 'default'
-        ? getDefaultTemplate(fileType as FileTypeKey)
+        ? getDefaultTemplate(fileType as AvailableFileType)
         : configOptions.template;
     await fileExists(template);
 
