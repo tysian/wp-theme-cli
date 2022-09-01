@@ -2,5 +2,7 @@
 
 import('../bootstrap.js')
   .then(({ bootstrap }) => bootstrap())
-  .then(process.exit(0))
-  .catch(process.exit(1));
+  .catch((err) => {
+    console.error(err?.message);
+    process.exit(1);
+  });
