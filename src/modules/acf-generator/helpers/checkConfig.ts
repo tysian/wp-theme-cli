@@ -51,9 +51,10 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
       updateLogger.awaiting(`${loggerPrefix(fileType)} Checking import search string...`);
       const importFileContent = await readStream(filePath);
       if (!replaceAll(`"`, `'`, importFileContent).includes(replaceAll(`"`, `'`, search))) {
-        updateLogger.done();
         throw new Error(
-          `${chalk.green(`'${filePath}'`)} file doesn't have ${chalk.green(`${search}`)} in it.`
+          `File ${chalk.green(`'${filePath}'`)} doesn't have search string (${chalk.green(
+            `${search}`
+          )}).`
         );
       }
       updateLogger.success(`${loggerPrefix(fileType)} Search string - OK`);
