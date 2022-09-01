@@ -1,6 +1,7 @@
 import inquirer from 'inquirer';
 import path from 'path';
 import chalk from 'chalk';
+import { SetOptional, SetRequired } from 'type-fest';
 import { AcfGeneratorConfig, AvailableFileType, FileType } from '../acf-generator.config.js';
 import { saveConfig } from '../../../utils/saveConfig.js';
 import { DEFAULT_CONFIG_FILENAME } from '../acf-generator.const.js';
@@ -44,9 +45,10 @@ export const createNewConfig = async () => {
   const fileTypes = {} as Record<AvailableFileType, FileType>;
 
   for await (const fileType of selectFileTypes) {
-    const { template = 'default' } = await inquirer.prompt<{
-      template?: string;
-    }>([
+    type TemplatePrompt = SetOptional<Pick<FileType, 'template'>, 'template'> & {
+      customTemplate: boolean;
+    };
+    const { template = 'default' } = await inquirer.prompt<TemplatePrompt>([
       {
         name: 'customTemplate',
         type: 'confirm',
@@ -58,11 +60,12 @@ export const createNewConfig = async () => {
         type: 'file-tree-selection',
         message: `${loggerPrefix(fileType)} Select EJS template`,
         validate: (item: string) => !!(path.extname(item) === '.ejs') || `You need .ejs extension`,
-        when: (userAnswer: { customTemplate: boolean }) => userAnswer.customTemplate,
+        when: (userAnswer: TemplatePrompt) => userAnswer.customTemplate,
       },
     ]);
 
-    const { output } = await inquirer.prompt<{ output: string }>([
+    type OutputPrompt = Pick<FileType, 'output'>;
+    const { output } = await inquirer.prompt<OutputPrompt>([
       {
         name: 'output',
         type: 'file-tree-selection',
@@ -71,7 +74,8 @@ export const createNewConfig = async () => {
       },
     ]);
 
-    const { haveImports } = await inquirer.prompt<{ haveImports: boolean }>([
+    type HaveImportsPrompt = { haveImports: boolean };
+    const { haveImports } = await inquirer.prompt<HaveImportsPrompt>([
       {
         name: 'haveImports',
         type: 'confirm',
@@ -82,7 +86,8 @@ export const createNewConfig = async () => {
 
     let importProperties: FileType['import'] | undefined;
     if (haveImports) {
-      const imports = await inquirer.prompt<{ filePath: string; search: string; append: string }>([
+      type ImportsPrompt = SetRequired<FileType, 'import'>['import'];
+      const imports = await inquirer.prompt<ImportsPrompt>([
         {
           name: 'filePath',
           type: 'file-tree-selection',

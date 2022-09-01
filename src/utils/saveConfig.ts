@@ -54,10 +54,8 @@ export const saveConfig = async <Config>(
       validate: async (input: string) => {
         const exists = await fileExists(
           `${defaultConfigDir}/${defaultFullFilename.replace(defaultConfigName, input)}`
-        )
-          .then(() => 'File already exists')
-          .catch(() => true);
-        return exists;
+        );
+        return !exists || 'File already exists';
       },
     },
   ]);

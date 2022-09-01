@@ -30,32 +30,30 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
     },
   ]);
 
-  if (configType === 'create-new') {
-    const overwrittenConfig = await createNewConfig();
+  switch (configType) {
+    case 'create-new':
+      const overwrittenConfig = await createNewConfig();
+      return overwrittenConfig;
+    case 'external-config-file':
+      // Ask for external config path
+      const { externalConfigFile } = await inquirer.prompt([
+        {
+          type: 'file-tree-selection',
+          message: 'Select external config file',
+          name: 'externalConfigFile',
+          default: defaultConfigExists || null,
+          validate: (item: string) => path.extname(item) === '.json' || `You need json extension`,
+        },
+      ]);
 
-    return overwrittenConfig;
+      const externalConfigContent = await readStream(externalConfigFile);
+      try {
+        const parsedConfig = JSON.parse(externalConfigContent);
+        return parsedConfig;
+      } catch (e) {
+        throw new Error(`Invalid JSON file - ${externalConfigFile}`);
+      }
+    default:
+      throw new Error('Wrong config type.');
   }
-
-  if (configType === 'external-config-file') {
-    // Ask for external config path
-    const { externalConfigFile } = await inquirer.prompt([
-      {
-        type: 'file-tree-selection',
-        message: 'Select external config file',
-        name: 'externalConfigFile',
-        default: defaultConfigExists || null,
-        validate: (item: string) => path.extname(item) === '.json' || `You need json extension`,
-      },
-    ]);
-
-    const externalConfigContent = await readStream(externalConfigFile);
-    try {
-      const parsedConfig = JSON.parse(externalConfigContent);
-      return parsedConfig;
-    } catch (e) {
-      throw new Error(`Invalid JSON file - ${externalConfigFile}`);
-    }
-  }
-
-  throw new Error('Wrong config type.');
 };

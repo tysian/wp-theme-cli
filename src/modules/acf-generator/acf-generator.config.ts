@@ -22,5 +22,4 @@ export type AcfGeneratorConfig = {
   modulesFieldName: string;
   conflictAction: 'ignore' | 'overwrite';
   fileTypes: Record<AvailableFileType, FileType>;
-  // fileTypes: { [key in AvailableFileType]: FileType };
 };
