@@ -2,8 +2,12 @@ import chalk from 'chalk';
 import { AcfGroup, AcfLayout } from '../../../types.js';
 import { logger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
+import { AcfGeneratorConfig } from '../acf-generator.config.js';
 
-export const getAcfModules = async (filePath: string, fieldName: string): Promise<AcfLayout[]> => {
+export const getAcfModules = async (
+  filePath: AcfGeneratorConfig['modulesFilePath'],
+  fieldName: AcfGeneratorConfig['modulesFieldName']
+): Promise<AcfLayout[]> => {
   // Check if modules field exists
   const modulesFileContent: AcfGroup = await readStream(filePath).then((c) => JSON.parse(c));
   if (
