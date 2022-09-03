@@ -9,25 +9,25 @@ import { logger, updateLogger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
 import { replaceAll } from '../../../utils/replaceAll.js';
 import { writeStream } from '../../../utils/writeStream.js';
-import { AcfGeneratorConfig, FileType, FileTypeKey } from '../acf-generator.config.js';
+import { AcfGeneratorConfig, AvailableFileType, FileType } from '../acf-generator.config.js';
 import { AcfLayout } from './getAcfModules.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
 
 type Module = {
   layout: AcfLayout;
-  fileTypes: Record<FileTypeKey, FileType>;
+  fileTypes: Record<AvailableFileType, FileType>;
   conflictAction: 'overwrite' | 'ignore';
 };
 
 const createModule = async ({ layout, fileTypes, conflictAction }: Module): Promise<boolean> => {
-  for (const [fileType, options] of Object.entries(fileTypes)) {
+  for await (const [fileType, options] of Object.entries(fileTypes)) {
     const { active, output, template: customTemplate, import: moduleImport } = options;
     if (!active) {
       return true;
     }
 
     // Setup template - use default if default, else use custom template from config
-    let template = getDefaultTemplate(fileType as FileTypeKey);
+    let template = getDefaultTemplate(fileType as AvailableFileType);
     if (customTemplate && customTemplate !== 'default' && customTemplate !== template) {
       template = customTemplate;
     }
