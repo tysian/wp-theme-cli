@@ -1,3 +1,4 @@
+import { askForContinue } from '../../utils/askForContinue.js';
 import { gitCheck } from '../../utils/gitCheck.js';
 import { logger, updateLogger } from '../../utils/logger.js';
 import { checkConfig } from './helpers/checkConfig.js';
@@ -14,6 +15,10 @@ export const acfGenerator = async (): Promise<boolean> => {
 
     const finalConfig = await selectConfig();
     await checkConfig(finalConfig);
+
+    if (!(await askForContinue())) {
+      return true;
+    }
 
     const acfModules = await getAcfModules(
       finalConfig.modulesFilePath,

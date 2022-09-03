@@ -1,19 +1,23 @@
 import inquirer from 'inquirer';
 import { simpleGit, SimpleGit } from 'simple-git';
-import { logger, updateLogger } from './logger.js';
+import { updateLogger } from './logger.js';
 
 const git: SimpleGit = simpleGit();
 
 export const gitCheck = async (): Promise<boolean> => {
+  updateLogger.start('Looking for git repository...');
   const isRepo = await git.checkIsRepo();
   if (!isRepo) {
-    logger.warn('No repo found.');
+    updateLogger.warn('No repo found.');
+    updateLogger.done();
     return true;
   }
 
+  updateLogger.start('Checking git status...');
   const status = await git.status();
   if (status.isClean()) {
-    logger.skip('Nothing to commit, continuing...');
+    updateLogger.skip('Nothing to commit, continuing...');
+    updateLogger.done();
     return true;
   }
 

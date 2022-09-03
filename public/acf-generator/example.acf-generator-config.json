@@ -1,0 +1,32 @@
+{
+  "modulesFilePath": "./includes/acf-json/group_5d380bc6e0ae8.json",
+  "modulesFieldName": "modules",
+  "conflictAction": "ignore",
+  "fileTypes": {
+    "php": {
+      "active": true,
+      "template": "default",
+      "output": "./modules"
+    },
+    "scss": {
+      "active": true,
+      "template": "default",
+      "output": "./src/scss/modules",
+      "import": {
+        "filePath": "./src/scss/main.scss",
+        "search": "@import 'modules/",
+        "append": "@import \"modules/{file_name}\";"
+      }
+    },
+    "js": {
+      "active": false,
+      "template": "default",
+      "output": "./src/js/modules",
+      "import": {
+        "filePath": "./src/js/modules/index.js",
+        "search": "export",
+        "append": "export { {module_variable_name} } from './{file_name}.js';"
+      }
+    }
+  }
+}

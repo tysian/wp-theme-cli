@@ -4,7 +4,7 @@ import { loggerPrefix } from '../../../utils/logger-utils.js';
 import { logger, updateLogger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
 import { replaceAll } from '../../../utils/replaceAll.js';
-import { AcfGeneratorConfig, FileTypeKey } from '../acf-generator.config.js';
+import { AcfGeneratorConfig, AvailableFileType } from '../acf-generator.config.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {
@@ -33,7 +33,7 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
     updateLogger.awaiting(`${loggerPrefix(fileType)} Checking existence of template files...`);
     const template =
       configOptions.template === 'default'
-        ? getDefaultTemplate(fileType as FileTypeKey)
+        ? getDefaultTemplate(fileType as AvailableFileType)
         : configOptions.template;
     await fileExists(template);
 
@@ -51,9 +51,10 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
       updateLogger.awaiting(`${loggerPrefix(fileType)} Checking import search string...`);
       const importFileContent = await readStream(filePath);
       if (!replaceAll(`"`, `'`, importFileContent).includes(replaceAll(`"`, `'`, search))) {
-        updateLogger.done();
         throw new Error(
-          `${chalk.green(`'${filePath}'`)} file doesn't have ${chalk.green(`${search}`)} in it.`
+          `File ${chalk.green(`'${filePath}'`)} doesn't have search string (${chalk.green(
+            `${search}`
+          )}).`
         );
       }
       updateLogger.success(`${loggerPrefix(fileType)} Search string - OK`);

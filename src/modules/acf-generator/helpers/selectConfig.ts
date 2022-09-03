@@ -1,37 +1,28 @@
 import inquirer from 'inquirer';
 import path from 'path';
 import { fileExists } from '../../../utils/fileExist.js';
-import { logger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
-import {
-  AcfGeneratorConfig,
-  config,
-  configDescriptions,
-  printConfig,
-} from '../acf-generator.config.js';
+import { AcfGeneratorConfig } from '../acf-generator.config.js';
 import { DEFAULT_CONFIG_PATH } from '../acf-generator.const.js';
-import { overwriteConfig } from './overwriteConfig.js';
+import { createNewConfig } from './createNewConfig.js';
 
 export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
+  const defaultConfigExists = await fileExists(DEFAULT_CONFIG_PATH).catch(() => false);
+
   const { configType } = await inquirer.prompt([
     {
       type: 'list',
       message: 'Select config type',
       name: 'configType',
-      default: 'default',
+      default: defaultConfigExists ? 'external-config-file' : 'create-new',
       choices: [
         {
-          name: 'Default config',
-          value: 'default',
-          short: 'default',
+          name: 'Create new config',
+          value: 'create-new',
+          short: 'create new',
         },
         {
-          name: 'Overwrite default config',
-          value: 'overwrite',
-          short: 'overwrite',
-        },
-        {
-          name: 'External config file',
+          name: 'Use external config',
           value: 'external-config-file',
           short: 'external',
         },
@@ -39,53 +30,30 @@ export const selectConfig = async (): Promise<AcfGeneratorConfig> => {
     },
   ]);
 
-  if (configType === 'default') {
-    // Show current config and ask for overwrite
-    logger.info('Here is default config of this generator.');
-    printConfig();
-    const { confirmDefaultConfig } = await inquirer.prompt([
-      {
-        type: 'confirm',
-        message: 'Are you sure you want to use default config?',
-        name: 'confirmDefaultConfig',
-        default: true,
-      },
-    ]);
+  switch (configType) {
+    case 'create-new':
+      const overwrittenConfig = await createNewConfig();
+      return overwrittenConfig;
+    case 'external-config-file':
+      // Ask for external config path
+      const { externalConfigFile } = await inquirer.prompt([
+        {
+          type: 'file-tree-selection',
+          message: 'Select external config file',
+          name: 'externalConfigFile',
+          default: defaultConfigExists || null,
+          validate: (item: string) => path.extname(item) === '.json' || `You need json extension`,
+        },
+      ]);
 
-    if (confirmDefaultConfig) {
-      return config;
-    }
-
-    await selectConfig();
+      const externalConfigContent = await readStream(externalConfigFile);
+      try {
+        const parsedConfig = JSON.parse(externalConfigContent);
+        return parsedConfig;
+      } catch (e) {
+        throw new Error(`Invalid JSON file - ${externalConfigFile}`);
+      }
+    default:
+      throw new Error('Wrong config type.');
   }
-
-  if (configType === 'overwrite') {
-    const overwrittenConfig = await overwriteConfig(config, configDescriptions);
-
-    return overwrittenConfig as AcfGeneratorConfig;
-  }
-
-  if (configType === 'external-config-file') {
-    // Ask for external config path
-    const externalConfigFilePath = await fileExists(DEFAULT_CONFIG_PATH).catch(() => '');
-    const { externalConfigFile } = await inquirer.prompt([
-      {
-        type: 'file-tree-selection',
-        message: 'Select external config file',
-        name: 'externalConfigFile',
-        default: externalConfigFilePath || null,
-        validate: (item: string) => path.extname(item) === '.json' || `You need json extension`,
-      },
-    ]);
-
-    const externalConfigContent = await readStream(externalConfigFile);
-    try {
-      const parsedConfig = JSON.parse(externalConfigContent);
-      return parsedConfig;
-    } catch (e) {
-      throw new Error(`Invalid JSON file - ${externalConfigFile}`);
-    }
-  }
-
-  return config;
 };
