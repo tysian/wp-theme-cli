@@ -124,7 +124,11 @@ export const createNewConfig = async () => {
     };
   }
 
-  const newConfig: AcfGeneratorConfig = { ...answers, fileTypes };
+  const newConfig: AcfGeneratorConfig = {
+    ...answers,
+    modulesFilePath: getRelativePath(answers.modulesFilePath),
+    fileTypes,
+  };
   await saveConfig<AcfGeneratorConfig>(DEFAULT_CONFIG_FILENAME, newConfig);
 
   return newConfig;
