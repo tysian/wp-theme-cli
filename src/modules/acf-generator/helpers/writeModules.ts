@@ -10,7 +10,6 @@ import { readStream } from '../../../utils/readStream.js';
 import { replaceAll } from '../../../utils/replaceAll.js';
 import { writeStream } from '../../../utils/writeStream.js';
 import { AcfGeneratorConfig, AvailableFileType, FileType } from '../acf-generator.config.js';
-import { AcfLayout } from './getAcfModules.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
 import { AcfLayout } from '../../../types.js';
 

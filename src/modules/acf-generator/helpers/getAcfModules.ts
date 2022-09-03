@@ -3,10 +3,7 @@ import { AcfGroup, AcfLayout } from '../../../types.js';
 import { logger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
 
-export const getAcfModules = async (
-  filePath = config.modulesFilePath,
-  fieldName = config.modulesFieldName
-): Promise<AcfLayout[]> => {
+export const getAcfModules = async (filePath: string, fieldName: string): Promise<AcfLayout[]> => {
   // Check if modules field exists
   const modulesFileContent: AcfGroup = await readStream(filePath).then((c) => JSON.parse(c));
   if (
