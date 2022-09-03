@@ -15,6 +15,7 @@ import { DEFAULT_CONFIG_FILENAME, OperationType } from '../cleaner.const.js';
 import { logger } from '../../../utils/logger.js';
 import { saveConfig } from '../../../utils/saveConfig.js';
 import { loggerMergeMessages, loggerPrefix } from '../../../utils/logger-utils.js';
+import { getRelativePath } from '../../../utils/getRelativePath.js';
 
 const addMultipleEntries = async (entryName = 'entry'): Promise<string[]> => {
   let stop = false;
@@ -133,7 +134,7 @@ const createNewOperation = async (group?: OperationGroup | null): Promise<Operat
   const operation: Partial<Operation> = {
     operationType: type,
     description,
-    input: input.map((filePath: string) => path.relative(process.cwd(), filePath)),
+    input: input.map((filePath: string) => getRelativePath(filePath)),
   };
 
   if (type === OperationType.REMOVE_ACF_LAYOUT) {

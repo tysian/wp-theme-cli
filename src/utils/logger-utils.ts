@@ -1,10 +1,9 @@
 import chalk, { ChalkInstance } from 'chalk';
-import path from 'path';
+import { getRelativePath } from './getRelativePath.js';
 
 export const loggerPrefix = (fileType: string) => `[${chalk.cyanBright(fileType.toUpperCase())}]`;
 
-export const loggerRelativePath = (file = '') =>
-  `(${chalk.green(path.relative(process.cwd(), file))})`;
+export const loggerRelativePath = (file: string) => `(${chalk.green(getRelativePath(file))})`;
 
 type LoggerListOptions = {
   color?: ChalkInstance;

@@ -4,7 +4,7 @@ import { getObjectFromJSON } from './getObjectFromJSON.js';
 
 export const getExternalConfig = async <Config>(defaultConfig: string) => {
   // Ask for external config path
-  const { externalConfigFile } = await inquirer.prompt([
+  const { externalConfigFile } = await inquirer.prompt<{ externalConfigFile: string }>([
     {
       type: 'file-tree-selection',
       message: 'Select external config file',
@@ -14,6 +14,6 @@ export const getExternalConfig = async <Config>(defaultConfig: string) => {
     },
   ]);
 
-  const config = await getObjectFromJSON<Config>(externalConfigFile);
-  return config as Config;
+  const config: Config = await getObjectFromJSON(externalConfigFile);
+  return config;
 };
