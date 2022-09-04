@@ -1,23 +1,29 @@
 import { askForContinue } from '../../utils/askForContinue.js';
 import { gitCheck } from '../../utils/gitCheck.js';
 import { logger, updateLogger } from '../../utils/logger.js';
+import { selectConfig } from '../../utils/selectConfig.js';
+import { AcfGeneratorConfig } from './acf-generator.config.js';
+import { DEFAULT_CONFIG_PATH } from './acf-generator.const.js';
 import { checkConfig } from './helpers/checkConfig.js';
+import { createNewConfig } from './helpers/createNewConfig.js';
 import { getAcfModules } from './helpers/getAcfModules.js';
-import { selectConfig } from './helpers/selectConfig.js';
 import { writeModules } from './helpers/writeModules.js';
 
-export const acfGenerator = async (): Promise<boolean> => {
+export const acfGenerator = async (): Promise<void> => {
   logger.none('ACF Flexible field files generator!');
 
   try {
     // Check if there are any uncommited changes
     await gitCheck();
 
-    const finalConfig = await selectConfig();
+    const finalConfig = await selectConfig<AcfGeneratorConfig>({
+      defaultConfigPath: DEFAULT_CONFIG_PATH,
+      createNewConfig,
+    });
     await checkConfig(finalConfig);
 
     if (!(await askForContinue())) {
-      return true;
+      return;
     }
 
     const acfModules = await getAcfModules(
@@ -31,6 +37,4 @@ export const acfGenerator = async (): Promise<boolean> => {
     updateLogger.error((error as Error)?.message);
     updateLogger.done();
   }
-
-  return true;
 };
