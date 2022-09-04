@@ -49,7 +49,7 @@ export const bootstrap = async () => {
   program
     .command('clean')
     .description('Update and remove files using provided config')
-    .option('--force', 'Run cleaning outside of current working directory')
+    .option('--force', 'Allow cleaning outside of current working directory')
     .action(() => {
       cleaner();
     });

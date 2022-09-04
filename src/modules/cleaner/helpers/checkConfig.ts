@@ -6,6 +6,8 @@ import { CleanerConfig, CleanerConfigSchema } from '../cleaner.config.js';
 
 export const checkConfig = async (config: CleanerConfig): Promise<void> => {
   updateLogger.start('Checking config...');
+
+  // Check schema
   const check = CleanerConfigSchema.strict().safeParse(config);
   if (!check.success) {
     const errors = check.error.issues
