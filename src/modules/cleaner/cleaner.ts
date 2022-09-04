@@ -24,7 +24,7 @@ export const cleaner = async (): Promise<void> => {
     });
     await checkConfig(finalConfig);
 
-    if (await askForContinue()) return;
+    if (!(await askForContinue())) return;
 
     const filteredOperations: Operation[] = await filterOperations(finalConfig);
 

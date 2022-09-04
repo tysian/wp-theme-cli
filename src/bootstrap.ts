@@ -8,8 +8,6 @@ import { acfGenerator } from './modules/acf-generator/acf-generator.js';
 import { logger } from './utils/logger.js';
 import { loggerListElements } from './utils/logger-utils.js';
 import { getPackageJSON } from './utils/getPackageJSON.js';
-import { readStream } from './utils/readStream.js';
-import { ROOT_DIR } from './constants.js';
 import { cleaner } from './modules/cleaner/cleaner.js';
 
 export const bootstrap = async () => {
@@ -55,4 +53,6 @@ export const bootstrap = async () => {
     });
 
   program.parse();
+
+  console.log({ global });
 };
