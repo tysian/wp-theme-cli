@@ -5,6 +5,7 @@ import { getObjectFromJSON } from './getObjectFromJSON.js';
 
 export const getPackageJSON = async (): Promise<PackageJson> => {
   const packageJSONPath = path.resolve(`${ROOT_DIR}/../package.json`);
+  const packageJSON: PackageJson = await getObjectFromJSON<PackageJson>(packageJSONPath);
 
-  return getObjectFromJSON<PackageJson>(packageJSONPath);
+  return packageJSON;
 };
