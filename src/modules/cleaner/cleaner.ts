@@ -9,16 +9,19 @@ import { filterOperations } from './helpers/filterOperations.js';
 import { CleanerStatistics, cleanerStats } from './cleaner.const.js';
 import { checkConfig } from './helpers/checkConfig.js';
 import { handleError } from '../../utils/handleError.js';
+import { askForContinue } from '../../utils/askForContinue.js';
 
 export const cleaner = async (): Promise<void> => {
   logger.none('WordPress template cleaner!');
 
   try {
-    // Check if there are any uncommited changes
     await gitCheck();
 
     const finalConfig = await selectConfig();
     await checkConfig(finalConfig);
+
+    if (await askForContinue()) return;
+
     const filteredOperations: Operation[] = await filterOperations(finalConfig);
 
     const statistics = new Statistics(cleanerStats) as CleanerStatistics;

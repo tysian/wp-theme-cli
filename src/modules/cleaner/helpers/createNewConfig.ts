@@ -2,7 +2,6 @@ import chalk from 'chalk';
 import getSlug from 'speakingurl';
 import inquirer from 'inquirer';
 import { cloneDeep } from 'lodash-es';
-import path from 'path';
 import {
   CleanerConfig,
   Operation,
