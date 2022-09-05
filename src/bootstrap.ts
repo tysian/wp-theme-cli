@@ -47,12 +47,11 @@ export const bootstrap = async () => {
   program
     .command('clean')
     .description('Update and remove files using provided config')
-    .option('--force', 'Allow cleaning outside of current working directory')
-    .action(() => {
+    .option('--allow-outside-cwd', 'Allow cleaning outside of current working directory')
+    .action((options) => {
+      global.programOptions = options;
       cleaner();
     });
 
   program.parse();
-
-  console.log({ global });
 };

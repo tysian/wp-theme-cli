@@ -2,8 +2,8 @@
 /* eslint-disable vars-on-top */
 
 declare global {
-  var cleanerOptions: {
-    force: boolean;
+  var programOptions: {
+    allowOutsideCwd?: boolean;
   };
 }
 
