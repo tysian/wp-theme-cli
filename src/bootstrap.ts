@@ -7,13 +7,10 @@ import semver from 'semver';
 import { acfGenerator } from './modules/acf-generator/acf-generator.js';
 import { logger } from './utils/logger.js';
 import { loggerListElements } from './utils/logger-utils.js';
-import { getPackageJSON } from './utils/getPackageJSON.js';
+import { bin, description, version, engines as pkgEngines } from '../package.json';
 import { cleaner } from './modules/cleaner/cleaner.js';
 
 export const bootstrap = async () => {
-  const pkg = await getPackageJSON();
-  const { bin = '', description = '', version = '', engines: pkgEngines = {} } = pkg;
-
   const currentVersion = process.versions.node;
   const engines = pkgEngines?.node ?? '';
   const isSupported = semver.satisfies(currentVersion, engines);

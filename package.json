@@ -1,35 +1,36 @@
 {
   "name": "wp-theme",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "Generate, update & remove files in your WordPress theme",
-  "author": {
-    "name": "Jakub Bazgier",
-    "url": "https://github.com/tysian"
+  "homepage": "https://github.com/tysian/wp-theme",
+  "bugs": {
+    "url": "https://github.com/tysian/wp-theme/issues"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/tysian/wp-theme.git"
   },
-  "bugs": {
-    "url": "https://github.com/tysian/wp-theme/issues"
-  },
-  "homepage": "https://github.com/tysian/wp-theme",
   "license": "MIT",
-  "engines": {
-    "node": "^14.18.0 || >=16.12.0"
+  "author": {
+    "name": "Jakub Bazgier",
+    "url": "https://github.com/tysian"
   },
   "type": "module",
   "bin": {
-    "wp-theme": "dist/bin/wp-theme.js"
-  },
-  "scripts": {
-    "build": "tsc",
-    "dev": "tsc -w"
+    "wp-theme": "dist/wp-theme.js"
   },
   "files": [
-    "dist/*",
-    "public/*"
+    "dist/*"
   ],
+  "scripts": {
+    "build": "tsup src/bin/wp-theme.ts --format esm --clean --sourcemap --minify --metafile",
+    "check": "yarn lint && yarn format && yarn typecheck",
+    "dev": "tsup src/bin/wp-theme.ts --format esm --watch --clean",
+    "format": "prettier --write --plugin-search-dir=. \"**/*.{ts,md,json,js,mjs,cjs}\" --ignore-path .gitignore",
+    "lint": "eslint src --cache --cache-strategy content",
+    "start": "node dist/wp-theme.js",
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "chalk": "^5.0.1",
     "clarify": "^2.1.0",
@@ -66,7 +67,11 @@
     "eslint-import-resolver-typescript": "^3.4.0",
     "eslint-plugin-import": "^2.26.0",
     "prettier": "^2.7.1",
+    "tsup": "^6.2.3",
     "type-fest": "^2.19.0",
     "typescript": "^4.7.4"
+  },
+  "engines": {
+    "node": "^14.18.0 || >=16.12.0"
   }
 }

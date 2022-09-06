@@ -17,4 +17,3 @@ export const readStream = (file: string): Promise<string> =>
       reject(error);
     });
   });
-
