@@ -30,15 +30,13 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
     updateLogger.done();
 
     // Check if template exists
-    updateLogger.awaiting(`${loggerPrefix(fileType)} Checking existence of template files...`);
-    const template =
-      configOptions.template === 'default'
-        ? getDefaultTemplate(fileType as AvailableFileType)
-        : configOptions.template;
-    await fileExists(template);
+    if (configOptions.template !== 'default') {
+      updateLogger.awaiting(`${loggerPrefix(fileType)} Checking existence of template files...`);
+      await fileExists(configOptions.template);
 
-    updateLogger.success(`${loggerPrefix(fileType)} Templates - OK`);
-    updateLogger.done();
+      updateLogger.success(`${loggerPrefix(fileType)} Templates - OK`);
+      updateLogger.done();
+    }
 
     if (configOptions?.import) {
       const { filePath, search } = configOptions.import;

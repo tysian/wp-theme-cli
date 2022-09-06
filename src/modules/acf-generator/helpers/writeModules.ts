@@ -26,12 +26,6 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
       return true;
     }
 
-    // Setup template - use default if default, else use custom template from config
-    let template = getDefaultTemplate(fileType as AvailableFileType);
-    if (customTemplate && customTemplate !== 'default' && customTemplate !== template) {
-      template = customTemplate;
-    }
-
     // Prepare data structure to create modules
     const moduleData = {
       name: layout.name,
@@ -51,8 +45,14 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
     // Prepare output path
     const outputPath = path.resolve(output, moduleData.fileName);
 
+    // Setup template - use default if default, else use custom template from config
+    let template = getDefaultTemplate(fileType as AvailableFileType);
+    if (customTemplate && customTemplate !== 'default') {
+      template = await readStream(customTemplate);
+    }
+
     // Render template using EJS
-    const renderedTemplate = await ejs.renderFile(template, { data: moduleData }, { async: true });
+    const renderedTemplate = await ejs.render(template, { data: moduleData }, { async: true });
 
     // Check if output exists and proceed conflictAction if necessary
     const outputExists = await fileExists(outputPath).catch(() => false);
