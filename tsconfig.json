@@ -13,5 +13,6 @@
     "skipLibCheck": true,
     "noEmit": false,
     "allowSyntheticDefaultImports": true
-  }
+  },
+  "include": ["./src/**/*.ts"]
 }
