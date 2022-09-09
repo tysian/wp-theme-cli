@@ -2,7 +2,7 @@
 
 ## Goal
 
-Starting new WP projects can be time consuming. I've decided to create this CLI to automate some of tasks.  
+Bootstrapping new WP projects might be time consuming. I've decided to create this CLI to automate some of tasks.  
 For now, I'm focusing on files operations, such as removing unnecessary files or creating new ones.
 
 > ⚠ Warning
@@ -15,6 +15,20 @@ For now, I'm focusing on files operations, such as removing unnecessary files or
 
 - Node 14.18.0 or >=16.12.0
 
+## Installation
+
+Preferred way is to run latest version directly using `npx` or `pnpx`
+
+```bash
+npx wp-theme@latest
+```
+
+```bash
+pnpx wp-theme@latest
+```
+
+You can also install it locally or globally, but this way is **NOT RECOMMENDED**.
+
 ## Available options
 
 Check all commands available using help command
@@ -23,13 +37,6 @@ Check all commands available using help command
 wp-theme --help
 ```
 
-### Generate modules
+Each feature is called a **module** and have separate documentation:
 
-In my company, the **modules** are simply a flexible field rows, and we are using separate file for each module.  
-You can use this command to generate files for flexible field.
-
-```bash
-wp-theme generate modules
-```
-
-For more informations, please check [this](/docs/acf-generator.md).
+1. [ACF Generator](docs/acf-generator.md) - Generate files based on flexible field layouts
