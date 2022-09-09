@@ -11,6 +11,7 @@ import { handleError } from '../../../utils/handleError.js';
 import { removeFromJSON } from '../operations/removeFromJSON.js';
 import { removeACFLayout } from '../operations/removeACFLayout.js';
 import { loggerMergeMessages, loggerPrefix } from '../../../utils/logger-utils.js';
+import { filterOutsideCwd } from '../../../utils/filterOutsideCwd.js';
 
 export const handleOperations = async (
   operations: Operation[],
@@ -19,22 +20,23 @@ export const handleOperations = async (
   for await (const operation of operations) {
     try {
       const { input, operationType, description = '', groupKey = '' } = operation;
-      const files = await getGlobFiles(input);
 
-      const outsideOfCwd = files.filter((file) => !file.includes(process.cwd()));
-      if (outsideOfCwd.length > 0) {
-        throw new Error('Operation outside of current working directory!');
-      }
+      const files = await getGlobFiles(input).then((output) =>
+        filterOutsideCwd(output, global.programOptions?.allowOutsideCwd)
+      );
 
       if (!files.length) {
         logger.skip(
           loggerMergeMessages([
+            // key of current group
             groupKey ? loggerPrefix(groupKey) : '',
-            `${asArray(input).length} ${
-              operationType === OperationType.REMOVE_DIRECTORY
-                ? `director${asArray(input).length > 1 ? 'ies' : 'y'}`
-                : `file${asArray(input).length > 1 ? 's' : ''}`
-            } not found`,
+            // amount of files
+            `${asArray(input).length}`,
+            // Plural or singular
+            operationType === OperationType.REMOVE_DIRECTORY
+              ? `director${asArray(input).length > 1 ? 'ies' : 'y'}`
+              : `file${asArray(input).length > 1 ? 's' : ''}`,
+            `not found`,
             `for operation (${chalk.green(description || operationType)})`,
           ])
         );
