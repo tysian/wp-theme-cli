@@ -57,6 +57,7 @@ export const gitCheck = async (): Promise<boolean> => {
       },
     ]);
 
+    updateLogger.done();
     updateLogger.start('Commiting');
     await git.add('.');
     await git.commit(commitMessage);
