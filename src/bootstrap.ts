@@ -30,9 +30,13 @@ export const bootstrap = async () => {
     .description('Generate files')
     .argument('<type>', `what to generate, accepting: ${loggerListElements(['modules'])}`)
     .action((type) => {
-      if (type === 'modules') acfGenerator();
-      else {
-        logger.none(`Wrong type, accepting only: ${loggerListElements(['modules'])}`);
+      switch (type) {
+        case 'modules':
+          acfGenerator();
+          break;
+        default:
+          logger.none(`Wrong type, accepting only: ${loggerListElements(['modules'])}`);
+          break;
       }
     });
 
