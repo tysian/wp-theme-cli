@@ -1,6 +1,6 @@
 {
-  "name": "Temporary Config",
-  "description": "Description for temporary config",
+  "name": "Default config",
+  "description": "Description for default config",
   "groups": [
     {
       "key": "common",
@@ -93,7 +93,7 @@
           "input": ["includes/functions/custom-post-types/cpt-raporty_biezace.php"]
         },
         {
-          "description": "Remove Custom Post Type imports",
+          "description": "Update Custom Post Type imports",
           "operationType": "REMOVE_FILE_LINE",
           "input": "includes/functions/custom-post-types.php",
           "search": "custom-post-types/cpt-raporty_biezace.php"
@@ -127,7 +127,7 @@
           "input": ["includes/dictionary", "includes/gri-admin"]
         },
         {
-          "description": "Remove report related imports",
+          "description": "Update report related imports",
           "operationType": "REMOVE_FILE_LINE",
           "input": "functions.php",
           "search": ["includes/gri-admin/gri-admin", "includes/dictionary/dictionary-admin"]
@@ -142,7 +142,7 @@
           ]
         },
         {
-          "description": "Remove Custom Post Type imports",
+          "description": "Update Custom Post Type imports",
           "operationType": "REMOVE_FILE_LINE",
           "input": "includes/functions/custom-post-types.php",
           "search": [
@@ -209,7 +209,7 @@
           "input": ["sidebar.php", "single-noty_objasniajace.php"]
         },
         {
-          "description": "Update PHP file ({filename})",
+          "description": "Remove unnecessary includes and unused functions",
           "operationType": "REMOVE_FILE_LINE",
           "input": "**/*.php",
           "exclude": ["class-wp-bootstrap-navwalker.php"],
