@@ -11,10 +11,9 @@ export const getAcfModules = async (
   // Check if modules field exists
   const modulesFileContent: AcfGroup = await readStream(filePath).then((c) => JSON.parse(c));
   if (
-    !modulesFileContent ||
-    !Object.prototype.hasOwnProperty.call(modulesFileContent, 'fields') ||
+    !modulesFileContent?.fields ||
     !Array.isArray(modulesFileContent.fields) ||
-    modulesFileContent.fields.length === 0
+    !modulesFileContent.fields.length
   ) {
     logger.debug(modulesFileContent);
     throw new Error(
@@ -27,13 +26,9 @@ export const getAcfModules = async (
     throw new Error(`There is no ${fieldName} field.`);
   }
 
-  if (
-    !modulesField?.layouts ||
-    !Object.prototype.hasOwnProperty.call(modulesField, 'layouts') ||
-    !Object.values(modulesField.layouts)
-  ) {
+  if (!modulesField?.layouts || !Object.values(modulesField.layouts).length) {
     throw new Error('Modules field have no layouts.');
   }
 
-  return Object.values(modulesField.layouts) as AcfLayout[];
+  return Object.values(modulesField.layouts);
 };

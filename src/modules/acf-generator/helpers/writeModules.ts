@@ -7,10 +7,10 @@ import filenamify from 'filenamify';
 import { fileExists } from '../../../utils/fileExist.js';
 import { logger, updateLogger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
-import { replaceAll } from '../../../utils/replaceAll.js';
 import { writeStream } from '../../../utils/writeStream.js';
 import { AcfGeneratorConfig, AvailableFileType, FileType } from '../acf-generator.config.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
+import { stringIncludesIgnoreQuotes } from '../../../utils/stringIncludesIgnoreQuotes.js';
 import { AcfLayout } from '../../../types.js';
 
 type Module = {
@@ -19,11 +19,11 @@ type Module = {
   conflictAction: 'overwrite' | 'ignore';
 };
 
-const createModule = async ({ layout, fileTypes, conflictAction }: Module): Promise<boolean> => {
+const createModule = async ({ layout, fileTypes, conflictAction }: Module): Promise<void> => {
   for await (const [fileType, options] of Object.entries(fileTypes)) {
     const { active, output, template: customTemplate, import: moduleImport } = options;
     if (!active) {
-      return true;
+      return;
     }
 
     // Prepare data structure to create modules
@@ -45,6 +45,24 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
     // Prepare output path
     const outputPath = path.resolve(output, moduleData.fileName);
 
+    // Check if output exists and proceed conflictAction if necessary
+    const outputExists = await fileExists(outputPath).catch(() => false);
+    if (outputExists) {
+      switch (conflictAction) {
+        case 'ignore':
+          updateLogger.skip(`${chalk.green(`${moduleData.fileName}`)} already exists.`);
+          break;
+        case 'overwrite':
+          updateLogger.warn(
+            `File ${moduleData.fileName} already exist - ${chalk.bold.red('OVERWRITING')}`
+          );
+          break;
+        default:
+          break;
+      }
+      updateLogger.done();
+    }
+
     // Setup template - use default if default, else use custom template from config
     let template = getDefaultTemplate(fileType as AvailableFileType);
     if (customTemplate && customTemplate !== 'default') {
@@ -53,22 +71,6 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
 
     // Render template using EJS
     const renderedTemplate = await ejs.render(template, { data: moduleData }, { async: true });
-
-    // Check if output exists and proceed conflictAction if necessary
-    const outputExists = await fileExists(outputPath).catch(() => false);
-    if (outputExists) {
-      if (conflictAction === 'ignore') {
-        updateLogger.skip(`${chalk.green(`${moduleData.fileName}`)} already exists.`);
-        updateLogger.done();
-      }
-
-      if (conflictAction === 'overwrite') {
-        updateLogger.warn(
-          `File ${moduleData.fileName} already exist - ${chalk.bold.red('OVERWRITING')}`
-        );
-        updateLogger.done();
-      }
-    }
 
     // Create module file
     if (!outputExists || (outputExists && conflictAction === 'overwrite')) {
@@ -83,33 +85,29 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
 
       const importFileContent = await readStream(moduleImport.filePath);
 
-      // remove starting `_` and ending `.scss`
+      // For SCSS files - remove starting `_` and ending `.scss`
       let { fileName } = moduleData;
       if (fileName.startsWith('_') && fileName.endsWith('.scss')) {
         fileName = fileName.substring(1).slice(0, -5);
       }
 
-      let textToAppend = moduleImport.append;
-      textToAppend = textToAppend
+      const textToAppend = moduleImport.append
         .replace('{file_name}', fileName)
         .replace('{module_name}', moduleData.name)
         .replace('{module_variable_name}', moduleData.variableName);
 
-      const isImported = replaceAll(`"`, `'`, importFileContent).includes(
-        replaceAll(`"`, `'`, textToAppend)
-      );
+      const isImported = stringIncludesIgnoreQuotes(importFileContent, textToAppend);
 
       if (isImported) {
         updateLogger.skip(`${chalk.green(`${moduleData.fileName}`)} already imported.`);
         updateLogger.done();
-        return true;
+        return;
       }
 
       // Find last index
       const contentArray = importFileContent.split('\n');
       const lastIndex = [...contentArray].reduce(
-        (acc, row, idx) =>
-          replaceAll(`"`, `'`, row).includes(replaceAll(`"`, `'`, moduleImport.search)) ? idx : acc,
+        (acc, row, idx) => (stringIncludesIgnoreQuotes(row, moduleImport.search) ? idx : acc),
         -1
       );
 
@@ -118,7 +116,7 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
           `This should never happen, but didn't found ${chalk.blueBright(moduleImport.search)}.`
         );
         updateLogger.done();
-        return true;
+        return;
       }
 
       contentArray.splice(lastIndex + 1, 0, textToAppend);
@@ -128,8 +126,6 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
       updateLogger.done();
     }
   }
-
-  return true;
 };
 
 export const writeModules = async (acfModules: AcfLayout[], config: AcfGeneratorConfig) => {
@@ -138,7 +134,7 @@ export const writeModules = async (acfModules: AcfLayout[], config: AcfGenerator
   const timeStart = performance.now();
   const { fileTypes, conflictAction } = config;
 
-  for (const layout of acfModules) {
+  for await (const layout of acfModules) {
     await createModule({ layout, fileTypes, conflictAction });
   }
   const timeEnd = performance.now();

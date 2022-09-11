@@ -3,7 +3,7 @@ import { fileExists } from '../../../utils/fileExist.js';
 import { loggerPrefix } from '../../../utils/logger-utils.js';
 import { logger, updateLogger } from '../../../utils/logger.js';
 import { readStream } from '../../../utils/readStream.js';
-import { replaceAll } from '../../../utils/replaceAll.js';
+import { stringIncludesIgnoreQuotes } from '../../../utils/stringIncludesIgnoreQuotes.js';
 import { AcfGeneratorConfig } from '../acf-generator.config.js';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {
@@ -20,7 +20,7 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
   }
   logger.success('Conflict action - OK');
 
-  for (const [fileType, configOptions] of Object.entries(config.fileTypes).filter(
+  for await (const [fileType, configOptions] of Object.entries(config.fileTypes).filter(
     ([, configOption]) => configOption.active
   )) {
     updateLogger.awaiting(`${loggerPrefix(fileType)} Checking existence of output files...`);
@@ -47,7 +47,8 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
 
       updateLogger.awaiting(`${loggerPrefix(fileType)} Checking import search string...`);
       const importFileContent = await readStream(filePath);
-      if (!replaceAll(`"`, `'`, importFileContent).includes(replaceAll(`"`, `'`, search))) {
+
+      if (!stringIncludesIgnoreQuotes(importFileContent, search)) {
         throw new Error(
           `File ${chalk.green(`'${filePath}'`)} doesn't have search string (${chalk.green(
             `${search}`
