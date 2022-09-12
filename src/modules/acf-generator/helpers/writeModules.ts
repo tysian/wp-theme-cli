@@ -1,17 +1,17 @@
 import chalk from 'chalk';
 import ejs from 'ejs';
+import filenamify from 'filenamify';
 import { kebabCase, snakeCase } from 'lodash-es';
 import path from 'path';
 import { performance } from 'perf_hooks';
-import filenamify from 'filenamify';
-import { fileExists } from '../../../utils/fileExist.js';
-import { logger, updateLogger } from '../../../utils/logger.js';
-import { readStream } from '../../../utils/readStream.js';
-import { writeStream } from '../../../utils/writeStream.js';
+import { fileExists } from '../../../shared/utils/fileExist.js';
+import { logger, updateLogger } from '../../../shared/utils/logger.js';
+import { readStream } from '../../../shared/utils/readStream.js';
+import { stringIncludesIgnoreQuotes } from '../../../shared/utils/stringIncludesIgnoreQuotes.js';
+import { writeStream } from '../../../shared/utils/writeStream.js';
 import { AcfGeneratorConfig, AvailableFileType, FileType } from '../acf-generator.config.js';
 import { AcfLayout } from './getAcfModules.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
-import { stringIncludesIgnoreQuotes } from '../../../utils/stringIncludesIgnoreQuotes.js';
 
 type Module = {
   layout: AcfLayout;

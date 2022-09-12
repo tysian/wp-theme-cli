@@ -5,9 +5,9 @@ import inquirer from 'inquirer';
 import inquirerFileTreeSelection from 'inquirer-file-tree-selection-prompt';
 import semver from 'semver';
 import { acfGenerator } from './modules/acf-generator/acf-generator.js';
-import { logger } from './utils/logger.js';
-import { loggerListElements } from './utils/logger-utils.js';
 import { bin, description, version, engines as pkgEngines } from '../package.json';
+import { loggerListElements } from './shared/utils/logger-utils.js';
+import { logger } from './shared/utils/logger.js';
 
 export const bootstrap = async () => {
   const currentVersion = process.versions.node;

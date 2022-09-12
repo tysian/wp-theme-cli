@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import filenamify from 'filenamify';
 import inquirer from 'inquirer';
-import { DEFAULT_CONFIGS_DIR } from '../constants.js';
+import { DEFAULT_CONFIGS_DIR } from '../../constants.js';
 import { fileExists } from './fileExist.js';
 import { loggerMergeMessages } from './logger-utils.js';
 import { logger, updateLogger } from './logger.js';
