@@ -27,7 +27,7 @@ To contribute, please make sure that you:
    ```
 4. Have installed all dependencies
    ```bash
-   npm install
+   pnpm install
    ```
 
 ### Useful commands
