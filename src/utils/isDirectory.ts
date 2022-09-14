@@ -1,13 +1,7 @@
-import { lstat, PathLike } from 'fs';
+import { PathLike } from 'fs';
+import { lstat } from 'fs/promises';
 
-export async function isDirectory(path: PathLike) {
-  return new Promise((resolve) => {
-    lstat(path, (err, stat) => {
-      if (!err) {
-        resolve(stat.isDirectory());
-      } else {
-        resolve(false);
-      }
-    });
-  });
-}
+export const isDirectory = async (path: PathLike) =>
+  lstat(path)
+    .then((stat) => stat.isDirectory())
+    .catch(() => false);
