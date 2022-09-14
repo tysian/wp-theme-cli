@@ -136,19 +136,20 @@ const createNewOperation = async (group?: OperationGroup | null): Promise<Operat
     input: input.map((filePath: string) => getRelativePath(filePath)),
   };
 
-  if (type === OperationType.REMOVE_ACF_LAYOUT) {
-    const layouts = await addMultipleEntries('layout name');
-    (operation as RemoveACFLayoutOperation).layouts = layouts;
-  }
-
-  if (type === OperationType.REMOVE_FROM_JSON) {
-    const propertyPaths = await addMultipleEntries('property path');
-    (operation as RemoveFromJSONOperation).propertyPaths = propertyPaths;
-  }
-
-  if (type === OperationType.REMOVE_FILE_LINE) {
-    const search = await addMultipleEntries('search value');
-    (operation as RemoveFileLineOperation).search = search;
+  switch (type) {
+    case OperationType.REMOVE_ACF_LAYOUT:
+      (operation as RemoveACFLayoutOperation).layouts = await addMultipleEntries('layout name');
+      break;
+    case OperationType.REMOVE_FROM_JSON:
+      (operation as RemoveFromJSONOperation).propertyPaths = await addMultipleEntries(
+        'property path'
+      );
+      break;
+    case OperationType.REMOVE_FILE_LINE:
+      (operation as RemoveFileLineOperation).search = await addMultipleEntries('search value');
+      break;
+    default:
+      break;
   }
 
   logger.info(`New operation ${chalk.cyan(OperationType[type])} created.`);
