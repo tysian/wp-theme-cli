@@ -13,10 +13,7 @@ import { removeACFLayout } from '../operations/removeACFLayout.js';
 import { loggerMergeMessages, loggerPrefix } from '../../../utils/logger-utils.js';
 import { filterOutsideCwd } from '../../../utils/filterOutsideCwd.js';
 
-export const handleOperations = async (
-  operations: Operation[],
-  statistics: CleanerStatistics
-): Promise<void> => {
+export const handleOperations = async (operations: Operation[], statistics: CleanerStatistics) => {
   for await (const operation of operations) {
     try {
       const { input, operationType, description = '', groupKey = '' } = operation;

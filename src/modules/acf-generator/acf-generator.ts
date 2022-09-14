@@ -9,7 +9,7 @@ import { createNewConfig } from './helpers/createNewConfig.js';
 import { getAcfModules } from './helpers/getAcfModules.js';
 import { writeModules } from './helpers/writeModules.js';
 
-export const acfGenerator = async (): Promise<void> => {
+export const acfGenerator = async () => {
   logger.none('ACF Flexible field files generator!');
 
   try {

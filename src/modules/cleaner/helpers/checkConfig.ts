@@ -4,7 +4,7 @@ import { loggerMergeMessages, loggerPrefix } from '../../../utils/logger-utils.j
 import { updateLogger } from '../../../utils/logger.js';
 import { CleanerConfig, CleanerConfigSchema } from '../cleaner.config.js';
 
-export const checkConfig = async (config: CleanerConfig): Promise<void> => {
+export const checkConfig = async (config: CleanerConfig) => {
   updateLogger.start('Checking config...');
 
   // Check schema

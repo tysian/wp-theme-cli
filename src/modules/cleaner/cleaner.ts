@@ -12,7 +12,7 @@ import { askForContinue } from '../../utils/askForContinue.js';
 import { selectConfig } from '../../utils/selectConfig.js';
 import { createNewConfig } from './helpers/createNewConfig.js';
 
-export const cleaner = async (): Promise<void> => {
+export const cleaner = async () => {
   logger.none('WordPress template cleaner!');
 
   try {
@@ -26,7 +26,7 @@ export const cleaner = async (): Promise<void> => {
 
     if (!(await askForContinue())) return;
 
-    const filteredOperations: Operation[] = await filterOperations(finalConfig);
+    const filteredOperations = await filterOperations(finalConfig);
 
     const statistics: CleanerStatistics = new Statistics(cleanerStats);
     statistics.startTimer();

@@ -19,7 +19,7 @@ type Module = {
   conflictAction: 'overwrite' | 'ignore';
 };
 
-const createModule = async ({ layout, fileTypes, conflictAction }: Module): Promise<void> => {
+const createModule = async ({ layout, fileTypes, conflictAction }: Module) => {
   for await (const [fileType, options] of Object.entries(fileTypes)) {
     const { active, output, template: customTemplate, import: moduleImport } = options;
     if (!active) {
