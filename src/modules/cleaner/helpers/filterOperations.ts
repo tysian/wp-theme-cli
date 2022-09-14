@@ -11,11 +11,16 @@ export const filterOperations = async (_config: CleanerConfig) => {
     .filter(Boolean);
 
   const commonIndex = config.groups.findIndex((group) => group.key === 'common');
-  if (commonIndex > -1) {
+  const hasCommonGroup = commonIndex > -1;
+  if (hasCommonGroup) {
     logger.info(`${chalk.green('Common')} operation will be added automatically.`);
   }
 
-  const { categories } = await inquirer.prompt([
+  if (!config.groups.length && !hasCommonGroup) {
+    throw new Error("Can't find operation group.");
+  }
+
+  const { categories } = await inquirer.prompt<{ categories: string[] }>([
     {
       type: 'checkbox',
       message: `Select operations group (checked groups will be ${chalk.bold.red('REMOVED')}):`,
@@ -25,7 +30,7 @@ export const filterOperations = async (_config: CleanerConfig) => {
     },
   ]);
 
-  if (commonIndex > -1) {
+  if (hasCommonGroup) {
     categories.unshift('common');
   }
 
@@ -34,7 +39,7 @@ export const filterOperations = async (_config: CleanerConfig) => {
     .reduce(
       (operations, group) => [
         ...operations,
-        ...group.operations.map((op) => ({ ...op, groupKey: group.key })),
+        ...group.operations.map((operation) => ({ ...operation, groupKey: group.key })),
       ],
       [] as Operation[]
     );

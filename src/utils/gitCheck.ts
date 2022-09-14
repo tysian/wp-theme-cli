@@ -21,10 +21,13 @@ export const gitCheck = async (): Promise<boolean> => {
     return true;
   }
 
-  const { shouldCommit } = await inquirer.prompt([
+  updateLogger.info('You got uncommited changes.');
+  const { shouldCommit } = await inquirer.prompt<{
+    shouldCommit: 'commit' | 'continue' | 'abort';
+  }>([
     {
       type: 'list',
-      message: 'You got uncommited changes, what should we do?',
+      message: 'Do you want to commit?',
       name: 'shouldCommit',
       default: 'commit',
       choices: [
@@ -38,6 +41,7 @@ export const gitCheck = async (): Promise<boolean> => {
           short: 'Ignore & continue',
           value: 'continue',
         },
+        { type: 'separator' },
         {
           name: 'Abort',
           value: 'abort',
@@ -47,7 +51,7 @@ export const gitCheck = async (): Promise<boolean> => {
   ]);
 
   if (shouldCommit === 'commit') {
-    const { commitMessage } = await inquirer.prompt([
+    const { commitMessage } = await inquirer.prompt<{ commitMessage: string }>([
       {
         type: 'input',
         name: 'commitMessage',

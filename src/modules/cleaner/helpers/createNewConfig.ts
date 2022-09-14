@@ -21,7 +21,7 @@ const addMultipleEntries = async (entryName = 'entry'): Promise<string[]> => {
   const entries = [];
 
   while (!stop) {
-    const { entry } = await inquirer.prompt([
+    const { entry } = await inquirer.prompt<{ entry: string }>([
       {
         name: 'entry',
         type: 'input',
@@ -30,7 +30,7 @@ const addMultipleEntries = async (entryName = 'entry'): Promise<string[]> => {
     ]);
     entries.push(entry);
     if (entries.length > 0) {
-      const { shouldContinue } = await inquirer.prompt([
+      const { shouldContinue } = await inquirer.prompt<{ shouldContinue: boolean }>([
         {
           name: 'shouldContinue',
           type: 'confirm',
@@ -47,21 +47,16 @@ const addMultipleEntries = async (entryName = 'entry'): Promise<string[]> => {
 };
 
 const createNewGroup = async (allGroups: OperationGroup[]): Promise<OperationGroup> => {
-  const { name } = await inquirer.prompt([
+  const { name } = await inquirer.prompt<{ name: string }>([
     {
       type: 'input',
       name: 'name',
       message: 'Provide group name',
-      validate: (input: string) => {
-        if (!input.trim().length) {
-          return 'Name cannot be empty';
-        }
-        return true;
-      },
+      validate: (input: string) => !!input.trim().length || 'Name cannot be empty',
     },
   ]);
 
-  const { key } = await inquirer.prompt([
+  const { key } = await inquirer.prompt<{ key: string }>([
     {
       type: 'input',
       name: 'key',
@@ -116,7 +111,7 @@ const createNewOperation = async (group?: OperationGroup | null): Promise<Operat
     },
   ]);
 
-  const { input } = await inquirer.prompt([
+  const { input } = await inquirer.prompt<{ input: string[] }>([
     {
       type: 'file-tree-selection',
       name: 'input',

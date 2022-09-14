@@ -28,7 +28,7 @@ export const saveConfig = async <Config>(_defaultFullFilename: string, config: C
     .catch(() => '.');
 
   // Ask user if they want to save this config
-  const { wannaSave } = await inquirer.prompt([
+  const { wannaSave } = await inquirer.prompt<{ wannaSave: boolean }>([
     {
       type: 'confirm',
       message: 'Do you want to save this config?',
