@@ -43,6 +43,7 @@ module.exports = {
     'guard-for-in': 'off',
     'no-continue': 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'no-await-in-loop': 'off',
   },
   settings: {
     'import/parsers': {

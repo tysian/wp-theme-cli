@@ -5,9 +5,9 @@ export const unsetInObject = (object: object, _properties: string | string[]) =>
   const clonedJSON = cloneDeep(object);
   const properties = asArray(_properties);
 
-  properties.forEach((property) => {
+  for (const property of properties) {
     unset(clonedJSON, property);
-  });
+  }
 
   return clonedJSON;
 };

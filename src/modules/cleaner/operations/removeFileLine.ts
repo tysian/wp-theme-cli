@@ -33,9 +33,9 @@ export const removeFileLine = async (
     const fileContent = await readStream(file);
     let modifiedFileContent = fileContent;
 
-    asArray(search).forEach((singleSearch) => {
+    for (const singleSearch of asArray(search)) {
       modifiedFileContent = removeLineInText(modifiedFileContent, singleSearch);
-    });
+    }
 
     // Remove empty <?php ?> from .php file
     if (fileExt === '.php') {
