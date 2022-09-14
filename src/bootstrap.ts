@@ -1,14 +1,14 @@
-import 'trace';
 import 'clarify';
 import { Command } from 'commander';
 import inquirer from 'inquirer';
 import inquirerFileTreeSelection from 'inquirer-file-tree-selection-prompt';
 import semver from 'semver';
+import 'trace';
+import { bin, description, engines as pkgEngines, version } from '../package.json';
 import { acfGenerator } from './modules/acf-generator/acf-generator.js';
-import { logger } from './utils/logger.js';
-import { loggerListElements } from './utils/logger-utils.js';
-import { bin, description, version, engines as pkgEngines } from '../package.json';
 import { cleaner } from './modules/cleaner/cleaner.js';
+import { loggerListElements } from './utils/logger-utils.js';
+import { logger } from './utils/logger.js';
 
 export const bootstrap = async () => {
   const currentVersion = process.versions.node;
@@ -43,11 +43,20 @@ export const bootstrap = async () => {
 
   program
     .command('clean')
+    .alias('c')
     .description('Update and remove files using provided config')
+    .argument('[type]', `what to clean, accepting: ${loggerListElements(['theme'])}`, 'theme')
     .option('--allow-outside-cwd', 'Allow cleaning outside of current working directory')
-    .action((options) => {
+    .action((type, options) => {
       global.programOptions = options;
-      cleaner();
+      switch (type) {
+        case 'theme':
+          cleaner();
+          break;
+        default:
+          logger.none(`Wrong type, accepting only: ${loggerListElements(['theme'])}`);
+          break;
+      }
     });
 
   program.parse();
