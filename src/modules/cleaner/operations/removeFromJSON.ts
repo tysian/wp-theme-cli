@@ -1,15 +1,11 @@
+import { isEqual } from 'lodash-es';
 import { asArray } from '../../../utils/asArray.js';
 import { getObjectFromJSON } from '../../../utils/getObjectFromJSON.js';
 import { handleError } from '../../../utils/handleError.js';
-import {
-  loggerMergeMessages,
-  loggerPrefix,
-  loggerRelativePath,
-} from '../../../utils/logger-utils.js';
-import { updateLogger } from '../../../utils/logger.js';
 import { writeStream } from '../../../utils/writeStream.js';
 import { RemoveFromJSONOperation } from '../cleaner.config.js';
 import { CleanerStatistics } from '../cleaner.const.js';
+import { OperationsLogger } from '../helpers/OperationLogger.js';
 import { unsetInObject } from '../helpers/unsetInObject.js';
 
 export const removeFromJSON = async (
@@ -17,36 +13,35 @@ export const removeFromJSON = async (
   { groupKey = '', description = '', propertyPaths = [] }: RemoveFromJSONOperation,
   statistics: CleanerStatistics
 ): Promise<boolean | null> => {
-  const relativePath = loggerRelativePath(file);
-  const prefix = groupKey ? loggerPrefix(groupKey) : '';
-  const message = description || 'Removed from JSON';
-  const propertyPathsArray = asArray(propertyPaths);
+  const operationLogger = new OperationsLogger({
+    relativePath: file,
+    prefix: groupKey,
+    message: description || 'Removed from JSON',
+  });
 
   try {
-    updateLogger.start(loggerMergeMessages([prefix, `Removing in JSON`, relativePath]));
+    operationLogger.start('Removing in JSON');
+
     const parsedFileContent: object = await getObjectFromJSON(file);
+    const propertyPathsArray = asArray(propertyPaths);
     const modifiedFileContent = unsetInObject(parsedFileContent, propertyPathsArray);
 
-    const stringifiedContent = JSON.stringify(parsedFileContent, null, 2);
-    const stringifiedModifiedContent = JSON.stringify(modifiedFileContent, null, 2);
-
-    // If something was changed - update file
-    if (stringifiedContent.length !== stringifiedModifiedContent.length) {
-      await writeStream(file, stringifiedModifiedContent);
-
-      updateLogger.complete(loggerMergeMessages([prefix, message, relativePath]));
-      updateLogger.done();
-      statistics.incrementStat('modified');
-      return true;
+    if (isEqual(parsedFileContent, modifiedFileContent)) {
+      operationLogger.skip();
+      statistics.incrementStat('unchanged');
+      return null;
     }
+
+    // Stringify object and write to file
+    const stringifiedModifiedContent = JSON.stringify(modifiedFileContent, null, 2);
+    await writeStream(file, stringifiedModifiedContent);
+
+    operationLogger.complete();
+    statistics.incrementStat('modified');
+    return true;
   } catch (error) {
-    handleError(error as Error, prefix);
+    handleError(error as Error, operationLogger.prefix);
     statistics.incrementStat('error');
     return false;
   }
-
-  updateLogger.skip(loggerMergeMessages([prefix, `No changes were made`, relativePath]));
-  updateLogger.done();
-  statistics.incrementStat('unchanged');
-  return null;
 };
