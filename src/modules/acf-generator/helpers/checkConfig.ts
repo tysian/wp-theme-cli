@@ -1,9 +1,12 @@
 import chalk from 'chalk';
-import { fileExists } from '../../../shared/utils/fileExist.js';
-import { loggerPrefix } from '../../../shared/utils/logger-utils.js';
-import { logger, updateLogger } from '../../../shared/utils/logger.js';
-import { readStream } from '../../../shared/utils/readStream.js';
-import { stringIncludesIgnoreQuotes } from '../../../shared/utils/stringIncludesIgnoreQuotes.js';
+import {
+  logger,
+  updateLogger,
+  fileExists,
+  loggerPrefix,
+  readStream,
+  stringIncludesIgnoreQuotes,
+} from '$/shared/utils/index.js';
 import { AcfGeneratorConfig } from '../acf-generator.config.js';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {

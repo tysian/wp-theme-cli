@@ -1,13 +1,12 @@
-import 'trace';
 import 'clarify';
+import 'trace';
 import { Command } from 'commander';
 import inquirer from 'inquirer';
 import inquirerFileTreeSelection from 'inquirer-file-tree-selection-prompt';
 import semver from 'semver';
+import { bin, description, engines as pkgEngines, version } from '../package.json';
 import { acfGenerator } from './modules/acf-generator/acf-generator.js';
-import { bin, description, version, engines as pkgEngines } from '../package.json';
-import { loggerListElements } from './shared/utils/logger-utils.js';
-import { logger } from './shared/utils/logger.js';
+import { loggerListElements, logger } from './shared/utils/index.js';
 
 export const bootstrap = async () => {
   const currentVersion = process.versions.node;

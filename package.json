@@ -28,7 +28,7 @@
     "format:check": "yarn typecheck && yarn lint && yarn format",
     "format": "prettier --write --plugin-search-dir=. \"**/*.{ts,md,json,js,mjs,cjs}\"",
     "check": "yarn typecheck && yarn lint",
-    "lint": "eslint src --cache --cache-strategy content",
+    "lint": "eslint src --fix --cache --cache-strategy content",
     "prepare": "husky install",
     "start": "node dist/wp-theme.js",
     "typecheck": "tsc --noEmit",

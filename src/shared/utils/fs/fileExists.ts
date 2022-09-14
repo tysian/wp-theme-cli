@@ -1,6 +1,6 @@
-import chalk from 'chalk';
 import fs from 'fs/promises';
 import path from 'path';
+import chalk from 'chalk';
 
 export const fileExists = async (filePath: string) => {
   const resolvedPath = path.resolve(filePath);

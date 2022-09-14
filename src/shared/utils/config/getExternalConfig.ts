@@ -1,5 +1,5 @@
-import inquirer from 'inquirer';
 import path from 'path';
+import inquirer from 'inquirer';
 import { getObjectFromJSON } from './getObjectFromJSON.js';
 
 export const getExternalConfig = async <Config>(defaultConfig: string) => {
