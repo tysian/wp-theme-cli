@@ -26,7 +26,7 @@ export const selectConfig = async <Config>({
     },
   ];
 
-  const defaultConfigExists = await fileExists(defaultConfigPath).catch(() => false);
+  const defaultConfigExists = await fileExists(defaultConfigPath);
   if (defaultConfigExists) {
     configTypeChoices.unshift({
       name: `Default config (${defaultConfigPath})`,

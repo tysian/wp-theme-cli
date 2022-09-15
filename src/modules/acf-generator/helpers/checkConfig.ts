@@ -7,12 +7,16 @@ import {
   readStream,
   stringIncludesIgnoreQuotes,
 } from '$/shared/utils/index.js';
+import { FileExistenceError } from '$/shared/utils/FileExistenceError.js';
 import { AcfGeneratorConfig } from '../acf-generator.config.js';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {
   logger.start('Checking config...');
   updateLogger.awaiting('Checking if modules JSON file exists...');
-  await fileExists(config.modulesFilePath);
+  const modulesFilePathExists = await fileExists(config.modulesFilePath);
+  if (!modulesFilePathExists) {
+    throw new FileExistenceError(config.modulesFilePath);
+  }
   updateLogger.success(`Module JSON file exist - OK`);
   updateLogger.done();
 
@@ -27,14 +31,20 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
     ([, configOption]) => configOption.active
   )) {
     updateLogger.awaiting(`${loggerPrefix(fileType)} Checking existence of output files...`);
-    await fileExists(configOptions.output);
+    const outputExists = await fileExists(configOptions.output);
+    if (!outputExists) {
+      throw new FileExistenceError(configOptions.output);
+    }
     updateLogger.success(`${loggerPrefix(fileType)} Output files - OK`);
     updateLogger.done();
 
     // Check if template exists
     if (configOptions.template !== 'default') {
       updateLogger.awaiting(`${loggerPrefix(fileType)} Checking existence of template files...`);
-      await fileExists(configOptions.template);
+      const templateExists = await fileExists(configOptions.template);
+      if (!templateExists) {
+        throw new FileExistenceError(configOptions.template);
+      }
 
       updateLogger.success(`${loggerPrefix(fileType)} Templates - OK`);
       updateLogger.done();
@@ -44,7 +54,10 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
       const { filePath, search } = configOptions.import;
 
       updateLogger.awaiting(`${loggerPrefix(fileType)} Checking import file path...`);
-      await fileExists(filePath);
+      const filePathExists = await fileExists(filePath);
+      if (!filePathExists) {
+        throw new FileExistenceError(filePath);
+      }
       updateLogger.success(`${loggerPrefix(fileType)} Import file - OK`);
       updateLogger.done();
 

@@ -49,7 +49,7 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
     const outputPath = path.resolve(output, moduleData.fileName);
 
     // Check if output exists and proceed conflictAction if necessary
-    const outputExists = await fileExists(outputPath).catch(() => false);
+    const outputExists = await fileExists(outputPath);
     if (outputExists) {
       switch (conflictAction) {
         case 'ignore':
