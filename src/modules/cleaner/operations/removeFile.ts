@@ -20,7 +20,7 @@ export const removeFile = async (
   try {
     operationLogger.start('Removing file');
 
-    const exists = await fileExists(file).catch(() => false);
+    const exists = await fileExists(file);
     if (!exists) {
       operationLogger.skip('File not found');
       statistics.incrementStat('unchanged');
