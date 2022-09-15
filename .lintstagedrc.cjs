@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   'src/**/*.ts': [
     './node_modules/.bin/prettier --write',
     './node_modules/.bin/eslint --cache --fix',

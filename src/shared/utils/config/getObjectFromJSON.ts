@@ -1,6 +1,6 @@
-import chalk from 'chalk';
 import path from 'path';
-import { readStream } from './readStream.js';
+import chalk from 'chalk';
+import { readStream } from '../fs/readStream.js';
 
 export const getObjectFromJSON = async <JSONObject = object>(file: string): Promise<JSONObject> => {
   if (!file || !file.toString().trim()) {

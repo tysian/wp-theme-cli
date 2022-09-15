@@ -1,12 +1,15 @@
-import inquirer from 'inquirer';
 import path from 'path';
 import chalk from 'chalk';
+import inquirer from 'inquirer';
 import { SetOptional, SetRequired } from 'type-fest';
+import {
+  loggerPrefix,
+  loggerListElements,
+  getRelativePath,
+  saveConfig,
+} from '$/shared/utils/index.js';
 import { AcfGeneratorConfig, AvailableFileType, FileType } from '../acf-generator.config.js';
-import { saveConfig } from '../../../utils/saveConfig.js';
 import { DEFAULT_CONFIG_FILENAME } from '../acf-generator.const.js';
-import { loggerListElements, loggerPrefix } from '../../../utils/logger-utils.js';
-import { getRelativePath } from '../../../utils/getRelativePath.js';
 
 export const createNewConfig = async () => {
   // Ask for ACF JSON file

@@ -1,7 +1,5 @@
 import chalk from 'chalk';
-import { AcfGroup, AcfLayout } from '../../../types.js';
-import { logger } from '../../../utils/logger.js';
-import { readStream } from '../../../utils/readStream.js';
+import { readStream, logger } from '$/shared/utils/index.js';
 import { AcfGeneratorConfig } from '../acf-generator.config.js';
 
 export const getAcfModules = async (

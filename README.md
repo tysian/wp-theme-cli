@@ -41,3 +41,7 @@ Each feature is called a **module** and have separate documentation:
 
 1. [ACF Generator](docs/acf-generator.md) - Generate files based on flexible field layouts
 2. [Cleaner](docs/cleaner.md) - Remove directories, files, update files by removing lines of code, update JSON files (cleaner)
+
+## Credits
+
+All npm/husky/changeset/commitlint related stuff, typescript building setup was inspired by [create-t3-app](https://github.com/t3-oss/create-t3-app).
