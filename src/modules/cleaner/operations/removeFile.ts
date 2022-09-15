@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { fileExists } from '../../../utils/fileExist.js';
-import { handleError } from '../../../utils/handleError.js';
+import { fileExists } from '$/shared/utils/index.js';
+import { handleError } from '$/shared/utils/handleError.js';
 import { RemoveFileOperation } from '../cleaner.config.js';
 import { CleanerStatistics } from '../cleaner.const.js';
 import { OperationsLogger } from '../helpers/OperationLogger.js';

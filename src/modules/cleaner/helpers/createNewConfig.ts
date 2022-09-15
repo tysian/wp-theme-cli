@@ -3,6 +3,13 @@ import getSlug from 'speakingurl';
 import inquirer from 'inquirer';
 import { cloneDeep } from 'lodash-es';
 import {
+  logger,
+  loggerMergeMessages,
+  loggerPrefix,
+  getRelativePath,
+  saveConfig,
+} from '$/shared/utils/index.js';
+import {
   CleanerConfig,
   Operation,
   OperationGroup,
@@ -11,10 +18,6 @@ import {
   RemoveFromJSONOperation,
 } from '../cleaner.config.js';
 import { DEFAULT_CONFIG_FILENAME, OperationType } from '../cleaner.const.js';
-import { logger } from '../../../utils/logger.js';
-import { saveConfig } from '../../../utils/saveConfig.js';
-import { loggerMergeMessages, loggerPrefix } from '../../../utils/logger-utils.js';
-import { getRelativePath } from '../../../utils/getRelativePath.js';
 
 const addMultipleEntries = async (entryName = 'entry'): Promise<string[]> => {
   let stop = false;

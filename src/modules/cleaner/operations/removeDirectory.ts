@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { handleError } from '../../../utils/handleError.js';
-import { isDirectory } from '../../../utils/isDirectory.js';
+import { isDirectory } from '$/shared/utils/index.js';
+import { handleError } from '$/shared/utils/handleError.js';
 import { RemoveDirectoryOperation } from '../cleaner.config.js';
 import { CleanerStatistics } from '../cleaner.const.js';
 import { OperationsLogger } from '../helpers/OperationLogger.js';

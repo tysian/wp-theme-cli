@@ -1,14 +1,17 @@
 import { isEqual } from 'lodash-es';
-import { AcfGroup } from '../../../types.js';
-import { getObjectFromJSON } from '../../../utils/getObjectFromJSON.js';
-import { handleError } from '../../../utils/handleError.js';
-import { writeStream } from '../../../utils/writeStream.js';
+import {
+  loggerMergeMessages,
+  loggerListElements,
+  getObjectFromJSON,
+  writeStream,
+} from '$/shared/utils/index.js';
+import { AcfGroup } from '$/types.js';
+import { asArray } from '$/shared/utils/asArray.js';
+import { handleError } from '$/shared/utils/handleError.js';
 import { RemoveACFLayoutOperation } from '../cleaner.config.js';
 import { CleanerStatistics } from '../cleaner.const.js';
-import { unsetInObject } from '../helpers/unsetInObject.js';
-import { loggerListElements, loggerMergeMessages } from '../../../utils/logger-utils.js';
-import { asArray } from '../../../utils/asArray.js';
 import { OperationsLogger } from '../helpers/OperationLogger.js';
+import { unsetInObject } from '../helpers/unsetInObject.js';
 
 export const removeACFLayout = async (
   file: string,

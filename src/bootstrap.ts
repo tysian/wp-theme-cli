@@ -7,6 +7,7 @@ import semver from 'semver';
 import { bin, description, engines as pkgEngines, version } from '../package.json';
 import { acfGenerator } from './modules/acf-generator/acf-generator.js';
 import { loggerListElements, logger } from './shared/utils/index.js';
+import { cleaner } from './modules/cleaner/cleaner.js';
 
 export const bootstrap = async () => {
   const currentVersion = process.versions.node;

@@ -1,5 +1,5 @@
-import { asArray } from '../../../utils/asArray.js';
-import { getEOL } from '../../../utils/getEOL.js';
+import { asArray } from '$/shared/utils/asArray.js';
+import { getEOL } from '$/shared/utils/getEOL.js';
 
 export const removeLineInText = (text: string, search: string): string => {
   if (!text.trim() || !search.trim()) {

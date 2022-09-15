@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import { isNumber } from 'lodash-es';
-import { loggerMergeMessages, loggerPrefix } from '../../../utils/logger-utils.js';
-import { updateLogger } from '../../../utils/logger.js';
+import { updateLogger, loggerMergeMessages, loggerPrefix } from '$/shared/utils/index.js';
 import { CleanerConfig, CleanerConfigSchema } from '../cleaner.config.js';
 
 export const checkConfig = async (config: CleanerConfig) => {

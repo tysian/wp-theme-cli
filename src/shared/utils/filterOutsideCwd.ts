@@ -1,7 +1,7 @@
-import chalk from 'chalk';
 import path from 'path';
-import { loggerMergeMessages } from './logger-utils.js';
-import { logger } from './logger.js';
+import chalk from 'chalk';
+import { logger } from './log/logger.js';
+import { loggerMergeMessages } from './log/loggerMergeMessages.js';
 
 /**
  * Filter out files outside of cwd to prevent unwanted changes.

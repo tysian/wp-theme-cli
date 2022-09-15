@@ -1,10 +1,8 @@
-import chalk from 'chalk';
 import path from 'path';
-import { asArray } from '../../../utils/asArray.js';
-import { handleError } from '../../../utils/handleError.js';
-import { loggerListElements } from '../../../utils/logger-utils.js';
-import { readStream } from '../../../utils/readStream.js';
-import { writeStream } from '../../../utils/writeStream.js';
+import chalk from 'chalk';
+import { loggerListElements, readStream, writeStream } from '$/shared/utils/index.js';
+import { asArray } from '$/shared/utils/asArray.js';
+import { handleError } from '$/shared/utils/handleError.js';
 import { RemoveFileLineOperation } from '../cleaner.config.js';
 import { CleanerStatistics } from '../cleaner.const.js';
 import { OperationsLogger } from '../helpers/OperationLogger.js';

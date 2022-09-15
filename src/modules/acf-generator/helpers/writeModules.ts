@@ -12,8 +12,8 @@ import {
   logger,
   stringIncludesIgnoreQuotes,
 } from '$/shared/utils/index.js';
+import { AcfLayout } from '$/types.js';
 import { AvailableFileType, FileType, AcfGeneratorConfig } from '../acf-generator.config.js';
-import { AcfLayout } from './getAcfModules.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
 
 type Module = {

@@ -1,15 +1,17 @@
-import { gitCheck } from '../../utils/gitCheck.js';
-import { logger } from '../../utils/logger.js';
-import { askForInstallDependencies, installDependencies } from '../../utils/installDependencies.js';
-import { Statistics } from '../../utils/Statistics.js';
-import { handleOperations } from './helpers/handleOperations.js';
+import { gitCheck } from '$/shared/utils/gitCheck.js';
+import { handleError } from '$/shared/utils/handleError.js';
+import { logger, selectConfig } from '$/shared/utils/index.js';
+import {
+  askForInstallDependencies,
+  installDependencies,
+} from '$/shared/utils/installDependencies.js';
+import { Statistics } from '$/shared/utils/Statistics.js';
 import { CleanerConfig } from './cleaner.config.js';
-import { filterOperations } from './helpers/filterOperations.js';
-import { CleanerStatistics, cleanerStats, DEFAULT_CONFIG_PATH } from './cleaner.const.js';
+import { DEFAULT_CONFIG_PATH, CleanerStatistics, cleanerStats } from './cleaner.const.js';
 import { checkConfig } from './helpers/checkConfig.js';
-import { handleError } from '../../utils/handleError.js';
-import { selectConfig } from '../../utils/selectConfig.js';
 import { createNewConfig } from './helpers/createNewConfig.js';
+import { filterOperations } from './helpers/filterOperations.js';
+import { handleOperations } from './helpers/handleOperations.js';
 
 export const cleaner = async () => {
   logger.none('WordPress template cleaner!');

@@ -1,9 +1,9 @@
 import {
-  loggerMergeMessages,
-  loggerPrefix,
   loggerRelativePath,
-} from '../../../utils/logger-utils.js';
-import { updateLogger } from '../../../utils/logger.js';
+  loggerPrefix,
+  updateLogger,
+  loggerMergeMessages,
+} from '$/shared/utils/index.js';
 
 type OperationsLoggerArgs = {
   relativePath: string;

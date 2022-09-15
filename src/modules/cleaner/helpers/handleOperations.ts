@@ -1,17 +1,16 @@
 import chalk from 'chalk';
-import { logger } from '../../../utils/logger.js';
+import { logger, loggerMergeMessages, loggerPrefix } from '$/shared/utils/index.js';
+import { asArray } from '$/shared/utils/asArray.js';
+import { filterOutsideCwd } from '$/shared/utils/filterOutsideCwd.js';
+import { handleError } from '$/shared/utils/handleError.js';
+import { Operation } from '../cleaner.config.js';
 import { CleanerStatistics, OperationType } from '../cleaner.const.js';
+import { removeACFLayout } from '../operations/removeACFLayout.js';
 import { removeDirectory } from '../operations/removeDirectory.js';
 import { removeFile } from '../operations/removeFile.js';
 import { removeFileLine } from '../operations/removeFileLine.js';
-import { getGlobFiles } from './getGlobFiles.js';
-import { Operation } from '../cleaner.config.js';
-import { asArray } from '../../../utils/asArray.js';
-import { handleError } from '../../../utils/handleError.js';
 import { removeFromJSON } from '../operations/removeFromJSON.js';
-import { removeACFLayout } from '../operations/removeACFLayout.js';
-import { loggerMergeMessages, loggerPrefix } from '../../../utils/logger-utils.js';
-import { filterOutsideCwd } from '../../../utils/filterOutsideCwd.js';
+import { getGlobFiles } from './getGlobFiles.js';
 
 export const handleOperations = async (operations: Operation[], statistics: CleanerStatistics) => {
   for await (const operation of operations) {

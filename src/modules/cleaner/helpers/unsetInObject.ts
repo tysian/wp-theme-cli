@@ -1,5 +1,5 @@
 import { cloneDeep, unset } from 'lodash-es';
-import { asArray } from '../../../utils/asArray.js';
+import { asArray } from '$/shared/utils/asArray.js';
 
 export const unsetInObject = (object: object, _properties: string | string[]) => {
   const clonedJSON = cloneDeep(object);
