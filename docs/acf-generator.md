@@ -20,12 +20,13 @@ This command allows you to create your own config, so you feel free to generate 
 
 If you already have a config, you can pass its path during setup process.
 
-If you put it as `./.configs/acf-generator.config.json` it will be automatically detected.
+If you put it as `./configs/default.acf-generator-config.json` it will be automatically detected.
 
 ### Generating modules
 
 Run `wp-theme generate modules` to generate/update ACF modules files.  
-Now you'll see a default config, but you can easily overwrite it by answering questions via CLI.
+You can easily generate config by answering questions via CLI.  
+You might also want to see example config [here](/example-configs/example.acf-generator-config.json).
 
 **modulesFilePath**  
 Accepts: `string`  

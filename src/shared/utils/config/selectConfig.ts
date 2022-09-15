@@ -1,8 +1,8 @@
 import inquirer from 'inquirer';
-import { fileExists } from './fileExist.js';
+import { fileExists } from '../fs/fileExists.js';
+import { logger } from '../log/logger.js';
 import { getExternalConfig } from './getExternalConfig.js';
 import { getObjectFromJSON } from './getObjectFromJSON.js';
-import { logger } from './logger.js';
 
 type SelectConfigArgs<Config> = {
   defaultConfigPath: string;
@@ -26,7 +26,7 @@ export const selectConfig = async <Config>({
     },
   ];
 
-  const defaultConfigExists = await fileExists(defaultConfigPath).catch(() => false);
+  const defaultConfigExists = await fileExists(defaultConfigPath);
   if (defaultConfigExists) {
     configTypeChoices.unshift({
       name: `Default config (${defaultConfigPath})`,

@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import { simpleGit, SimpleGit } from 'simple-git';
-import { updateLogger } from './logger.js';
+import { updateLogger } from './log/logger.js';
 
 const git: SimpleGit = simpleGit();
 

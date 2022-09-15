@@ -1,17 +1,20 @@
-import chalk from 'chalk';
-import ejs from 'ejs';
-import { kebabCase, snakeCase } from 'lodash-es';
 import path from 'path';
 import { performance } from 'perf_hooks';
+import chalk from 'chalk';
+import ejs from 'ejs';
 import filenamify from 'filenamify';
-import { fileExists } from '../../../utils/fileExist.js';
-import { logger, updateLogger } from '../../../utils/logger.js';
-import { readStream } from '../../../utils/readStream.js';
-import { writeStream } from '../../../utils/writeStream.js';
-import { AcfGeneratorConfig, AvailableFileType, FileType } from '../acf-generator.config.js';
+import { kebabCase, snakeCase } from 'lodash-es';
+import {
+  updateLogger,
+  fileExists,
+  readStream,
+  writeStream,
+  logger,
+  stringIncludesIgnoreQuotes,
+} from '$/shared/utils/index.js';
+import { AvailableFileType, FileType, AcfGeneratorConfig } from '../acf-generator.config.js';
 import { AcfLayout } from './getAcfModules.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
-import { stringIncludesIgnoreQuotes } from '../../../utils/stringIncludesIgnoreQuotes.js';
 
 type Module = {
   layout: AcfLayout;
@@ -46,7 +49,7 @@ const createModule = async ({ layout, fileTypes, conflictAction }: Module): Prom
     const outputPath = path.resolve(output, moduleData.fileName);
 
     // Check if output exists and proceed conflictAction if necessary
-    const outputExists = await fileExists(outputPath).catch(() => false);
+    const outputExists = await fileExists(outputPath);
     if (outputExists) {
       switch (conflictAction) {
         case 'ignore':

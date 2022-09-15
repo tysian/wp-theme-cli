@@ -1,11 +1,11 @@
 import chalk from 'chalk';
 import filenamify from 'filenamify';
 import inquirer from 'inquirer';
-import { DEFAULT_CONFIGS_DIR } from '../constants.js';
-import { fileExists } from './fileExist.js';
-import { loggerMergeMessages } from './logger-utils.js';
-import { logger, updateLogger } from './logger.js';
-import { writeStream } from './writeStream.js';
+import { DEFAULT_CONFIGS_DIR } from '$/constants.js';
+import { loggerMergeMessages } from '../log/loggerMergeMessages.js';
+import { fileExists } from '../fs/fileExists.js';
+import { logger, updateLogger } from '../log/logger.js';
+import { writeStream } from '../fs/writeStream.js';
 
 const handleFileName = (filename: string) => {
   const cleanFilename = filenamify(filename).trim().toLowerCase();
@@ -26,9 +26,7 @@ export const saveConfig = async <Config>(
     );
   }
 
-  const defaultConfigDir = await fileExists(DEFAULT_CONFIGS_DIR)
-    .then(() => DEFAULT_CONFIGS_DIR)
-    .catch(() => '.');
+  const defaultConfigDir = (await fileExists(DEFAULT_CONFIGS_DIR)) ? DEFAULT_CONFIGS_DIR : '.';
 
   // Ask user if they want to save this config
   const { wannaSave } = await inquirer.prompt([
@@ -51,16 +49,10 @@ export const saveConfig = async <Config>(
       message: 'Provide the name of your new config',
       name: 'userConfigName',
       default: defaultConfigName,
-      validate: async (input: string) => {
-        try {
-          await fileExists(
-            `${defaultConfigDir}/${defaultFullFilename.replace(defaultConfigName, input)}`
-          );
-          return 'File already exists';
-        } catch (e) {
-          return true;
-        }
-      },
+      validate: async (input: string) =>
+        !(await fileExists(
+          `${defaultConfigDir}/${defaultFullFilename.replace(defaultConfigName, input)}`
+        )) || 'File already exists',
     },
   ]);
 

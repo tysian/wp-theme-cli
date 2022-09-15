@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   env: {
     commonjs: true,
-    es2021: true,
+    es2022: true,
     node: true,
   },
   parser: '@typescript-eslint/parser',
@@ -14,24 +14,20 @@ module.exports = {
     'prettier',
   ],
   parserOptions: {
-    ecmaVersion: 12,
+    ecmaVersion: 'latest',
+    source: 'module',
     project: './tsconfig.eslint.json',
   },
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-use-before-define': ['error'],
+    '@typescript-eslint/no-use-before-define': 'error',
     'import/no-unresolved': 'error',
-    'no-use-before-define': 'off',
-    'no-restricted-syntax': 'off',
-    'linebreak-style': 'off',
-    'func-names': 'off',
-    strict: 'off',
-    'import/no-commonjs': 'off',
+    'no-restricted-syntax': 'off', // we prefer for..of instead of array methods because async operations
     'no-underscore-dangle': 'off',
     'no-console': 'off',
-    'no-case-declarations': 'off',
-    'no-nested-ternary': 'off',
     'import/prefer-default-export': 'off',
+    'no-continue': 'off',
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
     'import/extensions': [
       'error',
       'ignorePackages',
@@ -40,9 +36,18 @@ module.exports = {
         ts: 'never',
       },
     ],
-    'guard-for-in': 'off',
-    'no-continue': 'off',
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+        pathGroups: [
+          {
+            pattern: '$/**',
+            group: 'internal',
+          },
+        ],
+      },
+    ],
   },
   settings: {
     'import/parsers': {

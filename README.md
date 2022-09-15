@@ -40,3 +40,7 @@ wp-theme --help
 Each feature is called a **module** and have separate documentation:
 
 1. [ACF Generator](docs/acf-generator.md) - Generate files based on flexible field layouts
+
+## Credits
+
+All npm/husky/changeset/commitlint related stuff, typescript building setup was inspired by [create-t3-app](https://github.com/t3-oss/create-t3-app).
