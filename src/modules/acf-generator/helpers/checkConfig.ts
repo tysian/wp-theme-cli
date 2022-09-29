@@ -6,8 +6,8 @@ import {
   loggerPrefix,
   readStream,
   stringIncludesIgnoreQuotes,
+  FileExistenceError,
 } from '$/shared/utils/index.js';
-import { FileExistenceError } from '$/shared/utils/FileExistenceError.js';
 import { AcfGeneratorConfig } from '../acf-generator.config.js';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {

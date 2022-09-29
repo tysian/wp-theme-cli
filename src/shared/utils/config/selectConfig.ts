@@ -13,6 +13,7 @@ export const selectConfig = async <Config>({
   defaultConfigPath,
   createNewConfig,
 }: SelectConfigArgs<Config>): Promise<Config> => {
+  logger.none();
   const configTypeChoices = [
     {
       name: 'Create new config',
