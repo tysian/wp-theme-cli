@@ -18,11 +18,11 @@ export const cleanerStats = {
     value: 0,
     description: `Files unchanged`,
   },
-  modified: {
+  removed: {
     value: 0,
     description: `Files removed`,
   },
-  removed: {
+  modified: {
     value: 0,
     description: `Files modified`,
   },
