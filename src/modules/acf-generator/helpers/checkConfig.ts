@@ -6,12 +6,14 @@ import {
   loggerPrefix,
   readStream,
   stringIncludesIgnoreQuotes,
+  FileExistenceError,
 } from '$/shared/utils/index.js';
-import { FileExistenceError } from '$/shared/utils/FileExistenceError.js';
 import { AcfGeneratorConfig } from '../acf-generator.config.js';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {
+  logger.none();
   logger.start('Checking config...');
+
   updateLogger.awaiting('Checking if modules JSON file exists...');
   const modulesFilePathExists = await fileExists(config.modulesFilePath);
   if (!modulesFilePathExists) {

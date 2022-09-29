@@ -35,7 +35,9 @@ export const saveConfig = async <Config>(_defaultFullFilename: string, config: C
     },
   ]);
 
-  if (!wannaSave) return;
+  if (!wannaSave) {
+    return;
+  }
 
   logger.info(`New config will be saved in ${chalk.green(`${defaultConfigDir}/`)}`);
   // Ask user only for a config name, which is better than asking for a full filename
