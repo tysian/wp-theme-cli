@@ -25,9 +25,9 @@
   "scripts": {
     "build": "tsup src/bin/wp-theme.ts --format esm --clean --minify",
     "dev": "tsup src/bin/wp-theme.ts --format esm --watch --clean",
-    "format:check": "yarn typecheck && yarn lint && yarn format",
+    "format:check": "pnpm run typecheck && pnpm run lint && pnpm run format",
     "format": "prettier --write --plugin-search-dir=. \"**/*.{ts,md,json,js,mjs,cjs}\"",
-    "check": "yarn typecheck && yarn lint",
+    "check": "pnpm run typecheck && pnpm run lint",
     "lint": "eslint src --fix --cache --cache-strategy content",
     "prepare": "husky install",
     "start": "node dist/wp-theme.js",
