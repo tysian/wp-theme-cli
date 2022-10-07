@@ -46,9 +46,7 @@ export const removeACFLayout = async (
     const modifiedAcfModulesGroup = unsetInObject(acfModulesGroup, removePaths);
 
     if (isEqual(acfModulesGroup, modifiedAcfModulesGroup)) {
-      operationLogger.skip(
-        loggerMergeMessages([`Didn't remove any layout`, loggerListElements(layoutsArray)])
-      );
+      operationLogger.skip();
       statistics.incrementStat('unchanged');
       return null;
     }

@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {
   loggerRelativePath,
   loggerPrefix,
@@ -28,7 +29,7 @@ export class OperationsLogger {
     updateLogger.start(loggerMergeMessages([this.prefix, msg, this.relativePath]));
   }
 
-  public skip(msg = 'No changes were made') {
+  public skip(msg = loggerMergeMessages([chalk.gray(`${this.message}`), 'No changes were made'])) {
     updateLogger.skip(loggerMergeMessages([this.prefix, msg, this.relativePath]));
     updateLogger.done();
   }
