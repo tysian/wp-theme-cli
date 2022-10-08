@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import { isNumber } from 'lodash-es';
 import {
   updateLogger,
   loggerMergeMessages,
@@ -7,33 +6,11 @@ import {
   loggerListElements,
   asArray,
 } from '$/shared/utils/index.js';
-import { CleanerConfig, CleanerConfigSchema } from '../cleaner.config.js';
+import { CleanerConfig } from '../cleaner.config.js';
 import { OperationType } from '../cleaner.const.js';
 
 export const checkConfig = async (config: Partial<CleanerConfig>) => {
   updateLogger.start('Checking config...');
-
-  // Check schema
-  const check = CleanerConfigSchema.strict().safeParse(config);
-  if (!check.success) {
-    const errors = check.error.issues
-      .map((issue) =>
-        loggerMergeMessages([
-          loggerPrefix(issue.code),
-          issue.message,
-          'in',
-          chalk.green(
-            issue.path.reduce((str, val) => {
-              if (!str) return val;
-              if (isNumber(val)) return `${str}[${val.toString()}]`;
-              return `${str}.${val}`;
-            }, '') as string
-          ),
-        ])
-      )
-      .join('\n');
-    throw new Error(`Config have some errors: \n${errors}`);
-  }
 
   // groups are not empty
   if (!config?.groups || !Array.isArray(config.groups) || !config.groups.length) {
@@ -90,21 +67,33 @@ export const checkConfig = async (config: Partial<CleanerConfig>) => {
         throw createError(`Empty ${chalk.green('search')} property`);
       }
 
-      if (operation.operationType === OperationType.REMOVE_FROM_JSON) {
+      if (
+        operation.operationType === OperationType.REMOVE_FROM_JSON ||
+        operation.operationType === OperationType.REMOVE_ACF_LAYOUT
+      ) {
         // REMOVE_FROM_JSON have propertyPaths property
-        if (!('propertyPaths' in operation)) {
+        if (
+          operation.operationType === OperationType.REMOVE_FROM_JSON &&
+          (!('propertyPaths' in operation) ||
+            !asArray(operation.propertyPaths).filter(Boolean).length)
+        ) {
           throw createError(`Empty ${chalk.green('propertyPaths')} property`);
         }
 
-        // REMOVE_FROM_JSON have only jsons in input
-        const nonJsonEntries = asArray(operation.input).filter((inp) => !inp.endsWith('.json'));
-        if (asArray(operation.input).length !== nonJsonEntries.length) {
+        // REMOVE_ACF_LAYOUT have layouts property
+        if (
+          operation.operationType === OperationType.REMOVE_ACF_LAYOUT &&
+          (!('layouts' in operation) || !asArray(operation.layouts).filter(Boolean).length)
+        ) {
+          throw createError(`Empty ${chalk.green('layouts')} property`);
+        }
+
+        // Input only contains json files
+        const nonJsonEntries = asArray(operation.input).find((inp) => !inp.endsWith('.json'));
+        if (nonJsonEntries) {
           throw createError(`Input property contains non-json files`);
         }
       }
-      // REMOVE_FILE_LINE have search property
-      // REMOVE_ACF_LAYOUT have only jsons in input
-      // REMOVE_ACF_LAYOUT have layouts property
     }
   }
 
