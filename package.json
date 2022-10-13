@@ -25,7 +25,7 @@
   "scripts": {
     "build": "tsup src/bin/wp-theme.ts --format esm --clean --minify",
     "dev": "tsup src/bin/wp-theme.ts --format esm --watch --clean",
-    "format:check": "pnpm run typecheck && pnpm run lint && pnpm run format",
+    "format:check": "pnpm run format && pnpm run typecheck && pnpm run lint",
     "format": "prettier --write --plugin-search-dir=. \"**/*.{ts,md,json,js,mjs,cjs}\"",
     "check": "pnpm run typecheck && pnpm run lint",
     "lint": "eslint src --fix --cache --cache-strategy content",
