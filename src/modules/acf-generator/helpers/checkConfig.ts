@@ -53,9 +53,12 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
     }
 
     if (configOptions?.import) {
-      const { filePath, search } = configOptions.import;
+      const { filePath = '', search = '' } = configOptions.import;
 
       updateLogger.awaiting(`${loggerPrefix(fileType)} Checking import file path...`);
+      if (!filePath.trim().length) {
+        throw new Error(`Property ${chalk.green(`'filePath'`)} cannot be empty.`);
+      }
       const filePathExists = await fileExists(filePath);
       if (!filePathExists) {
         throw new FileExistenceError(filePath);
@@ -64,8 +67,11 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
       updateLogger.done();
 
       updateLogger.awaiting(`${loggerPrefix(fileType)} Checking import search string...`);
-      const importFileContent = await readStream(filePath);
+      if (!search.trim().length) {
+        throw new Error(`Property ${chalk.green(`'search'`)} cannot be empty.`);
+      }
 
+      const importFileContent = await readStream(filePath);
       if (!stringIncludesIgnoreQuotes(importFileContent, search)) {
         throw new Error(
           `File ${chalk.green(`'${filePath}'`)} doesn't have search string (${chalk.green(

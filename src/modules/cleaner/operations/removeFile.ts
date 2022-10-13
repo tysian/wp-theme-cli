@@ -24,7 +24,7 @@ export const removeFile = async (
     if (!exists) {
       operationLogger.skip('File not found');
       statistics.incrementStat('unchanged');
-      return null;
+      return;
     }
 
     const fullPath = path.resolve(file);
@@ -32,10 +32,8 @@ export const removeFile = async (
 
     operationLogger.complete();
     statistics.incrementStat('removed');
-    return true;
   } catch (error) {
     statistics.incrementStat('error');
     handleError(error as Error, operationLogger.prefix);
-    return false;
   }
 };

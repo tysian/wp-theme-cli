@@ -11,7 +11,7 @@ export const removeFromJSON = async (
   file: string,
   { groupKey = '', description = '', propertyPaths = [] }: RemoveFromJSONOperation,
   statistics: CleanerStatistics
-): Promise<boolean | null> => {
+) => {
   const operationLogger = new OperationsLogger({
     relativePath: file,
     prefix: groupKey,
@@ -28,7 +28,7 @@ export const removeFromJSON = async (
     if (isEqual(parsedFileContent, modifiedFileContent)) {
       operationLogger.skip();
       statistics.incrementStat('unchanged');
-      return null;
+      return;
     }
 
     // Stringify object and write to file
@@ -37,10 +37,8 @@ export const removeFromJSON = async (
 
     operationLogger.complete();
     statistics.incrementStat('modified');
-    return true;
   } catch (error) {
-    handleError(error as Error, operationLogger.prefix);
     statistics.incrementStat('error');
-    return false;
+    handleError(error as Error, operationLogger.prefix);
   }
 };

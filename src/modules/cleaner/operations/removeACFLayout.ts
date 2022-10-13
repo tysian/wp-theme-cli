@@ -48,7 +48,7 @@ export const removeACFLayout = async (
     if (isEqual(acfModulesGroup, modifiedAcfModulesGroup)) {
       operationLogger.skip();
       statistics.incrementStat('unchanged');
-      return null;
+      return;
     }
 
     // Stringify object and write to file
@@ -57,11 +57,8 @@ export const removeACFLayout = async (
 
     operationLogger.complete();
     statistics.incrementStat('modified');
-
-    return true;
   } catch (error) {
-    handleError(error as Error, operationLogger.prefix);
     statistics.incrementStat('error');
-    return false;
+    handleError(error as Error, operationLogger.prefix);
   }
 };

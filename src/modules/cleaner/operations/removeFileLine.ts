@@ -1,6 +1,5 @@
 import path from 'path';
-import chalk from 'chalk';
-import { loggerListElements, readStream, writeStream } from '$/shared/utils/index.js';
+import { readStream, writeStream } from '$/shared/utils/index.js';
 import { asArray } from '$/shared/utils/asArray.js';
 import { handleError } from '$/shared/utils/handleError.js';
 import { RemoveFileLineOperation } from '../cleaner.config.js';
@@ -22,16 +21,6 @@ export const removeFileLine = async (
   try {
     operationLogger.start('Updating file');
 
-    if (!file.length || !search.length) {
-      throw new Error(
-        `Empty ${loggerListElements(['file', 'search'], {
-          color: chalk.green,
-          parentheses: false,
-          separator: ' or ',
-        })} values.`
-      );
-    }
-
     const fileContent = await readStream(file);
     let modifiedFileContent = fileContent;
 
@@ -48,7 +37,7 @@ export const removeFileLine = async (
     if (fileContent.length === modifiedFileContent.length) {
       operationLogger.skip();
       statistics.incrementStat('unchanged');
-      return null;
+      return;
     }
 
     // If something was changed - update file
@@ -56,10 +45,8 @@ export const removeFileLine = async (
 
     operationLogger.complete();
     statistics.incrementStat('modified');
-    return true;
   } catch (error) {
     statistics.incrementStat('error');
     handleError(error as Error, operationLogger.prefix);
-    return false;
   }
 };
