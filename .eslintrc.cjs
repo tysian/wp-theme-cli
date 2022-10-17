@@ -25,6 +25,7 @@ module.exports = {
     'no-restricted-syntax': 'off', // we prefer for..of instead of array methods because async operations
     'no-underscore-dangle': 'off',
     'no-console': 'off',
+    'no-await-in-loop': 'off',
     'import/prefer-default-export': 'off',
     'no-continue': 'off',
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }],

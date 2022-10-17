@@ -40,6 +40,7 @@ wp-theme --help
 Each feature is called a **module** and have separate documentation:
 
 1. [ACF Generator](docs/acf-generator.md) - Generate files based on flexible field layouts
+2. [Cleaner](docs/cleaner.md) - Remove directories, files, update files by removing lines of code, update JSON files (cleaner)
 
 ## Credits
 

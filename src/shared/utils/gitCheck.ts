@@ -21,13 +21,12 @@ export const gitCheck = async (): Promise<boolean> => {
     updateLogger.done();
     return true;
   }
-  updateLogger.info('Found uncommited changes.');
-  updateLogger.done();
+  updateLogger.info('You got uncommited changes.');
   const { shouldCommit } = await inquirer.prompt<{ shouldCommit: 'commit' | 'continue' | 'abort' }>(
     [
       {
         type: 'list',
-        message: 'Do you want to commit before running this script?',
+        message: 'Do you want to commit?',
         name: 'shouldCommit',
         default: 'commit',
         choices: [
@@ -41,9 +40,7 @@ export const gitCheck = async (): Promise<boolean> => {
             short: 'Ignore & continue',
             value: 'continue',
           },
-          {
-            type: 'separator',
-          },
+          { type: 'separator' },
           {
             name: 'Abort',
             value: 'abort',
@@ -59,7 +56,7 @@ export const gitCheck = async (): Promise<boolean> => {
         type: 'input',
         name: 'commitMessage',
         message: 'Provide commit message.',
-        default: () => 'Changes before generating ACF modules files',
+        default: 'Changes made before running script',
         validate: (input) => input.trim().length > 0,
       },
     ]);

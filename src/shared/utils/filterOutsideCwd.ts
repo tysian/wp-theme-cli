@@ -7,7 +7,6 @@ import { loggerMergeMessages } from './log/loggerMergeMessages.js';
  * Filter out files outside of cwd to prevent unwanted changes.
  * @param {string[]} files Array of files
  * @param {boolean} allow Determines if files outside of cwd should be allowed or not.
- * @returns {string[]}
  */
 export const filterOutsideCwd = (files: string[], allow = false): string[] => {
   const onlyInCwd = files.filter((file) => path.resolve(file).includes(process.cwd()));

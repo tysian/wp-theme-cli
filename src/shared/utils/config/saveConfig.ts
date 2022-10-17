@@ -13,10 +13,7 @@ const handleFileName = (filename: string) => {
   return cleanFilename.endsWith('.json') ? cleanFilename : `${cleanFilename}.json`;
 };
 
-export const saveConfig = async <Config>(
-  _defaultFullFilename: string,
-  config: Config
-): Promise<void> => {
+export const saveConfig = async <Config>(_defaultFullFilename: string, config: Config) => {
   const defaultFullFilename = handleFileName(_defaultFullFilename);
   if (!defaultFullFilename) {
     throw new Error(

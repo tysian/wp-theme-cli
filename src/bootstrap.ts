@@ -7,6 +7,7 @@ import semver from 'semver';
 import { bin, description, engines as pkgEngines, version } from '../package.json';
 import { acfGenerator } from './modules/acf-generator/acf-generator.js';
 import { loggerListElements, logger } from './shared/utils/index.js';
+import { cleaner } from './modules/cleaner/cleaner.js';
 
 export const bootstrap = async () => {
   const currentVersion = process.versions.node;
@@ -35,6 +36,24 @@ export const bootstrap = async () => {
           break;
         default:
           logger.none(`Wrong type, accepting only: ${loggerListElements(['modules'])}`);
+          break;
+      }
+    });
+
+  program
+    .command('clean')
+    .alias('c')
+    .description('Update and remove files using provided config')
+    .argument('[type]', `what to clean, accepting: ${loggerListElements(['theme'])}`, 'theme')
+    .option('--allow-outside-cwd', 'Allow cleaning outside of current working directory')
+    .action((type, options) => {
+      global.programOptions = options;
+      switch (type) {
+        case 'theme':
+          cleaner();
+          break;
+        default:
+          logger.none(`Wrong type, accepting only: ${loggerListElements(['theme'])}`);
           break;
       }
     });
