@@ -1,4 +1,4 @@
-# wp-theme-cli CLI
+# WP Theme CLI
 
 ## Goal
 
