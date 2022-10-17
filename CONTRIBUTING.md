@@ -1,6 +1,6 @@
-# Contributing to `wp-theme`
+# Contributing to `wp-theme-cli`
 
-`wp-theme` package is currently maintained by [Jakub Bazgier](https://github.com/tysian). All feedback and bugs reports are truly appreciated!
+`wp-theme-cli` package is currently maintained by [Jakub Bazgier](https://github.com/tysian). All feedback and bugs reports are truly appreciated!
 
 ## How to Contribute
 
@@ -8,8 +8,8 @@
 
 If you have any questions, here are a few quick steps you can make:
 
-1. Read [documentation](https://github.com/tysian/wp-theme/blob/main/README.md)
-2. Search through [issues](https://github.com/tysian/wp-theme/issues) or [pull requests](https://github.com/tysian/wp-theme/pulls)
+1. Read [documentation](https://github.com/tysian/wp-theme-cli/blob/main/README.md)
+2. Search through [issues](https://github.com/tysian/wp-theme-cli/issues) or [pull requests](https://github.com/tysian/wp-theme-cli/pulls)
 
 If you didn't find an answer to your question, feel free to create new issue.
 

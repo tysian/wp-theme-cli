@@ -1,4 +1,4 @@
-# WP-Theme CLI
+# wp-theme-cli CLI
 
 ## Goal
 
@@ -20,11 +20,11 @@ For now, I'm focusing on files operations, such as removing unnecessary files or
 Preferred way is to run latest version directly using `npx` or `pnpx`
 
 ```bash
-npx wp-theme@latest
+npx wp-theme-cli@latest
 ```
 
 ```bash
-pnpx wp-theme@latest
+pnpx wp-theme-cli@latest
 ```
 
 You can also install it locally or globally, but this way is **NOT RECOMMENDED**.
@@ -34,7 +34,7 @@ You can also install it locally or globally, but this way is **NOT RECOMMENDED**
 Check all commands available using help command
 
 ```bash
-wp-theme --help
+wp-theme-cli --help
 ```
 
 Each feature is called a **module** and have separate documentation:

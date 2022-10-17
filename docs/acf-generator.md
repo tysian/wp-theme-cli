@@ -9,12 +9,12 @@ Generate, update & remove files in our WordPress theme
 1. Clone repository
 2. Run `npm install` or `yarn install` to install dependencies
 3. Install this module globally `npm i -g .`
-4. Use it everywhere `wp-theme`
-5. To remove this module, just run `npm uninstall -g wp-theme`
+4. Use it everywhere `wp-theme-cli`
+5. To remove this module, just run `npm uninstall -g wp-theme-cli`
 
 ## Usage
 
-Use `wp-theme generate` command.  
+Use `wp-theme-cli generate` command.  
 The only type available for a moment is _modules_.
 This command allows you to create your own config, so you feel free to generate one using this tools.
 
@@ -24,7 +24,7 @@ If you put it as `./configs/default.acf-generator-config.json` it will be automa
 
 ### Generating modules
 
-Run `wp-theme generate modules` to generate/update ACF modules files.  
+Run `wp-theme-cli generate modules` to generate/update ACF modules files.  
 You can easily generate config by answering questions via CLI.  
 You might also want to see example config [here](/example-configs/example.acf-generator-config.json).
 

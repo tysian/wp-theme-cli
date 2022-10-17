@@ -8,7 +8,7 @@ Our goal is to have one complete template, but being able to clear it from stuff
 
 ## Usage
 
-Use `wp-theme clean` command.
+Use `wp-theme-cli clean` command.
 
 ## Configs
 
@@ -99,7 +99,7 @@ You can create it using this tool or do it by itself:
         {
           operationType: 'REMOVE_FILE',
           description: 'Example operation',
-          input: ['/mnt/c/laragon/www/wp-theme-cli-test/404.php'],
+          input: ['/404.php'],
         },
         // ...
       ],

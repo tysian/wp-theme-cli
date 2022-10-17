@@ -1,4 +1,4 @@
-# wp-theme
+# wp-theme-cli
 
 ## 1.0.0
 
