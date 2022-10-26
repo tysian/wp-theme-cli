@@ -52,7 +52,22 @@ If `true` - creates files for this file type.
 **\[fileType].template**  
 Accepts: `string`  
 Default: `'default'`  
-EJS template file, should have `.ejs` extension.
+EJS template file, should have `.ejs` extension.  
+Here is an data object provided to the template:
+
+```ts
+type DataObject = {
+  name: string;
+  variableName: string; // sanitized, snake_cased, variable-friendly version of layout name
+  fileName: string; // full filename with extension
+  className: string; // kebabCased, sanitized version layout name
+  subfields: {
+    // array of layout subfields
+    name: string;
+    variableName: string; // sanitized, variable-friendly subfield name
+  }[];
+};
+```
 
 **\[fileType].output**  
 Accepts: `string`  
