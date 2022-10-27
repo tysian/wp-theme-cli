@@ -43,7 +43,7 @@ export const installDependencies = async (packageManager = 'npm') => {
 
   logger.info('Installing dependencies...');
   await new Promise((resolve, reject) => {
-    const child = spawn(packageManager, ['install'], { stdio: 'inherit' });
+    const child = spawn(packageManager, ['install'], { stdio: 'inherit', shell: true });
     child.on('error', (error) => {
       reject(error);
     });
