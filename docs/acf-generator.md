@@ -4,14 +4,6 @@
 
 Generate, update & remove files in our WordPress theme
 
-### Installation
-
-1. Clone repository
-2. Run `npm install` or `yarn install` to install dependencies
-3. Install this module globally `npm i -g .`
-4. Use it everywhere `wp-theme-cli`
-5. To remove this module, just run `npm uninstall -g wp-theme-cli`
-
 ## Usage
 
 Use `wp-theme-cli generate` command.  
@@ -60,7 +52,22 @@ If `true` - creates files for this file type.
 **\[fileType].template**  
 Accepts: `string`  
 Default: `'default'`  
-EJS template file, should have `.ejs` extension.
+EJS template file, should have `.ejs` extension.  
+Here is an data object provided to the template:
+
+```ts
+type DataObject = {
+  name: string;
+  variableName: string; // sanitized, snake_cased, variable-friendly version of layout name
+  fileName: string; // full filename with extension
+  className: string; // kebabCased, sanitized version layout name
+  subfields: {
+    // array of layout subfields
+    name: string;
+    variableName: string; // sanitized, variable-friendly subfield name
+  }[];
+};
+```
 
 **\[fileType].output**  
 Accepts: `string`  

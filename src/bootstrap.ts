@@ -6,7 +6,7 @@ import inquirerFileTreeSelection from 'inquirer-file-tree-selection-prompt';
 import semver from 'semver';
 import { bin, description, engines as pkgEngines, version } from '../package.json';
 import { acfGenerator } from './modules/acf-generator/acf-generator.js';
-import { loggerListElements, logger } from './shared/utils/index.js';
+import { loggerListElements, logger, loggerMergeMessages } from './shared/utils/index.js';
 import { cleaner } from './modules/cleaner/cleaner.js';
 
 export const bootstrap = async () => {
@@ -15,9 +15,12 @@ export const bootstrap = async () => {
   const isSupported = semver.satisfies(currentVersion, engines);
 
   if (!isSupported) {
-    console.error(`Your Node.js version (v${currentVersion}) is not supported.`);
-    console.error(`Please use Node.js v${engines} or higher.`);
-    process.exit(1);
+    throw new Error(
+      loggerMergeMessages([
+        `Your Node.js version (v${currentVersion}) is not supported.`,
+        `Please use Node.js v${engines} or higher.`,
+      ])
+    );
   }
 
   inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
