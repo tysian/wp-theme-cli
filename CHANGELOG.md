@@ -4,7 +4,8 @@
 
 ### Patch Changes
 
-- 6b22b70: - Update docs
+- 6b22b70:
+  - Update docs
   - Add prepublish script
   - Fix error when installing dependencies
 
