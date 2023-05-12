@@ -33,6 +33,8 @@ export const createModule = async (
         return;
       }
 
+      // TODO: Handle clone fields
+
       // Prepare data structure to create modules
       const moduleData = {
         name: layout.name,
@@ -78,6 +80,7 @@ export const createModule = async (
       }
 
       // Render template using EJS
+      // TODO: render using lodash _.template() function instead
       const renderedTemplate = await ejs.render(template, { data: moduleData }, { async: true });
 
       // Create module file
@@ -100,6 +103,7 @@ export const createModule = async (
           fileName = fileName.substring(1).slice(0, -5);
         }
 
+        // TODO: Maybe use lodash _.template() too?
         const textToAppend = moduleImport.append
           .replace('{file_name}', fileName)
           .replace('{module_name}', moduleData.name)

@@ -9,6 +9,7 @@ export type StatisticProp = {
 
 export type StatisticsCollection<K extends string = string> = Record<K, StatisticProp>;
 
+// TODO: fix wrong counting because of duplicates, consider using Set
 export class Statistics<T extends StatisticsCollection> {
   private startTime = 0;
 
