@@ -23,7 +23,7 @@ To contribute, please make sure that you:
 2. Cloned it to your local machine
 3. Have installed [pnpm](https://pnpm.io) globally
    ```bash
-   npm install -g npm
+   npm install -g pnpm
    ```
 4. Have installed all dependencies
    ```bash
@@ -48,7 +48,7 @@ We're trying our best to make our clean and easy to read. We know that this isn'
 
 This CLI is separated by separate parts called **modules** and it's intentional to make them independent from each other.
 
-If you really need something from any of the existing modules,consider moving it to `/shared` directory and make it more generic.
+If you really need something from any of the existing modules, consider moving it to `/shared` directory and make it more generic.
 
 Each separate piece of code should be put inside its separate function, which is included in separate file with the same name.
 
