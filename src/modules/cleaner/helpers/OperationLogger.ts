@@ -29,7 +29,7 @@ export class OperationsLogger {
     updateLogger.start(loggerMergeMessages([this.prefix, msg, this.relativePath]));
   }
 
-  public skip(msg = loggerMergeMessages([chalk.gray(`${this.message}`), 'No changes were made'])) {
+  public skip(msg = loggerMergeMessages([this.message, chalk.gray('No changes were made')])) {
     updateLogger.skip(loggerMergeMessages([this.prefix, msg, this.relativePath]));
     updateLogger.done();
   }

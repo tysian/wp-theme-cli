@@ -27,14 +27,16 @@ export const handleOperations = async (operations: Operation[], statistics: Clea
             // key of current group
             groupKey ? loggerPrefix(groupKey) : '',
             // description or operation type
-            `${chalk.gray(`${description || operationType}`)}`,
-            // amount of files
-            `${asArray(input).length}`,
-            // plural or singular
-            operationType === OperationType.REMOVE_DIRECTORY
-              ? `director${asArray(input).length > 1 ? 'ies' : 'y'}`
-              : `file${asArray(input).length > 1 ? 's' : ''}`,
-            `not found`,
+            description || operationType,
+            chalk.gray(
+              // amount of files
+              asArray(input).length,
+              // plural or singular
+              operationType === OperationType.REMOVE_DIRECTORY
+                ? `director${asArray(input).length > 1 ? 'ies' : 'y'}`
+                : `file${asArray(input).length > 1 ? 's' : ''}`,
+              `not found`
+            ),
           ])
         );
 

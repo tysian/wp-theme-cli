@@ -1,10 +1,17 @@
 # wp-theme-cli
 
+## 1.1.0
+
+### Minor Changes
+
+- 03450fa: Update statistics to count files to prevent duplicates
+
 ## 1.0.2
 
 ### Patch Changes
 
-- 6b22b70: - Update docs
+- 6b22b70:
+  - Update docs
   - Add prepublish script
   - Fix error when installing dependencies
 

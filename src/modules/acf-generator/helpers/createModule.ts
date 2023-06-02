@@ -27,26 +27,28 @@ export const createModule = async (
   statistics: AcfGeneratorStatistics
 ): Promise<void> => {
   for await (const [fileType, options] of Object.entries(fileTypes)) {
+    const { active, output, template: customTemplate, import: moduleImport } = options;
+    if (!active) {
+      return;
+    }
+
+    // TODO: Handle clone fields
+
+    // Prepare data structure to create modules
+    const moduleData = {
+      name: layout.name,
+      variableName: snakeCase(filenamify(layout.name)),
+      fileName: `${fileType === 'scss' ? '_' : ''}${layout.name}.${fileType}`,
+      className: kebabCase(filenamify(layout.name)),
+      subfields: layout.sub_fields
+        .filter((subfield) => subfield?.name)
+        .map((subfield) => ({
+          name: subfield.name,
+          variableName: snakeCase(filenamify(subfield.name)),
+        })),
+    };
+
     try {
-      const { active, output, template: customTemplate, import: moduleImport } = options;
-      if (!active) {
-        return;
-      }
-
-      // Prepare data structure to create modules
-      const moduleData = {
-        name: layout.name,
-        variableName: snakeCase(filenamify(layout.name)),
-        fileName: `${fileType === 'scss' ? '_' : ''}${layout.name}.${fileType}`,
-        className: kebabCase(filenamify(layout.name)),
-        subfields: layout.sub_fields
-          .filter((subfield) => subfield?.name)
-          .map((subfield) => ({
-            name: subfield.name,
-            variableName: snakeCase(filenamify(subfield.name)),
-          })),
-      };
-
       updateLogger.pending(`Creating ${chalk.green(`${moduleData.fileName}`)}...`);
 
       // Prepare output path
@@ -58,7 +60,7 @@ export const createModule = async (
         switch (conflictAction) {
           case 'ignore':
             updateLogger.skip(`${chalk.green(`${moduleData.fileName}`)} already exists.`);
-            statistics.incrementStat('unchanged');
+            statistics.addFile('unchanged', moduleData.fileName);
             break;
           case 'overwrite':
             updateLogger.warn(
@@ -78,12 +80,13 @@ export const createModule = async (
       }
 
       // Render template using EJS
+      // TODO: render using lodash _.template() function instead
       const renderedTemplate = await ejs.render(template, { data: moduleData }, { async: true });
 
       // Create module file
       if (!outputExists || (outputExists && conflictAction === 'overwrite')) {
         await writeStream(outputPath, renderedTemplate);
-        statistics.incrementStat('created');
+        statistics.addFile('created', moduleData.fileName);
         updateLogger.success(` ${chalk.green(`${moduleData.fileName}`)} created.`);
         updateLogger.done();
       }
@@ -100,6 +103,7 @@ export const createModule = async (
           fileName = fileName.substring(1).slice(0, -5);
         }
 
+        // TODO: Maybe use lodash _.template() too?
         const textToAppend = moduleImport.append
           .replace('{file_name}', fileName)
           .replace('{module_name}', moduleData.name)
@@ -110,7 +114,7 @@ export const createModule = async (
         if (isImported) {
           updateLogger.skip(`${chalk.green(`${moduleData.fileName}`)} already imported.`);
           updateLogger.done();
-          statistics.incrementStat('unchanged');
+          statistics.addFile('unchanged', moduleData.fileName);
           return;
         }
 
@@ -125,7 +129,7 @@ export const createModule = async (
           updateLogger.skip(
             `This should never happen, but didn't found ${chalk.blueBright(moduleImport.search)}.`
           );
-          statistics.incrementStat('unchanged');
+          statistics.addFile('unchanged', moduleImport.search);
           updateLogger.done();
           return;
         }
@@ -135,10 +139,10 @@ export const createModule = async (
         await writeStream(path.resolve(moduleImport.filePath), contentWithImports);
         updateLogger.success(` ${chalk.green(`${moduleData.fileName}`)} successfully imported.`);
         updateLogger.done();
-        statistics.incrementStat('modified');
+        statistics.addFile('modified', moduleData.fileName);
       }
     } catch (error) {
-      statistics.incrementStat('error');
+      statistics.addFile('error', moduleData.fileName);
       handleError(error as Error);
     }
   }

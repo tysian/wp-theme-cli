@@ -23,16 +23,16 @@ export const removeDirectory = async (
     const checkIsDirectory = await isDirectory(file);
     if (!checkIsDirectory) {
       operationLogger.skip('Directory not found');
-      statistics.incrementStat('unchanged');
+      statistics.addFile('unchanged', file);
       return;
     }
     const fullPath = path.resolve(file);
     await fs.rmdir(fullPath, { recursive: true });
 
     operationLogger.complete();
-    statistics.incrementStat('removed');
+    statistics.addFile('removed', file);
   } catch (error) {
-    statistics.incrementStat('error');
+    statistics.addFile('error', file);
     handleError(error as Error, operationLogger.prefix);
   }
 };

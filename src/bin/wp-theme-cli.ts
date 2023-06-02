@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 
-import('../bootstrap.js')
-  .then(({ bootstrap }) => bootstrap())
-  .catch((err) => {
-    console.error(err?.message);
-    process.exit(1);
-  });
+import { bootstrap } from '../bootstrap.js';
+
+try {
+  bootstrap();
+} catch (err) {
+  if (err instanceof Error) {
+    console.error('[wp-theme-cli]', err?.message);
+  }
+  process.exit(1);
+}
