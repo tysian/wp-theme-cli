@@ -1,5 +1,11 @@
 # wp-theme-cli
 
+## 1.1.0
+
+### Minor Changes
+
+- 03450fa: Update statistics to count files to prevent duplicates
+
 ## 1.0.2
 
 ### Patch Changes
