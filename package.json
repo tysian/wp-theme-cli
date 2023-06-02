@@ -34,8 +34,7 @@
     "typecheck": "tsc --noEmit",
     "changeset": "changeset add",
     "bump-version": "changeset version && changeset tag",
-    "prepublishOnly": "pnpm run build",
-    "publish": "npm publish --access=public"
+    "release": "pnpm run build && pnpm publish --access=public"
   },
   "dependencies": {
     "chalk": "^5.0.1",
