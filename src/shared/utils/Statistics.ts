@@ -1,15 +1,16 @@
 import { performance } from 'perf_hooks';
 import chalk, { ChalkInstance } from 'chalk';
+import { asArray } from './asArray.js';
 
 export type StatisticProp = {
   value: number;
   description: string;
+  files?: string[];
   color?: ChalkInstance;
 };
 
 export type StatisticsCollection<K extends string = string> = Record<K, StatisticProp>;
 
-// TODO: fix wrong counting because of duplicates, consider using Set
 export class Statistics<T extends StatisticsCollection> {
   private startTime = 0;
 
@@ -36,6 +37,21 @@ export class Statistics<T extends StatisticsCollection> {
     return `${this.timeElapsed.toFixed(3)}ms`;
   }
 
+  addFile(type: keyof typeof this.statistics, filePath: string): boolean {
+    const root = this.getStat(type);
+    root.files = root?.files ? asArray(root.files) : [];
+
+    const alreadyProcessed = root.files.includes(filePath);
+    if (!alreadyProcessed) {
+      root.files.push(filePath);
+    }
+
+    return alreadyProcessed;
+  }
+
+  /**
+   * @deprecated Use {@link addFile} instead
+   */
   incrementStat(type: keyof typeof this.statistics, amount = 1): void {
     this.statistics[type].value += amount;
   }
@@ -54,8 +70,9 @@ export class Statistics<T extends StatisticsCollection> {
       if (props.description.trim()) {
         finalText.push(`${props.description}:`);
       }
+      const value = (props?.files ?? []).length;
       const color = props?.color ?? chalk.blue;
-      finalText.push(color(props.value));
+      finalText.push(color(value));
       return finalText.join(' ').trim();
     });
     if (this.timeElapsed) {

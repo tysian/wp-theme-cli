@@ -27,7 +27,7 @@ export const removeFromJSON = async (
 
     if (isEqual(parsedFileContent, modifiedFileContent)) {
       operationLogger.skip();
-      statistics.incrementStat('unchanged');
+      statistics.addFile('unchanged', file);
       return;
     }
 
@@ -36,9 +36,9 @@ export const removeFromJSON = async (
     await writeStream(file, stringifiedModifiedContent);
 
     operationLogger.complete();
-    statistics.incrementStat('modified');
+    statistics.addFile('modified', file);
   } catch (error) {
-    statistics.incrementStat('error');
+    statistics.addFile('error', file);
     handleError(error as Error, operationLogger.prefix);
   }
 };

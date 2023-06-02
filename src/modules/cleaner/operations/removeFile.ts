@@ -23,7 +23,7 @@ export const removeFile = async (
     const exists = await fileExists(file);
     if (!exists) {
       operationLogger.skip('File not found');
-      statistics.incrementStat('unchanged');
+      statistics.addFile('unchanged', file);
       return;
     }
 
@@ -31,9 +31,9 @@ export const removeFile = async (
     await fs.unlink(fullPath);
 
     operationLogger.complete();
-    statistics.incrementStat('removed');
+    statistics.addFile('removed', file);
   } catch (error) {
-    statistics.incrementStat('error');
+    statistics.addFile('error', file);
     handleError(error as Error, operationLogger.prefix);
   }
 };

@@ -22,7 +22,8 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-use-before-define': 'error',
     'import/no-unresolved': 'error',
-    'no-restricted-syntax': 'off', // we prefer for..of instead of array methods because async operations
+    // we prefer for..of instead of array methods because async operations
+    'no-restricted-syntax': 'off',
     'no-underscore-dangle': 'off',
     'no-console': 'off',
     'no-await-in-loop': 'off',
