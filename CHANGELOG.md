@@ -1,5 +1,11 @@
 # wp-theme-cli
 
+## 1.1.1
+
+### Patch Changes
+
+- f1b7f6b: Update dependencies, bump typescript to 5.2
+
 ## 1.1.0
 
 ### Minor Changes
