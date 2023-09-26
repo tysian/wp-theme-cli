@@ -49,11 +49,17 @@ dependencies:
   trace:
     specifier: ^3.1.1
     version: 3.1.1
+  zod:
+    specifier: ^3.22.2
+    version: 3.22.2
 
 devDependencies:
   '@changesets/cli':
     specifier: ^2.26.2
     version: 2.26.2
+  '@commander-js/extra-typings':
+    specifier: ^11.0.0
+    version: 11.0.0(commander@11.0.0)
   '@commitlint/cli':
     specifier: ^17.7.1
     version: 17.7.1
@@ -342,6 +348,14 @@ packages:
       fs-extra: 7.0.1
       human-id: 1.0.2
       prettier: 2.8.8
+    dev: true
+
+  /@commander-js/extra-typings@11.0.0(commander@11.0.0):
+    resolution: {integrity: sha512-06ol6Kn5gPjFY6v0vWOZ84nQwyqhZdaeZCHYH3vhwewjpOEjniF1KHZxh18887G3poWiJ8qyq5pb6ANuiddfPQ==}
+    peerDependencies:
+      commander: 11.0.x
+    dependencies:
+      commander: 11.0.0
     dev: true
 
   /@commitlint/cli@17.7.1:
@@ -4545,3 +4559,7 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zod@3.22.2:
+    resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
+    dev: false

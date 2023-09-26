@@ -1,8 +1,17 @@
 import chalk, { ChalkInstance } from 'chalk';
 
 type LoggerListOptions = {
+  /**
+   * @default chalk.green
+   */
   color?: ChalkInstance;
+  /**
+   * @default true
+   */
   parentheses?: boolean;
+  /**
+   * @default ","
+   */
   separator?: string;
 };
 export const loggerListElements = (elements: string[], options: LoggerListOptions = {}) => {
