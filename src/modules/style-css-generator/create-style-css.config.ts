@@ -4,7 +4,12 @@ import { z } from 'zod';
 export type StyleCssGeneratorOptions = {
   dontOverwrite?: boolean;
   validateSchema?: boolean;
+  interactive?: boolean;
+  commit?: boolean;
+  message?: string;
 };
+
+export const COMMIT_AFTER_MSG = 'chore: generate style.css based on package.json';
 
 const alsoPkgField = (fieldName: string) =>
   `you might use ${chalk.green(fieldName)} property from package.json`;

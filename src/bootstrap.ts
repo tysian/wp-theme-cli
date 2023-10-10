@@ -11,7 +11,10 @@ import { acfGenerator } from './modules/acf-generator/acf-generator.js';
 import { loggerListElements, logger, loggerMergeMessages } from './shared/utils/index.js';
 import { cleaner } from './modules/cleaner/cleaner.js';
 import { styleCssGenerator } from './modules/style-css-generator/create-style-css.js';
-import { StyleCssGeneratorOptions } from './modules/style-css-generator/create-style-css.config.js';
+import {
+  COMMIT_AFTER_MSG,
+  StyleCssGeneratorOptions,
+} from './modules/style-css-generator/create-style-css.config.js';
 
 export const bootstrap = async () => {
   const currentVersion = process.versions.node;
@@ -60,18 +63,18 @@ export const bootstrap = async () => {
     .description('Generate style.css meta file for WordPress using package.json data')
     .option(
       '--dont-overwrite',
-      `Prevent from overwriting style.css meta if this file already exists`,
-      false
+      `Prevent from overwriting style.css meta if this file already exists`
     )
-    .option('--validate-schema', `Validate schema against WordPress required fields`, false)
+    .option('--no-interactive', `Disable all interactive features and use defaults.`)
+    .option('--commit', 'Commit after generating')
+    .option('-m, --message <message>', 'Commit message', COMMIT_AFTER_MSG)
+    .option('--validate-schema', `Validate schema against WordPress required fields`)
     .addHelpText(
       'after',
       `\nYou can use of one those properties: ${loggerListElements(
         ['wp', 'wordpress', 'wp-theme-cli'],
         { parentheses: false }
-      )} in your package.json.\nThen provide bunch of properties accepted by WP.\nUse ${chalk.bold.italic(
-        `--validate-schema`
-      )} option to validate it.
+      )} in your package.json.\nThen provide bunch of properties accepted by WP.
       `
     )
     .action((_, ctx) => {
