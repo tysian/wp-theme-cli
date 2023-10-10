@@ -68,7 +68,7 @@ export const bootstrap = async () => {
     .option('--no-interactive', `Disable all interactive features and use defaults.`)
     .option('--commit', 'Commit after generating')
     .option('-m, --message <message>', 'Commit message', COMMIT_AFTER_MSG)
-    .option('--validate-schema', `Validate schema against WordPress required fields`)
+    .option('--validate', `Validate schema against WordPress required fields`)
     .addHelpText(
       'after',
       `\nYou can use of one those properties: ${loggerListElements(

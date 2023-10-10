@@ -26,7 +26,7 @@ export const styleCssGenerator = async (options: StyleCssGeneratorOptions) => {
   logger.start('Generating style.css with meta information.');
   try {
     const {
-      validateSchema = false,
+      validate = false,
       dontOverwrite = false,
       interactive = true,
       commit = false,
@@ -75,7 +75,7 @@ export const styleCssGenerator = async (options: StyleCssGeneratorOptions) => {
     }
 
     // Validate schema
-    if (validateSchema) {
+    if (validate) {
       logger.start('Validating wordpress property in package.json.');
       if (isObject(pkgWp) && isEmpty(pkgWp)) {
         throw new Error('Your wordpress property cannot be empty.');

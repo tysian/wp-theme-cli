@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export type StyleCssGeneratorOptions = {
   dontOverwrite?: boolean;
-  validateSchema?: boolean;
+  validate?: boolean;
   interactive?: boolean;
   commit?: boolean;
   message?: string;
