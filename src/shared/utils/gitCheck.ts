@@ -4,14 +4,14 @@ import { logger, updateLogger } from './log/logger.js';
 
 const git: SimpleGit = simpleGit();
 
-export const gitCheck = async (): Promise<boolean> => {
+export const gitCheck = async () => {
   logger.none();
   updateLogger.start('Looking for git repository...');
   const isRepo = await git.checkIsRepo();
   if (!isRepo) {
     updateLogger.warn('No repo found.');
     updateLogger.done();
-    return true;
+    return;
   }
 
   updateLogger.pending('Checking git status...');
@@ -19,7 +19,7 @@ export const gitCheck = async (): Promise<boolean> => {
   if (status.isClean()) {
     updateLogger.skip('Nothing to commit, continuing...');
     updateLogger.done();
-    return true;
+    return;
   }
   updateLogger.info('You got uncommited changes.');
   const { shouldCommit } = await inquirer.prompt<{ shouldCommit: 'commit' | 'continue' | 'abort' }>(
@@ -68,19 +68,17 @@ export const gitCheck = async (): Promise<boolean> => {
     updateLogger.complete('Changes commited successfully!');
     updateLogger.done();
 
-    return true;
+    return;
   }
 
   if (shouldCommit === 'continue') {
     updateLogger.done();
     updateLogger.skip('Continuing without commiting.');
     updateLogger.done();
-    return true;
+    return;
   }
 
   if (shouldCommit === 'abort') {
     throw new Error('Abort!');
   }
-
-  return true;
 };

@@ -57,14 +57,13 @@ export const bootstrap = async () => {
 
   program
     .command('create-style-css')
-    .description('Generate style.css meta file for WordPress using package.json data.')
+    .description('Generate style.css meta file for WordPress using package.json data')
     .option(
       '--dont-overwrite',
       `Prevent from overwriting style.css meta if this file already exists`,
       false
     )
     .option('--validate-schema', `Validate schema against WordPress required fields`, false)
-    .option('--use-restricted-tags', `Allow WordPress accepted tags when validating schema`, false)
     .addHelpText(
       'after',
       `\nYou can use of one those properties: ${loggerListElements(
