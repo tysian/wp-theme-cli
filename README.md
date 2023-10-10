@@ -5,7 +5,7 @@
 Bootstrapping new WP projects might be time consuming. I've decided to create this CLI to automate some of tasks.  
 For now, I'm focusing on files operations, such as removing unnecessary files or creating new ones.
 
-> **Warning**
+> [!WARNING]
 >
 > This package is still in beta, and some of features are about removing or modifying files.  
 > Please, make sure that you are in correct folder and you are using version control system (eg. git).  
@@ -41,6 +41,7 @@ Each feature is called a **module** and have separate documentation:
 
 1. [ACF Generator](docs/acf-generator.md) - Generate files based on flexible field layouts
 2. [Cleaner](docs/cleaner.md) - Remove directories, files, update files by removing lines of code, update JSON files (cleaner)
+3. [Create style.css](docs/create-style-css.md) - Create `style.css` WP meta file using `package.json`
 
 ## Credits
 
