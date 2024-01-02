@@ -1,5 +1,11 @@
 # wp-theme-cli
 
+## 1.2.1
+
+### Patch Changes
+
+- 2fb3279: Replace deprecated function `fs.rmdir()`, `fs.unlink()` with `fs.rm()`
+
 ## 1.2.0
 
 ### Minor Changes
