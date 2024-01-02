@@ -1,5 +1,11 @@
 # wp-theme-cli
 
+## 1.2.0
+
+### Minor Changes
+
+- d725b9c: Create tool for generating WordPress meta file - style.css using package.json from current working directory
+
 ## 1.1.1
 
 ### Patch Changes
