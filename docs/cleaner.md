@@ -1,6 +1,4 @@
-# Wordpress template cleaner
-
-A brief description of what this project does and who it's for
+# WordPress template cleaner
 
 ## Goal
 

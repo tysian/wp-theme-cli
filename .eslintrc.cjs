@@ -29,7 +29,7 @@ module.exports = {
     'no-await-in-loop': 'off',
     'import/prefer-default-export': 'off',
     'no-continue': 'off',
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'import/no-extraneous-dependencies': ['error', { packageDir: './' }],
     'import/extensions': [
       'error',
       'ignorePackages',
