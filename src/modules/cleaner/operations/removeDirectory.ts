@@ -27,7 +27,7 @@ export const removeDirectory = async (
       return;
     }
     const fullPath = path.resolve(file);
-    await fs.rmdir(fullPath, { recursive: true });
+    await fs.rm(fullPath, { recursive: true });
 
     operationLogger.complete();
     statistics.addFile('removed', file);
