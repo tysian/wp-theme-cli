@@ -28,7 +28,7 @@ export const removeFile = async (
     }
 
     const fullPath = path.resolve(file);
-    await fs.unlink(fullPath);
+    await fs.rm(fullPath);
 
     operationLogger.complete();
     statistics.addFile('removed', file);
