@@ -27,3 +27,5 @@ export { getRelativePath } from './fs/getRelativePath.js';
 export { isDirectory } from './fs/isDirectory.js';
 export { readStream } from './fs/readStream.js';
 export { writeStream } from './fs/writeStream.js';
+
+export { createStore, getStore, updateStore } from './store.js';
