@@ -2,6 +2,7 @@ import path from 'path';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { SetOptional, SetRequired } from 'type-fest';
+import { isFunction } from 'lodash-es';
 import {
   loggerPrefix,
   loggerListElements,
@@ -120,7 +121,7 @@ export const createNewConfig = async () => {
     }
 
     // Config generation is deprecated and inquirer cannot return function
-    const resolvedTemplate = template instanceof Function ? 'default' : template;
+    const resolvedTemplate = isFunction(template) ? 'default' : template;
 
     fileTypes[fileType] = {
       active: true,

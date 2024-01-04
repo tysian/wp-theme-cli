@@ -2,7 +2,7 @@ import path from 'path';
 import chalk from 'chalk';
 import ejs from 'ejs';
 import filenamify from 'filenamify';
-import { snakeCase, kebabCase } from 'lodash-es';
+import { snakeCase, kebabCase, isString, isFunction } from 'lodash-es';
 import { stringIncludesIgnoreQuotes } from '$/shared/utils/stringIncludesIgnoreQuotes.js';
 import {
   updateLogger,
@@ -73,20 +73,19 @@ export const createModule = async (
         updateLogger.done();
       }
 
-      // Setup template - use default if default, else use custom template from config
+      // Setup template - use default or custom template
+      const useEJS = !(customTemplate && isFunction(customTemplate));
       let template = getDefaultTemplate(fileType as AvailableFileType);
-      if (customTemplate) {
-        if (customTemplate instanceof Function) {
-          // TODO: Optimize this to not render ejs when we are running this function
-          template = customTemplate(moduleData);
-        } else if (typeof customTemplate === 'string' && customTemplate !== 'default') {
-          template = await readStream(customTemplate);
-        }
+      if (customTemplate && isString(customTemplate) && customTemplate !== 'default') {
+        template = await readStream(customTemplate);
+      } else if (customTemplate && isFunction(customTemplate)) {
+        template = customTemplate(moduleData);
       }
 
       // Render template using EJS
-      // TODO: render using lodash _.template() function instead
-      const renderedTemplate = await ejs.render(template, { data: moduleData }, { async: true });
+      const renderedTemplate = useEJS
+        ? await ejs.render(template, { data: moduleData }, { async: true })
+        : template;
 
       // Create module file
       if (!outputExists || (outputExists && conflictAction === 'overwrite')) {
@@ -108,17 +107,16 @@ export const createModule = async (
           fileName = fileName.substring(1).slice(0, -5);
         }
 
-        const textToAppend =
-          moduleImport.append instanceof Function
-            ? moduleImport.append({
-                fileName,
-                moduleName: moduleData.name,
-                moduleVariableName: moduleData.variableName,
-              })
-            : moduleImport.append
-                .replace('{file_name}', fileName)
-                .replace('{module_name}', moduleData.name)
-                .replace('{module_variable_name}', moduleData.variableName);
+        const textToAppend = isFunction(moduleImport.append)
+          ? moduleImport.append({
+              fileName,
+              moduleName: moduleData.name,
+              moduleVariableName: moduleData.variableName,
+            })
+          : moduleImport.append
+              .replace('{file_name}', fileName)
+              .replace('{module_name}', moduleData.name)
+              .replace('{module_variable_name}', moduleData.variableName);
 
         const isImported = stringIncludesIgnoreQuotes(importFileContent, textToAppend);
 
