@@ -119,9 +119,13 @@ export const createNewConfig = async () => {
       importProperties = { ...imports, filePath: getRelativePath(imports.filePath) };
     }
 
+    // Config generation is deprecated and inquirer cannot return function
+    const resolvedTemplate = template instanceof Function ? 'default' : template;
+
     fileTypes[fileType] = {
       active: true,
-      template: template !== 'default' ? getRelativePath(template) : template,
+      template:
+        resolvedTemplate !== 'default' ? getRelativePath(resolvedTemplate) : resolvedTemplate,
       output: getRelativePath(output),
       import: importProperties || undefined,
     };

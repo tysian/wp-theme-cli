@@ -8,6 +8,7 @@ type LogTypes =
   | 'awaiting'
   | 'complete'
   | 'debug'
+  | 'deprecated'
   | 'error'
   | 'info'
   | 'pause'
@@ -30,6 +31,7 @@ const types: TypesMap = {
   awaiting: { symbol: '…', label: 'awaiting', color: chalk.blue },
   complete: { symbol: '☑', label: 'complete', color: chalk.green },
   debug: { symbol: '◯', label: 'debug', color: chalk.magenta },
+  deprecated: { symbol: '⚠', label: 'deprecated', color: chalk.yellow },
   error: { symbol: '✖', label: 'error', color: chalk.red },
   info: { symbol: 'ℹ', label: 'info', color: chalk.blue },
   pause: { symbol: '■', label: 'pause', color: chalk.yellow },

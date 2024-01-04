@@ -75,8 +75,13 @@ export const createModule = async (
 
       // Setup template - use default if default, else use custom template from config
       let template = getDefaultTemplate(fileType as AvailableFileType);
-      if (customTemplate && customTemplate !== 'default') {
-        template = await readStream(customTemplate);
+      if (customTemplate) {
+        if (customTemplate instanceof Function) {
+          // TODO: Optimize this to not render ejs when we are running this function
+          template = customTemplate(moduleData);
+        } else if (typeof customTemplate === 'string' && customTemplate !== 'default') {
+          template = await readStream(customTemplate);
+        }
       }
 
       // Render template using EJS
@@ -103,11 +108,17 @@ export const createModule = async (
           fileName = fileName.substring(1).slice(0, -5);
         }
 
-        // TODO: Maybe use lodash _.template() too?
-        const textToAppend = moduleImport.append
-          .replace('{file_name}', fileName)
-          .replace('{module_name}', moduleData.name)
-          .replace('{module_variable_name}', moduleData.variableName);
+        const textToAppend =
+          moduleImport.append instanceof Function
+            ? moduleImport.append({
+                fileName,
+                moduleName: moduleData.name,
+                moduleVariableName: moduleData.variableName,
+              })
+            : moduleImport.append
+                .replace('{file_name}', fileName)
+                .replace('{module_name}', moduleData.name)
+                .replace('{module_variable_name}', moduleData.variableName);
 
         const isImported = stringIncludesIgnoreQuotes(importFileContent, textToAppend);
 
