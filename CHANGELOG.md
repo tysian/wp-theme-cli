@@ -1,5 +1,11 @@
 # wp-theme-cli
 
+## 1.2.2
+
+### Patch Changes
+
+- 59ee92c: bump tsup version to 8.3.0
+
 ## 1.2.1
 
 ### Patch Changes
