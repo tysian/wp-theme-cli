@@ -7,27 +7,48 @@ For now, I'm focusing on files operations, such as removing unnecessary files or
 
 > [!WARNING]
 >
-> This package is still in beta, and some of features are about removing or modifying files.  
 > Please, make sure that you are in correct folder and you are using version control system (eg. git).  
 > You are using this tool for your own responsibility.
 
 ## Requirements
 
-- Node 14.18.0 or >=16.12.0
+- Node 18.20.8 or 20.3.0 or >=22.0.0
+- npm >=9.6.5
+- pnpm >=7.1.0
 
 ## Installation
 
-Preferred way is to run latest version directly using `npx` or `pnpx`
+You can run latest version directly using `npx`:
 
 ```bash
 npx wp-theme-cli@latest
 ```
 
+Or install install it locally:
+
 ```bash
-pnpx wp-theme-cli@latest
+npm install wp-theme-cli --save-dev
 ```
 
-You can also install it locally or globally, but this way is **NOT RECOMMENDED**.
+## Configuration
+
+> [!IMPORTANT]
+> In v2 the old configuration based on json filed is no longer supported.  
+> From now on we use one config file for all kind of operations.  
+> New config is fully typed and documented. It also allows you to create templates using functions, etc.
+
+Create `theme.config.js`, `theme.config.mjs` or `theme.config.ts`, then import `defineConfig` function from `wp-theme-cli`.
+
+You can also read more reading documentation below.
+
+```typescript
+// theme.config.js
+import { defineConfig } from 'wp-theme-cli';
+
+export default defineConfig({
+  // put your options here...
+});
+```
 
 ## Available options
 

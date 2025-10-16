@@ -1,6 +1,6 @@
 {
   "name": "wp-theme-cli",
-  "version": "1.2.2",
+  "version": "2.0.0",
   "description": "Generate, update & remove files in your WordPress theme",
   "homepage": "https://github.com/tysian/wp-theme-cli",
   "bugs": {
@@ -23,8 +23,8 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "tsup src/bin/wp-theme-cli.ts --format esm --clean --minify",
-    "dev": "tsup src/bin/wp-theme-cli.ts --format esm --watch --clean",
+    "build": "tsup",
+    "dev": "tsup --watch ",
     "format:check": "pnpm run format && pnpm run typecheck && pnpm run lint",
     "format": "prettier --write --plugin-search-dir=. \"**/*.{ts,md,json,js,mjs,cjs}\"",
     "check": "pnpm run typecheck && pnpm run lint",
@@ -56,7 +56,7 @@
     "simple-git": "^3.19.1",
     "speakingurl": "^14.0.1",
     "trace": "^3.1.1",
-    "zod": "^3.22.2"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
@@ -82,11 +82,13 @@
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "prettier": "^3.0.3",
-    "tsup": "^8.3.0",
+    "tsup": "^8.5.0",
     "type-fest": "^4.3.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.9.3"
   },
   "engines": {
-    "node": "^14.18.0 || >=16.12.0"
+    "node": "18.20.8 || ^20.3.0 || >=22.0.0",
+    "npm": ">=9.6.5",
+    "pnpm": ">=7.1.0"
   }
 }
