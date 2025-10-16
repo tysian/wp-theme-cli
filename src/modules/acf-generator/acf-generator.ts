@@ -11,29 +11,18 @@ import { writeModules } from './helpers/writeModules.js';
 export const acfGenerator = async () => {
   logger.none('ACF Flexible field files generator!');
 
-  try {
-    // Check if there are any uncommited changes
-    await gitCheck();
+  const finalConfig = await selectConfig<AcfGeneratorConfig>({
+    defaultConfigPath: DEFAULT_CONFIG_PATH,
+    createNewConfig,
+  });
+  await checkConfig(finalConfig);
 
-    const finalConfig = await selectConfig<AcfGeneratorConfig>({
-      defaultConfigPath: DEFAULT_CONFIG_PATH,
-      createNewConfig,
-    });
-    await checkConfig(finalConfig);
-
-    if (!(await askForContinue())) {
-      return;
-    }
-
-    const acfModules = await getAcfModules(
-      finalConfig.modulesFilePath,
-      finalConfig.modulesFieldName
-    );
-
-    // Create files
-    await writeModules(acfModules, finalConfig);
-  } catch (error) {
-    updateLogger.error((error as Error)?.message);
-    updateLogger.done();
+  if (!(await askForContinue())) {
+    return;
   }
+
+  const acfModules = await getAcfModules(finalConfig.modulesFilePath, finalConfig.modulesFieldName);
+
+  // Create files
+  await writeModules(acfModules, finalConfig);
 };
