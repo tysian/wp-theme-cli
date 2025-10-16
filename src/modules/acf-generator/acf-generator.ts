@@ -1,7 +1,6 @@
+import type { AcfGeneratorConfig } from './acf-generator.config.js';
 import { askForContinue } from '$/shared/utils/askForContinue.js';
-import { gitCheck } from '$/shared/utils/gitCheck.js';
-import { logger, selectConfig, updateLogger } from '$/shared/utils/index.js';
-import { AcfGeneratorConfig } from './acf-generator.config.js';
+import { logger, selectConfig } from '$/shared/utils/index.js';
 import { DEFAULT_CONFIG_PATH } from './acf-generator.const.js';
 import { checkConfig } from './helpers/checkConfig.js';
 import { createNewConfig } from './helpers/createNewConfig.js';

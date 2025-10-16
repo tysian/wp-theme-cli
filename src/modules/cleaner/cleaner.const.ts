@@ -1,6 +1,6 @@
-import chalk from 'chalk';
+import type { Statistics, StatisticsCollection } from '$/shared/utils/Statistics.js';
 import { DEFAULT_CONFIGS_DIR } from '$/constants.js';
-import { Statistics, StatisticsCollection } from '$/shared/utils/Statistics.js';
+import chalk from 'chalk';
 
 export const DEFAULT_CONFIG_FILENAME = `default.cleaner-config.json`;
 export const DEFAULT_CONFIG_PATH = `${DEFAULT_CONFIGS_DIR}/${DEFAULT_CONFIG_FILENAME}`;

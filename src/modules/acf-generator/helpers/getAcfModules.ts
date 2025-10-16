@@ -1,7 +1,7 @@
+import type { AcfGroup, AcfLayout } from '$/types.js';
+import type { AcfGeneratorConfig } from '../acf-generator.config.js';
+import { logger, readStream } from '$/shared/utils/index.js';
 import chalk from 'chalk';
-import { readStream, logger } from '$/shared/utils/index.js';
-import { AcfGroup, AcfLayout } from '$/types.js';
-import { AcfGeneratorConfig } from '../acf-generator.config.js';
 
 export const getAcfModules = async (
   filePath: AcfGeneratorConfig['modulesFilePath'],

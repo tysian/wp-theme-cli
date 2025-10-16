@@ -1,8 +1,8 @@
+import type { CleanerConfig, Operation } from '../cleaner.config.js';
+import { logger } from '$/shared/utils/index.js';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { cloneDeep } from 'lodash-es';
-import { logger } from '$/shared/utils/index.js';
-import { CleanerConfig, Operation } from '../cleaner.config.js';
 
 export const filterOperations = async (_config: CleanerConfig) => {
   const config = cloneDeep(_config);
@@ -39,7 +39,10 @@ export const filterOperations = async (_config: CleanerConfig) => {
     .reduce(
       (operations, group) => [
         ...operations,
-        ...group.operations.map((operation) => ({ ...operation, groupKey: group.key })),
+        ...group.operations.map((operation) => ({
+          ...operation,
+          groupKey: group.key,
+        })),
       ],
       [] as Operation[]
     );

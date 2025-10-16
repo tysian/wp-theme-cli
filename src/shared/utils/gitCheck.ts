@@ -1,17 +1,18 @@
-import inquirer from 'inquirer';
-import { simpleGit, SimpleGit } from 'simple-git';
-import { merge } from 'lodash-es';
+import type { SimpleGit } from 'simple-git';
 import { DEFAULT_COMMIT_MSG } from '$/constants.js';
+import inquirer from 'inquirer';
+import { merge } from 'lodash-es';
+import { simpleGit } from 'simple-git';
 import { updateLogger } from './log/logger.js';
 
 const git: SimpleGit = simpleGit();
 
-export type GitCheckOptions = {
+export interface GitCheckOptions {
   /**
    * Default action for uncommited changes
-   * * ask - show prompt and ask user what should we do
-   * * commit - commit with default message
-   * * abort - throw error on uncommited changes
+   * ask - show prompt and ask user what should we do
+   * commit - commit with default message
+   * abort - throw error on uncommited changes
    * @default 'ask'
    */
   defaultAction?: 'ask' | 'commit' | 'abort';
@@ -20,7 +21,7 @@ export type GitCheckOptions = {
    */
   defaultMessage?: string;
   abortErrorMessage?: string;
-};
+}
 
 export const gitCommit = async (message: string, add = '.') => {
   updateLogger.done();

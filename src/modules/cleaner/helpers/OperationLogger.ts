@@ -1,16 +1,16 @@
-import chalk from 'chalk';
 import {
-  loggerRelativePath,
-  loggerPrefix,
-  updateLogger,
   loggerMergeMessages,
+  loggerPrefix,
+  loggerRelativePath,
+  updateLogger,
 } from '$/shared/utils/index.js';
+import chalk from 'chalk';
 
-type OperationsLoggerArgs = {
+interface OperationsLoggerArgs {
   relativePath: string;
   prefix: string;
   message: string;
-};
+}
 
 export class OperationsLogger {
   public relativePath: OperationsLoggerArgs['relativePath'];

@@ -1,12 +1,12 @@
-import { ZodError } from 'zod';
+import type { ZodError } from 'zod';
 import chalk from 'chalk';
 import { loggerMergeMessages, loggerPrefix } from './index.js';
 
-type ParseZodErrorOptions = {
+interface ParseZodErrorOptions {
   title?: string;
   spaces?: number;
   withPropertyNames?: boolean;
-};
+}
 
 export const parseZodError = (
   error: ZodError,
@@ -19,7 +19,7 @@ export const parseZodError = (
   }: ParseZodErrorOptions = {}
 ) => {
   const { issues } = error;
-  const renderedSpaces = new Array(spaces).fill(' ').join('');
+  const renderedSpaces = Array.from({ length: spaces }).fill(' ').join('');
   let errorString = '';
   if (title) {
     errorString += `${title}\n`;
@@ -27,8 +27,12 @@ export const parseZodError = (
 
   errorString += issues
     .map((issue) => {
-      const prefixed = withPropertyNames
-        ? loggerPrefix(issue.path.join('.'), { upperCase: false, color: chalk.red })
+      const prefixed =
+        withPropertyNames ?
+          loggerPrefix(issue.path.join('.'), {
+            upperCase: false,
+            color: chalk.red,
+          })
         : '';
       return `${renderedSpaces}${loggerMergeMessages([prefixed, chalk.gray(issue.message)], ' ')}`;
     })

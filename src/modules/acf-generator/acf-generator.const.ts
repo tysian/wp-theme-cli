@@ -1,5 +1,5 @@
+import type { Statistics, StatisticsCollection } from '$/shared/utils/Statistics.js';
 import chalk from 'chalk';
-import { Statistics, StatisticsCollection } from '$/shared/utils/Statistics.js';
 import { DEFAULT_CONFIGS_DIR } from '../../constants.js';
 
 export const DEFAULT_CONFIG_FILENAME = `default.acf-generator-config.json`;

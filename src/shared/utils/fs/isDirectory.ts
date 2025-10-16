@@ -1,5 +1,5 @@
-import { PathLike } from 'fs';
-import { lstat } from 'fs/promises';
+import type { PathLike } from 'node:fs';
+import { lstat } from 'node:fs/promises';
 
 export const isDirectory = async (path: PathLike) =>
   lstat(path)

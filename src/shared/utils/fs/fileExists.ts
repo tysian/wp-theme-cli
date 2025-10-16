@@ -1,5 +1,5 @@
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 export const fileExists = async (filePath: string) => {
   const resolvedPath = path.resolve(filePath);

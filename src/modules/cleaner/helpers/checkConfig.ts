@@ -1,12 +1,12 @@
-import chalk from 'chalk';
+import type { CleanerConfig } from '../cleaner.config.js';
 import {
-  updateLogger,
+  asArray,
+  loggerListElements,
   loggerMergeMessages,
   loggerPrefix,
-  loggerListElements,
-  asArray,
+  updateLogger,
 } from '$/shared/utils/index.js';
-import { CleanerConfig } from '../cleaner.config.js';
+import chalk from 'chalk';
 import { OperationType } from '../cleaner.const.js';
 
 export const checkConfig = async (config: Partial<CleanerConfig>) => {

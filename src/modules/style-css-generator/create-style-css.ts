@@ -1,12 +1,9 @@
-import { PackageJson } from 'type-fest';
-import { isEmpty, isObject, kebabCase, merge } from 'lodash-es';
-import chalk from 'chalk';
-import { parse } from 'css-tree';
-import MagicString from 'magic-string';
+import type { PackageJson } from 'type-fest';
+import type { StyleCss, StyleCssGeneratorOptions } from './create-style-css.config.js';
 import { gitCheck, gitCommit } from '$/shared/utils/gitCheck.js';
 import {
-  FileExistenceError,
   asArray,
+  FileExistenceError,
   fileExists,
   logger,
   readStream,
@@ -14,13 +11,11 @@ import {
   writeStream,
 } from '$/shared/utils/index.js';
 import { parseZodError } from '$/shared/utils/parseZodError.js';
-import {
-  COMMIT_AFTER_MSG,
-  StyleCss,
-  StyleCssGeneratorOptions,
-  styleCssLabels,
-  styleCssSchema,
-} from './create-style-css.config.js';
+import chalk from 'chalk';
+import { parse } from 'css-tree';
+import { isEmpty, isObject, kebabCase, merge } from 'lodash-es';
+import MagicString from 'magic-string';
+import { COMMIT_AFTER_MSG, styleCssLabels, styleCssSchema } from './create-style-css.config.js';
 
 export const styleCssGenerator = async (options: StyleCssGeneratorOptions) => {
   logger.start('Generating style.css with meta information.');

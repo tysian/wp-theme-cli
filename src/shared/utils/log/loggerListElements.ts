@@ -1,6 +1,7 @@
-import chalk, { ChalkInstance } from 'chalk';
+import type { ChalkInstance } from 'chalk';
+import chalk from 'chalk';
 
-type LoggerListOptions = {
+interface LoggerListOptions {
   /**
    * @default chalk.green
    */
@@ -13,7 +14,7 @@ type LoggerListOptions = {
    * @default ","
    */
   separator?: string;
-};
+}
 export const loggerListElements = (elements: string[], options: LoggerListOptions = {}) => {
   const { color = chalk.green, parentheses = true, separator = ', ' } = options;
   const logString = elements.map((l) => color(l)).join(separator);

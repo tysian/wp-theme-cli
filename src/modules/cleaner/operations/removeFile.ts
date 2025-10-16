@@ -1,9 +1,9 @@
-import fs from 'fs/promises';
-import path from 'path';
-import { fileExists } from '$/shared/utils/index.js';
+import type { RemoveFileOperation } from '../cleaner.config.js';
+import type { CleanerStatistics } from '../cleaner.const.js';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import { handleError } from '$/shared/utils/handleError.js';
-import { RemoveFileOperation } from '../cleaner.config.js';
-import { CleanerStatistics } from '../cleaner.const.js';
+import { fileExists } from '$/shared/utils/index.js';
 import { OperationsLogger } from '../helpers/OperationLogger.js';
 
 export const removeFile = async (

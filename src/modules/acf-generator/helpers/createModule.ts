@@ -1,26 +1,26 @@
-import path from 'path';
+import type { AcfLayout } from '$/types.js';
+import type { AvailableFileType, FileType } from '../acf-generator.config.js';
+import type { AcfGeneratorStatistics } from '../acf-generator.const.js';
+import path from 'node:path';
+import {
+  fileExists,
+  handleError,
+  readStream,
+  updateLogger,
+  writeStream,
+} from '$/shared/utils/index.js';
+import { stringIncludesIgnoreQuotes } from '$/shared/utils/stringIncludesIgnoreQuotes.js';
 import chalk from 'chalk';
 import ejs from 'ejs';
 import filenamify from 'filenamify';
-import { snakeCase, kebabCase, isString, isFunction } from 'lodash-es';
-import { stringIncludesIgnoreQuotes } from '$/shared/utils/stringIncludesIgnoreQuotes.js';
-import {
-  updateLogger,
-  fileExists,
-  readStream,
-  writeStream,
-  handleError,
-} from '$/shared/utils/index.js';
-import { AcfLayout } from '$/types.js';
-import { AvailableFileType, FileType } from '../acf-generator.config.js';
-import { AcfGeneratorStatistics } from '../acf-generator.const.js';
+import { isFunction, isString, kebabCase, snakeCase } from 'lodash-es';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
 
-type Module = {
+interface Module {
   layout: AcfLayout;
   fileTypes: Record<AvailableFileType, FileType>;
   conflictAction: 'overwrite' | 'ignore';
-};
+}
 
 export const createModule = async (
   { layout, fileTypes, conflictAction }: Module,
@@ -83,9 +83,8 @@ export const createModule = async (
       }
 
       // Render template using EJS
-      const renderedTemplate = useEJS
-        ? await ejs.render(template, { data: moduleData }, { async: true })
-        : template;
+      const renderedTemplate =
+        useEJS ? await ejs.render(template, { data: moduleData }, { async: true }) : template;
 
       // Create module file
       if (!outputExists || (outputExists && conflictAction === 'overwrite')) {
@@ -107,8 +106,9 @@ export const createModule = async (
           fileName = fileName.substring(1).slice(0, -5);
         }
 
-        const textToAppend = isFunction(moduleImport.append)
-          ? moduleImport.append({
+        const textToAppend =
+          isFunction(moduleImport.append) ?
+            moduleImport.append({
               fileName,
               moduleName: moduleData.name,
               moduleVariableName: moduleData.variableName,

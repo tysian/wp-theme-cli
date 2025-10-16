@@ -1,13 +1,14 @@
-import { performance } from 'perf_hooks';
-import chalk, { ChalkInstance } from 'chalk';
+import type { ChalkInstance } from 'chalk';
+import { performance } from 'node:perf_hooks';
+import chalk from 'chalk';
 import { asArray } from './asArray.js';
 
-export type StatisticProp = {
+export interface StatisticProp {
   value: number;
   description: string;
   files?: string[];
   color?: ChalkInstance;
-};
+}
 
 export type StatisticsCollection<K extends string = string> = Record<K, StatisticProp>;
 

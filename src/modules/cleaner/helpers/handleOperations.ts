@@ -1,10 +1,11 @@
-import chalk from 'chalk';
-import { logger, loggerMergeMessages, loggerPrefix } from '$/shared/utils/index.js';
+import type { Operation } from '../cleaner.config.js';
+import type { CleanerStatistics } from '../cleaner.const.js';
 import { asArray } from '$/shared/utils/asArray.js';
 import { filterOutsideCwd } from '$/shared/utils/filterOutsideCwd.js';
 import { handleError } from '$/shared/utils/handleError.js';
-import { Operation } from '../cleaner.config.js';
-import { CleanerStatistics, OperationType } from '../cleaner.const.js';
+import { logger, loggerMergeMessages, loggerPrefix } from '$/shared/utils/index.js';
+import chalk from 'chalk';
+import { OperationType } from '../cleaner.const.js';
 import { removeACFLayout } from '../operations/removeACFLayout.js';
 import { removeDirectory } from '../operations/removeDirectory.js';
 import { removeFile } from '../operations/removeFile.js';
@@ -32,9 +33,9 @@ export const handleOperations = async (operations: Operation[], statistics: Clea
               // amount of files
               asArray(input).length,
               // plural or singular
-              operationType === OperationType.REMOVE_DIRECTORY
-                ? `director${asArray(input).length > 1 ? 'ies' : 'y'}`
-                : `file${asArray(input).length > 1 ? 's' : ''}`,
+              operationType === OperationType.REMOVE_DIRECTORY ?
+                `director${asArray(input).length > 1 ? 'ies' : 'y'}`
+              : `file${asArray(input).length > 1 ? 's' : ''}`,
               `not found`
             ),
           ])

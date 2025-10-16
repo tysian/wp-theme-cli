@@ -1,32 +1,37 @@
 {
   "name": "wp-theme-cli",
+  "type": "module",
   "version": "2.0.0",
   "description": "Generate, update & remove files in your WordPress theme",
-  "homepage": "https://github.com/tysian/wp-theme-cli",
-  "bugs": {
-    "url": "https://github.com/tysian/wp-theme-cli/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tysian/wp-theme-cli.git"
-  },
-  "license": "MIT",
   "author": {
     "name": "Jakub Bazgier",
     "url": "https://github.com/tysian"
   },
-  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/tysian/wp-theme-cli",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tysian/wp-theme-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tysian/wp-theme-cli/issues"
+  },
   "bin": {
     "wp-theme-cli": "dist/wp-theme-cli.js"
   },
   "files": [
     "dist/*"
   ],
+  "engines": {
+    "node": "18.20.8 || ^20.3.0 || >=22.0.0",
+    "npm": ">=9.6.5",
+    "pnpm": ">=7.1.0"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch ",
     "format:check": "pnpm run format && pnpm run typecheck && pnpm run lint",
-    "format": "prettier --write --plugin-search-dir=. \"**/*.{ts,md,json,js,mjs,cjs}\"",
+    "format": "prettier . --write",
     "check": "pnpm run typecheck && pnpm run lint",
     "lint": "eslint src --fix --cache --cache-strategy content",
     "prepare": "husky install",
@@ -73,17 +78,12 @@
     "@types/semver": "^7.5.2",
     "@types/speakingurl": "^13.0.3",
     "eslint": "^9.37.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-prettier": "^10.1.8",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
-    "prettier": "^3.0.3",
+    "prettier": "^3.6.2",
     "tsup": "^8.5.0",
     "type-fest": "^4.3.1",
     "typescript": "^5.9.3"
-  },
-  "engines": {
-    "node": "18.20.8 || ^20.3.0 || >=22.0.0",
-    "npm": ">=9.6.5",
-    "pnpm": ">=7.1.0"
   }
 }

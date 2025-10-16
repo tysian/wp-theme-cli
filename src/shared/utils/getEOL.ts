@@ -1,6 +1,6 @@
 // src: https://stackoverflow.com/a/34820855
 
-import { EOL } from 'os';
+import { EOL } from 'node:os';
 
 export const getEOL = (text: string) => {
   const m = text.match(/\r\n|\n/g);

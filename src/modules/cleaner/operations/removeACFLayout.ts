@@ -1,15 +1,15 @@
-import { isEqual } from 'lodash-es';
-import {
-  loggerMergeMessages,
-  loggerListElements,
-  getObjectFromJSON,
-  writeStream,
-} from '$/shared/utils/index.js';
-import { AcfGroup } from '$/types.js';
+import type { AcfGroup } from '$/types.js';
+import type { RemoveACFLayoutOperation } from '../cleaner.config.js';
+import type { CleanerStatistics } from '../cleaner.const.js';
 import { asArray } from '$/shared/utils/asArray.js';
 import { handleError } from '$/shared/utils/handleError.js';
-import { RemoveACFLayoutOperation } from '../cleaner.config.js';
-import { CleanerStatistics } from '../cleaner.const.js';
+import {
+  getObjectFromJSON,
+  loggerListElements,
+  loggerMergeMessages,
+  writeStream,
+} from '$/shared/utils/index.js';
+import { isEqual } from 'lodash-es';
 import { OperationsLogger } from '../helpers/OperationLogger.js';
 import { unsetInObject } from '../helpers/unsetInObject.js';
 

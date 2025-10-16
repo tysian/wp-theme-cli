@@ -1,9 +1,9 @@
-import path from 'path';
-import { readStream, writeStream } from '$/shared/utils/index.js';
+import type { RemoveFileLineOperation } from '../cleaner.config.js';
+import type { CleanerStatistics } from '../cleaner.const.js';
+import path from 'node:path';
 import { asArray } from '$/shared/utils/asArray.js';
 import { handleError } from '$/shared/utils/handleError.js';
-import { RemoveFileLineOperation } from '../cleaner.config.js';
-import { CleanerStatistics } from '../cleaner.const.js';
+import { readStream, writeStream } from '$/shared/utils/index.js';
 import { OperationsLogger } from '../helpers/OperationLogger.js';
 import { removeLineInText } from '../helpers/removeLineInText.js';
 
@@ -31,7 +31,7 @@ export const removeFileLine = async (
     // Remove empty <?php ?> from .php file
     const fileExt = path.extname(file);
     if (fileExt === '.php') {
-      modifiedFileContent = modifiedFileContent.replace(/\s?<\?php(\s)*\?>\s?/gim, '');
+      modifiedFileContent = modifiedFileContent.replace(/\s?<\?php(\s)*\?>\s?/gi, '');
     }
 
     if (fileContent.length === modifiedFileContent.length) {

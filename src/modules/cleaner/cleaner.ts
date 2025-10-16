@@ -1,14 +1,12 @@
-import { findDeprecatedConfig } from '$/config.js';
-import { gitCheck } from '$/shared/utils/gitCheck.js';
-import { handleError } from '$/shared/utils/handleError.js';
+import type { CleanerConfig } from './cleaner.config.js';
+import type { CleanerStatistics } from './cleaner.const.js';
 import { logger, selectConfig } from '$/shared/utils/index.js';
 import {
   askForInstallDependencies,
   installDependencies,
 } from '$/shared/utils/installDependencies.js';
 import { Statistics } from '$/shared/utils/Statistics.js';
-import { CleanerConfig } from './cleaner.config.js';
-import { DEFAULT_CONFIG_PATH, CleanerStatistics, cleanerStats } from './cleaner.const.js';
+import { cleanerStats, DEFAULT_CONFIG_PATH } from './cleaner.const.js';
 import { checkConfig } from './helpers/checkConfig.js';
 import { createNewConfig } from './helpers/createNewConfig.js';
 import { filterOperations } from './helpers/filterOperations.js';

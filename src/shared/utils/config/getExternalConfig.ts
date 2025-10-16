@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import inquirer from 'inquirer';
 import { getObjectFromJSON } from './getObjectFromJSON.js';
 

@@ -1,9 +1,10 @@
-import chalk, { ChalkInstance } from 'chalk';
+import type { ChalkInstance } from 'chalk';
+import chalk from 'chalk';
 
-type LoggerPrefixOptions = {
+interface LoggerPrefixOptions {
   upperCase?: boolean;
   color?: ChalkInstance;
-};
+}
 
 export const loggerPrefix = (
   fileType: string,

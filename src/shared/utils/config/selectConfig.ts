@@ -4,10 +4,10 @@ import { logger } from '../log/logger.js';
 import { getExternalConfig } from './getExternalConfig.js';
 import { getObjectFromJSON } from './getObjectFromJSON.js';
 
-type SelectConfigArgs<Config> = {
+interface SelectConfigArgs<Config> {
   defaultConfigPath: string;
   createNewConfig: () => Config | Promise<Config>;
-};
+}
 
 export const selectConfig = async <Config>({
   defaultConfigPath,

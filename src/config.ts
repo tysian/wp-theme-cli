@@ -1,6 +1,6 @@
+import type { AcfGeneratorConfig } from './modules/acf-generator/acf-generator.config.js';
+import type { CleanerConfig } from './modules/cleaner/cleaner.config.js';
 import fastGlob from 'fast-glob';
-import { AcfGeneratorConfig } from './modules/acf-generator/acf-generator.config.js';
-import { CleanerConfig } from './modules/cleaner/cleaner.config.js';
 import { DEFAULT_CONFIGS_DIR } from './constants.js';
 import { logger } from './shared/utils/log/logger.js';
 

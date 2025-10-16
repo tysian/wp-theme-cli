@@ -1,4 +1,5 @@
-import chalk, { ChalkInstance } from 'chalk';
+import type { ChalkInstance } from 'chalk';
+import chalk from 'chalk';
 import isUnicodeSupported from 'is-unicode-supported';
 import logUpdate from 'log-update';
 

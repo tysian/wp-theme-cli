@@ -1,14 +1,14 @@
-import chalk from 'chalk';
+import type { AcfGeneratorConfig } from '../acf-generator.config.js';
 import {
-  logger,
-  updateLogger,
+  FileExistenceError,
   fileExists,
+  logger,
   loggerPrefix,
   readStream,
   stringIncludesIgnoreQuotes,
-  FileExistenceError,
+  updateLogger,
 } from '$/shared/utils/index.js';
-import { AcfGeneratorConfig } from '../acf-generator.config.js';
+import chalk from 'chalk';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {
   logger.none();

@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import chalk from 'chalk';
 import { readStream } from '../fs/readStream.js';
 
@@ -16,7 +16,7 @@ export const getObjectFromJSON = async <JSONObject = object>(file: string): Prom
   try {
     const parsedConfig: JSONObject = JSON.parse(config);
     return parsedConfig;
-  } catch (error) {
+  } catch {
     throw new Error(`Invalid JSON file - ${file}`);
   }
 };

@@ -4,7 +4,7 @@ export enum AvailableFileType {
   JS = 'js',
 }
 
-export type FileType = {
+export interface FileType {
   /**
    * Inactive file types won't be generated
    *
@@ -43,25 +43,25 @@ export type FileType = {
      */
     append: string | AppendImportFn;
   };
-};
+}
 
-type TemplateFnParams = {
+interface TemplateFnParams {
   name: string;
   variableName: string;
   fileName: string;
   className: string;
   subfields: { name: string; variableName: string }[];
-};
+}
 type TemplateFn = (params: TemplateFnParams) => string;
 
-type AppendImportFnOptions = {
+interface AppendImportFnOptions {
   fileName: string;
   moduleName: string;
   moduleVariableName: string;
-};
+}
 type AppendImportFn = (variables: AppendImportFnOptions) => string;
 
-export type AcfGeneratorConfig = {
+export interface AcfGeneratorConfig {
   /**
    * Relative path to acf-json json file which has flexible field
    */
@@ -80,4 +80,4 @@ export type AcfGeneratorConfig = {
    * List of file types (hardcoded and limited for now) available to generate files
    */
   fileTypes: Record<AvailableFileType, FileType>;
-};
+}

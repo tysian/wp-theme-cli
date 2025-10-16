@@ -1,7 +1,8 @@
+import type { AcfLayout } from '$/types.js';
+import type { AcfGeneratorConfig } from '../acf-generator.config.js';
+import type { AcfGeneratorStatistics } from '../acf-generator.const.js';
 import { logger, Statistics } from '$/shared/utils/index.js';
-import { AcfLayout } from '$/types.js';
-import { AcfGeneratorConfig } from '../acf-generator.config.js';
-import { AcfGeneratorStatistics, acfGeneratorStats } from '../acf-generator.const.js';
+import { acfGeneratorStats } from '../acf-generator.const.js';
 import { createModule } from './createModule.js';
 
 export const writeModules = async (acfModules: AcfLayout[], config: AcfGeneratorConfig) => {

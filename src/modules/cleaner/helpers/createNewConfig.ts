@@ -1,15 +1,4 @@
-import chalk from 'chalk';
-import getSlug from 'speakingurl';
-import inquirer from 'inquirer';
-import { cloneDeep } from 'lodash-es';
-import {
-  logger,
-  loggerMergeMessages,
-  loggerPrefix,
-  getRelativePath,
-  saveConfig,
-} from '$/shared/utils/index.js';
-import {
+import type {
   CleanerConfig,
   Operation,
   OperationGroup,
@@ -17,6 +6,17 @@ import {
   RemoveFileLineOperation,
   RemoveFromJSONOperation,
 } from '../cleaner.config.js';
+import {
+  getRelativePath,
+  logger,
+  loggerMergeMessages,
+  loggerPrefix,
+  saveConfig,
+} from '$/shared/utils/index.js';
+import chalk from 'chalk';
+import inquirer from 'inquirer';
+import { cloneDeep } from 'lodash-es';
+import getSlug from 'speakingurl';
 import { DEFAULT_CONFIG_FILENAME, OperationType } from '../cleaner.const.js';
 
 const addMultipleEntries = async (entryName = 'entry'): Promise<string[]> => {
@@ -139,9 +139,8 @@ const createNewOperation = async (group?: OperationGroup | null): Promise<Operat
       (operation as RemoveACFLayoutOperation).layouts = await addMultipleEntries('layout name');
       break;
     case OperationType.REMOVE_FROM_JSON:
-      (operation as RemoveFromJSONOperation).propertyPaths = await addMultipleEntries(
-        'property path'
-      );
+      (operation as RemoveFromJSONOperation).propertyPaths =
+        await addMultipleEntries('property path');
       break;
     case OperationType.REMOVE_FILE_LINE:
       (operation as RemoveFileLineOperation).search = await addMultipleEntries('search value');

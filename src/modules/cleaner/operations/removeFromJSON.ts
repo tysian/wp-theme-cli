@@ -1,9 +1,9 @@
-import { isEqual } from 'lodash-es';
-import { getObjectFromJSON, writeStream } from '$/shared/utils/index.js';
+import type { RemoveFromJSONOperation } from '../cleaner.config.js';
+import type { CleanerStatistics } from '../cleaner.const.js';
 import { asArray } from '$/shared/utils/asArray.js';
 import { handleError } from '$/shared/utils/handleError.js';
-import { RemoveFromJSONOperation } from '../cleaner.config.js';
-import { CleanerStatistics } from '../cleaner.const.js';
+import { getObjectFromJSON, writeStream } from '$/shared/utils/index.js';
+import { isEqual } from 'lodash-es';
 import { OperationsLogger } from '../helpers/OperationLogger.js';
 import { unsetInObject } from '../helpers/unsetInObject.js';
 

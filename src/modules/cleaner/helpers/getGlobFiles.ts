@@ -1,6 +1,7 @@
-import fastGlob, { Options } from 'fast-glob';
-import normalizePath from 'normalize-path';
+import type { Options } from 'fast-glob';
 import { asArray } from '$/shared/utils/asArray.js';
+import fastGlob from 'fast-glob';
+import normalizePath from 'normalize-path';
 
 export const getGlobFiles = async (
   glob: string | string[],

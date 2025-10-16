@@ -1,7 +1,8 @@
-import { spawn } from 'child_process';
+import type { PackageManager } from './getUserPackageManager.js';
+import { spawn } from 'node:child_process';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { getUserPackageManager, PackageManager } from './getUserPackageManager.js';
+import { getUserPackageManager } from './getUserPackageManager.js';
 import { logger } from './log/logger.js';
 
 export const askForInstallDependencies = async (): Promise<PackageManager | false> => {

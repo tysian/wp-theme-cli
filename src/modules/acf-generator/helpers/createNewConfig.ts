@@ -1,15 +1,16 @@
-import path from 'path';
-import chalk from 'chalk';
-import inquirer from 'inquirer';
-import { SetOptional, SetRequired } from 'type-fest';
-import { isFunction } from 'lodash-es';
+import type { SetOptional, SetRequired } from 'type-fest';
+import type { AcfGeneratorConfig, FileType } from '../acf-generator.config.js';
+import path from 'node:path';
 import {
-  loggerPrefix,
-  loggerListElements,
   getRelativePath,
+  loggerListElements,
+  loggerPrefix,
   saveConfig,
 } from '$/shared/utils/index.js';
-import { AcfGeneratorConfig, AvailableFileType, FileType } from '../acf-generator.config.js';
+import chalk from 'chalk';
+import inquirer from 'inquirer';
+import { isFunction } from 'lodash-es';
+import { AvailableFileType } from '../acf-generator.config.js';
 import { DEFAULT_CONFIG_FILENAME } from '../acf-generator.const.js';
 
 export const createNewConfig = async () => {
@@ -35,7 +36,9 @@ export const createNewConfig = async () => {
     },
   ]);
 
-  const { selectFileTypes } = await inquirer.prompt<{ selectFileTypes: AvailableFileType[] }>([
+  const { selectFileTypes } = await inquirer.prompt<{
+    selectFileTypes: AvailableFileType[];
+  }>([
     {
       name: 'selectFileTypes',
       type: 'checkbox',
@@ -78,7 +81,9 @@ export const createNewConfig = async () => {
       },
     ]);
 
-    type HaveImportsPrompt = { haveImports: boolean };
+    interface HaveImportsPrompt {
+      haveImports: boolean;
+    }
     const { haveImports } = await inquirer.prompt<HaveImportsPrompt>([
       {
         name: 'haveImports',
@@ -117,7 +122,10 @@ export const createNewConfig = async () => {
         },
       ]);
 
-      importProperties = { ...imports, filePath: getRelativePath(imports.filePath) };
+      importProperties = {
+        ...imports,
+        filePath: getRelativePath(imports.filePath),
+      };
     }
 
     // Config generation is deprecated and inquirer cannot return function
