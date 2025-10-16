@@ -1,22 +1,39 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "NodeNext",
-    "lib": ["ES2020"],
-    "moduleResolution": "NodeNext",
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
     "rootDir": ".",
     "outDir": "dist",
     "baseUrl": "./",
     "paths": {
       "$/*": ["./src/*"]
     },
+
+    "moduleResolution": "NodeNext",
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Base Options: */
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "noEmit": false,
-    "allowSyntheticDefaultImports": true
+    "target": "es2022",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    // "verbatimModuleSyntax": true,
+
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+
+    /* If transpiling with TypeScript: */
+    "module": "nodenext",
+
+    /* AND if you're building for a library: */
+    "declaration": true,
+
+    /* If your code doesn't run in the DOM: */
+    "lib": ["es2022"]
   },
-  "include": ["./src/**/*.ts"]
+  "include": ["./src/**/*.ts", "tsup.config.ts"]
 }
