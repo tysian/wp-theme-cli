@@ -1,2 +1,3 @@
-export { bootstrap } from './bootstrap.js';
-export * from './constants.js';
+export { defineConfig } from './config.js';
+
+export type { UserConfig } from './config.js';

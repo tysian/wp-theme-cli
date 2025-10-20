@@ -12,7 +12,7 @@ For now, I'm focusing on files operations, such as removing unnecessary files or
 
 ## Requirements
 
-- Node 18.20.8 or 20.3.0 or >=22.0.0
+- Node 20.3.0 or >=22.0.0
 - npm >=9.6.5
 - pnpm >=7.1.0
 

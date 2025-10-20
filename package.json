@@ -16,14 +16,18 @@
   "bugs": {
     "url": "https://github.com/tysian/wp-theme-cli/issues"
   },
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "bin": {
-    "wp-theme-cli": "dist/wp-theme-cli.js"
+    "wp-theme-cli": "bin.mjs"
   },
   "files": [
-    "dist/*"
+    "bin.mjs",
+    "dist"
   ],
   "engines": {
-    "node": "18.20.8 || ^20.3.0 || >=22.0.0",
+    "node": "^20.3.0 || >=22.0.0",
     "npm": ">=9.6.5",
     "pnpm": ">=7.1.0"
   },

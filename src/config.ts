@@ -5,9 +5,9 @@ import { DEFAULT_CONFIGS_DIR } from './constants.js';
 import { logger } from './shared/utils/log/logger.js';
 
 export interface UserConfig {
-  generator?: {
-    acfFlexibleField: AcfGeneratorConfig;
-  };
+  // generator?: {
+  //   acfFlexibleField: AcfGeneratorConfig;
+  // };
   cleaner?: CleanerConfig;
 }
 
@@ -20,7 +20,7 @@ export function defineConfig(config: UserConfig) {
   return config;
 }
 
-export function loadCliConfig() {}
+export async function loadCliConfig() {}
 
 export function validateConfig() {}
 

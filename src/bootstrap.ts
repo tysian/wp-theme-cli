@@ -5,8 +5,9 @@ import { Command } from 'commander';
 import inquirer from 'inquirer';
 import inquirerFileTreeSelection from 'inquirer-file-tree-selection-prompt';
 import semver from 'semver';
-import { bin, description, engines as pkgEngines, version } from '../package.json';
-import { findDeprecatedConfig } from './config.js';
+import pkg from '../package.json' with { type: 'json' };
+import { findDeprecatedConfig, loadCliConfig } from './config.js';
+import { CLI_NAME } from './constants.js';
 import { acfGenerator } from './modules/acf-generator/acf-generator.js';
 import { cleaner } from './modules/cleaner/cleaner.js';
 import { COMMIT_AFTER_MSG } from './modules/style-css-generator/create-style-css.config.js';
@@ -23,6 +24,7 @@ import 'trace';
 
 export const bootstrap = async () => {
   try {
+    const { description, engines: pkgEngines, version } = pkg;
     const currentVersion = process.versions.node;
     const engines = pkgEngines?.node ?? '';
     const isSupported = semver.satisfies(currentVersion, engines);
@@ -41,10 +43,13 @@ export const bootstrap = async () => {
     // Check if there are any uncommited changes
     await gitCheck();
 
+    // Load and validate config
+    await loadCliConfig();
+
     inquirer.registerPrompt('file-tree-selection', inquirerFileTreeSelection);
 
     const program = new Command();
-    program.name(Object.keys(bin)[0]).description(description).version(version);
+    program.name(CLI_NAME).description(description).version(version);
     program
       .command('generate')
       .alias('g')
