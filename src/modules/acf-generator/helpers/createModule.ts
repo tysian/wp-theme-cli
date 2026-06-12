@@ -20,13 +20,14 @@ type Module = {
   layout: AcfLayout;
   fileTypes: Record<AvailableFileType, FileType>;
   conflictAction: 'overwrite' | 'ignore';
+  modulesDirectory: string;
 };
 
 export const createModule = async (
   { layout, fileTypes, conflictAction }: Module,
   statistics: AcfGeneratorStatistics
 ): Promise<void> => {
-  for await (const [fileType, options] of Object.entries(fileTypes)) {
+  for (const [fileType, options] of Object.entries(fileTypes)) {
     const { active, output, template: customTemplate, import: moduleImport } = options;
     if (!active) {
       return;

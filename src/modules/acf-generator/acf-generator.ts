@@ -1,3 +1,4 @@
+import { resolveModulesFilePath } from '$/modules/acf-generator/helpers/resolveModulesFilePath.js';
 import { askForContinue } from '$/shared/utils/askForContinue.js';
 import { gitCheck } from '$/shared/utils/gitCheck.js';
 import { logger, selectConfig, updateLogger } from '$/shared/utils/index.js';
@@ -19,6 +20,17 @@ export const acfGenerator = async () => {
       defaultConfigPath: DEFAULT_CONFIG_PATH,
       createNewConfig,
     });
+
+    // TODO: this should be in dedicated config parsing file, but not for today
+    if (finalConfig.modulesDirectory && finalConfig.modulesGroupKey) {
+      const modulesFilePath = `${finalConfig.modulesDirectory}/${finalConfig.modulesGroupKey}.json`;
+      finalConfig.modulesFilePath = finalConfig.modulesFilePath || modulesFilePath;
+    } else if (finalConfig.modulesFilePath) {
+      const resolved = resolveModulesFilePath(finalConfig.modulesFilePath);
+      finalConfig.modulesDirectory = finalConfig.modulesDirectory || resolved.modulesDirectory;
+      finalConfig.modulesGroupKey = finalConfig.modulesGroupKey || resolved.modulesGroupKey;
+    }
+
     await checkConfig(finalConfig);
 
     if (!(await askForContinue())) {

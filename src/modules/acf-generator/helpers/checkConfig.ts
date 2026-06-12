@@ -15,6 +15,13 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
   logger.start('Checking config...');
 
   updateLogger.awaiting('Checking if modules JSON file exists...');
+  if ((!config.modulesDirectory || !config.modulesGroupKey) && !config.modulesFilePath) {
+    throw new Error(
+      `You must use either ${chalk.green("'modulesDirectory'")} and ${chalk.green(
+        "'modulesGroupKey'"
+      )} or ${chalk.green("'modulesFilePath'")} property`
+    );
+  }
   const modulesFilePathExists = await fileExists(config.modulesFilePath);
   if (!modulesFilePathExists) {
     throw new FileExistenceError(config.modulesFilePath);
