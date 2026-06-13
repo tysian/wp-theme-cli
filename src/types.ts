@@ -15,6 +15,7 @@ export type AcfField = {
   layouts?: Record<string, AcfLayout>;
   [key: string]: any;
   clone?: string[];
+  display?: 'seamless' | 'group';
 };
 
 export type AcfGroup = {

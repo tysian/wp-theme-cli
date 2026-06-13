@@ -1,4 +1,4 @@
-import { resolveModulesFilePath } from '$/modules/acf-generator/helpers/resolveModulesFilePath.js';
+import { resolveModulesFilePath } from '$/modules/acf-generator/helpers/handleModulesFilePath.js';
 import { askForContinue } from '$/shared/utils/askForContinue.js';
 import { gitCheck } from '$/shared/utils/gitCheck.js';
 import { logger, selectConfig, updateLogger } from '$/shared/utils/index.js';
@@ -13,7 +13,6 @@ export const acfGenerator = async () => {
   logger.none('ACF Flexible field files generator!');
 
   try {
-    // Check if there are any uncommited changes
     await gitCheck();
 
     const finalConfig = await selectConfig<AcfGeneratorConfig>({
@@ -21,11 +20,7 @@ export const acfGenerator = async () => {
       createNewConfig,
     });
 
-    // TODO: this should be in dedicated config parsing file, but not for today
-    if (finalConfig.modulesDirectory && finalConfig.modulesGroupKey) {
-      const modulesFilePath = `${finalConfig.modulesDirectory}/${finalConfig.modulesGroupKey}.json`;
-      finalConfig.modulesFilePath = finalConfig.modulesFilePath || modulesFilePath;
-    } else if (finalConfig.modulesFilePath) {
+    if (finalConfig.modulesFilePath) {
       const resolved = resolveModulesFilePath(finalConfig.modulesFilePath);
       finalConfig.modulesDirectory = finalConfig.modulesDirectory || resolved.modulesDirectory;
       finalConfig.modulesGroupKey = finalConfig.modulesGroupKey || resolved.modulesGroupKey;
@@ -38,7 +33,8 @@ export const acfGenerator = async () => {
     }
 
     const acfModules = await getAcfModules(
-      finalConfig.modulesFilePath,
+      finalConfig.modulesDirectory,
+      finalConfig.modulesGroupKey,
       finalConfig.modulesFieldName
     );
 

@@ -9,3 +9,6 @@ export const resolveModulesFilePath = (
   modulesDirectory: dirname(modulesFilePath),
   modulesGroupKey: basename(modulesFilePath, extname(modulesFilePath)),
 });
+
+export const buildModulesFilePath = (modulesDirectory: string, modulesGroupKey: string): string =>
+  `${modulesDirectory}/${modulesGroupKey}.json`;

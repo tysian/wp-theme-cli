@@ -7,7 +7,9 @@ import {
   readStream,
   stringIncludesIgnoreQuotes,
   FileExistenceError,
+  loggerMergeMessages,
 } from '$/shared/utils/index.js';
+import { buildModulesFilePath } from '$/modules/acf-generator/helpers/handleModulesFilePath.js';
 import { AcfGeneratorConfig } from '../acf-generator.config.js';
 
 export const checkConfig = async (config: AcfGeneratorConfig) => {
@@ -22,9 +24,25 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
       )} or ${chalk.green("'modulesFilePath'")} property`
     );
   }
-  const modulesFilePathExists = await fileExists(config.modulesFilePath);
+  let modulesFilePath: string = '';
+  if (config.modulesFilePath) {
+    modulesFilePath = config.modulesFilePath;
+    updateLogger.warn(
+      loggerMergeMessages([
+        `The ${chalk.green("'modulesFilePath'")} property is deprecated.`,
+        `You should use ${chalk.green("'modulesDirectory'")} and ${chalk.green(
+          "'modulesGroupKey'"
+        )} instead.`,
+      ])
+    );
+    updateLogger.done();
+  }
+
+  modulesFilePath =
+    modulesFilePath || buildModulesFilePath(config.modulesDirectory, config.modulesGroupKey);
+  const modulesFilePathExists = await fileExists(modulesFilePath);
   if (!modulesFilePathExists) {
-    throw new FileExistenceError(config.modulesFilePath);
+    throw new FileExistenceError(modulesFilePath);
   }
   updateLogger.success(`Module JSON file exist - OK`);
   updateLogger.done();
