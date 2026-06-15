@@ -1,5 +1,12 @@
 # wp-theme-cli
 
+## 1.3.0
+
+### Minor Changes
+
+- e18bf7c: Add support for resolving clone fields in layout subfields
+- fabafe5: Drop Node v14
+
 ## 1.2.2
 
 ### Patch Changes
