@@ -1,5 +1,6 @@
 {
-  "modulesFilePath": "./includes/acf-json/group_5d380bc6e0ae8.json",
+  "modulesDirectory": "./includes/acf-json",
+  "modulesGroupKey": "group_5d380bc6e0ae8",
   "modulesFieldName": "modules",
   "conflictAction": "ignore",
   "fileTypes": {

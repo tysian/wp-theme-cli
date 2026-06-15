@@ -22,10 +22,19 @@ You might also want to see example config [here](/example-configs/example.acf-ge
 
 **modulesFilePath**  
 Accepts: `string`  
-This is the path to ACF JSON file.
+This is the path to ACF JSON file.  
+This property is **DEPRECATED**. You should use `'modulesDirectory'` and `'modulesGroupKey'` instead.
 
 > You need to enable json sync feature in your WordPress ACF settings.\
 > This field group **MUST** have at least one flexible field at the root level.
+
+**modulesDirectory**  
+Accepts: `string`  
+Path to directory with all ACF JSON files.
+
+**modulesGroupKey**  
+Accepts: `string`  
+Key of the group with flexible field.
 
 **modulesFieldName**  
 Accepts: `string`  
@@ -33,7 +42,8 @@ The flexible field name.
 
 **conflictAction**  
 Accepts: `string`  
-Options: `ignore` | `overwrite`  
+Options: `'ignore'` | `'overwrite'`  
+Default: `'ignore'`  
 Action when file already exists.
 
 **selectFileTypes**  
@@ -56,16 +66,28 @@ EJS template file, should have `.ejs` extension.
 Here is an data object provided to the template:
 
 ```ts
-type DataObject = {
+type ModuleData = {
+  /** Layout name */
   name: string;
-  variableName: string; // sanitized, snake_cased, variable-friendly version of layout name
-  fileName: string; // full filename with extension
-  className: string; // kebabCased, sanitized version layout name
-  subfields: {
-    // array of layout subfields
-    name: string;
-    variableName: string; // sanitized, variable-friendly subfield name
-  }[];
+  /** Layout name in PascalCase */
+  namePascalCase: string;
+  /** Layout name in camelCase */
+  nameCamelCase: string;
+  /** Layout name in snake_case */
+  variableName: string;
+  /** File name with extension */
+  fileName: string;
+  /** Layout name in kebab-case */
+  className: string;
+  /** Array of layout subfields */
+  subfields: ModuleDataSubfield[];
+};
+
+type ModuleDataSubfield = {
+  /** Subfield key */
+  name: string;
+  /** Subfield key in snake_case */
+  variableName: string;
 };
 ```
 

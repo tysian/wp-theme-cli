@@ -26,15 +26,24 @@ export type AcfGroup = {
 };
 
 type ModuleDataSubfield = {
+  /** Subfield key */
   name: string;
+  /** Subfield key in snake_case */
   variableName: string;
 };
 export type ModuleData = {
+  /** Layout name */
   name: string;
+  /** Layout name in PascalCase */
   namePascalCase: string;
+  /** Layout name in camelCase */
   nameCamelCase: string;
+  /** Layout name in snake_case */
   variableName: string;
+  /** File name with extension */
   fileName: string;
+  /** Layout name in kebab-case */
   className: string;
+  /** Array of layout subfields */
   subfields: ModuleDataSubfield[];
 };
