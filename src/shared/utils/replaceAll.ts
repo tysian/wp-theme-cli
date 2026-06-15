@@ -1,2 +1,3 @@
+/** @deprecated Use {@link String.replaceAll()} instead */
 export const replaceAll = (find: string, replace: string, string: string) =>
-  string.replace(new RegExp(find, 'g'), replace);
+  string.replaceAll(find, replace);

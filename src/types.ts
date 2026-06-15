@@ -14,6 +14,8 @@ export type AcfField = {
   type: string;
   layouts?: Record<string, AcfLayout>;
   [key: string]: any;
+  clone?: string[];
+  display?: 'seamless' | 'group';
 };
 
 export type AcfGroup = {
@@ -21,4 +23,18 @@ export type AcfGroup = {
   title: string;
   fields: AcfField[];
   [key: string]: any;
+};
+
+type ModuleDataSubfield = {
+  name: string;
+  variableName: string;
+};
+export type ModuleData = {
+  name: string;
+  namePascalCase: string;
+  nameCamelCase: string;
+  variableName: string;
+  fileName: string;
+  className: string;
+  subfields: ModuleDataSubfield[];
 };

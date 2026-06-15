@@ -2,7 +2,7 @@ import path from 'path';
 import chalk from 'chalk';
 import ejs from 'ejs';
 import filenamify from 'filenamify';
-import { snakeCase, kebabCase } from 'lodash-es';
+import { snakeCase, kebabCase, camelCase, template as _template } from 'lodash-es';
 import { stringIncludesIgnoreQuotes } from '$/shared/utils/stringIncludesIgnoreQuotes.js';
 import {
   updateLogger,
@@ -11,7 +11,9 @@ import {
   writeStream,
   handleError,
 } from '$/shared/utils/index.js';
-import { AcfLayout } from '$/types.js';
+import { AcfLayout, ModuleData } from '$/types.js';
+import { pascalCase } from '$/shared/utils/pascalCase.js';
+import { resolveSubfields } from '$/modules/acf-generator/helpers/resolveSubfields.js';
 import { AvailableFileType, FileType } from '../acf-generator.config.js';
 import { AcfGeneratorStatistics } from '../acf-generator.const.js';
 import { getDefaultTemplate } from './getDefaultTemplate.js';
@@ -20,32 +22,36 @@ type Module = {
   layout: AcfLayout;
   fileTypes: Record<AvailableFileType, FileType>;
   conflictAction: 'overwrite' | 'ignore';
+  modulesDirectory: string;
 };
 
 export const createModule = async (
-  { layout, fileTypes, conflictAction }: Module,
+  { layout, fileTypes, conflictAction, modulesDirectory }: Module,
   statistics: AcfGeneratorStatistics
 ): Promise<void> => {
-  for await (const [fileType, options] of Object.entries(fileTypes)) {
+  for (const [fileType, options] of Object.entries(fileTypes)) {
     const { active, output, template: customTemplate, import: moduleImport } = options;
     if (!active) {
       return;
     }
 
-    // TODO: Handle clone fields
-
     // Prepare data structure to create modules
-    const moduleData = {
+    const subfields = await resolveSubfields({
+      fields: layout.sub_fields,
+      layoutName: layout.name,
+      modulesDirectory,
+    });
+    const moduleData: ModuleData = {
       name: layout.name,
+      namePascalCase: pascalCase(layout.name),
+      nameCamelCase: camelCase(layout.name),
       variableName: snakeCase(filenamify(layout.name)),
       fileName: `${fileType === 'scss' ? '_' : ''}${layout.name}.${fileType}`,
       className: kebabCase(filenamify(layout.name)),
-      subfields: layout.sub_fields
-        .filter((subfield) => subfield?.name)
-        .map((subfield) => ({
-          name: subfield.name,
-          variableName: snakeCase(filenamify(subfield.name)),
-        })),
+      subfields: subfields.map((subfield) => ({
+        name: subfield.name,
+        variableName: snakeCase(filenamify(subfield.name)),
+      })),
     };
 
     try {
@@ -103,11 +109,17 @@ export const createModule = async (
           fileName = fileName.substring(1).slice(0, -5);
         }
 
-        // TODO: Maybe use lodash _.template() too?
-        const textToAppend = moduleImport.append
-          .replace('{file_name}', fileName)
-          .replace('{module_name}', moduleData.name)
-          .replace('{module_variable_name}', moduleData.variableName);
+        const SINGLE_CURLY_DELIMITER_RE = /{([\s\S]+?)}/g;
+        const textToAppendTemplate = _template(moduleImport.append, {
+          // use `{ }` delimiter
+          interpolate: SINGLE_CURLY_DELIMITER_RE,
+        });
+        const textToAppend = textToAppendTemplate({
+          file_name: fileName,
+          module_name: moduleData.name,
+          module_variable_name: moduleData.variableName,
+          ...moduleData,
+        });
 
         const isImported = stringIncludesIgnoreQuotes(importFileContent, textToAppend);
 

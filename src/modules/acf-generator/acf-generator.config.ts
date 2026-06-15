@@ -19,6 +19,8 @@ export type FileType = {
 
 export type AcfGeneratorConfig = {
   modulesFilePath: string;
+  modulesDirectory: string;
+  modulesGroupKey: string;
   modulesFieldName: string;
   conflictAction: 'ignore' | 'overwrite';
   fileTypes: Record<AvailableFileType, FileType>;

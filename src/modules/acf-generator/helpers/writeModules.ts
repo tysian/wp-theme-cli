@@ -11,9 +11,9 @@ export const writeModules = async (acfModules: AcfLayout[], config: AcfGenerator
   const statistics: AcfGeneratorStatistics = new Statistics(acfGeneratorStats);
   statistics.startTimer();
 
-  const { fileTypes, conflictAction } = config;
+  const { fileTypes, conflictAction, modulesDirectory } = config;
   for await (const layout of acfModules) {
-    await createModule({ layout, fileTypes, conflictAction }, statistics);
+    await createModule({ layout, fileTypes, conflictAction, modulesDirectory }, statistics);
   }
 
   statistics.stopTimer();
