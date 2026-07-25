@@ -6,10 +6,13 @@ export enum AvailableFileType {
 
 export type FileType = {
   active: boolean;
-  // 'default' -> use default template
-  // path -> provide path to custom template
+  /**
+   * - 'default' - use default template
+   * - path - provide path to custom template
+   */
   template: 'default' | string;
   output: string;
+  skipPrefixed?: string[];
   import?: {
     filePath: string;
     search: string;
