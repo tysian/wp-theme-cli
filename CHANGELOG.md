@@ -1,5 +1,11 @@
 # wp-theme-cli
 
+## 1.4.0
+
+### Minor Changes
+
+- c63ddd8: Allow to skip module file creation if it has specific prefix
+
 ## 1.3.0
 
 ### Minor Changes
