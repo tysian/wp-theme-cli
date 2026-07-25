@@ -54,9 +54,10 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
   }
   logger.success('Conflict action - OK');
 
-  for await (const [fileType, configOptions] of Object.entries(config.fileTypes).filter(
-    ([, configOption]) => configOption.active
-  )) {
+  const fileTypes = Object.entries(config.fileTypes);
+  for (const [fileType, configOptions] of fileTypes) {
+    if (!configOptions.active) continue;
+
     updateLogger.awaiting(`${loggerPrefix(fileType)} Checking existence of output files...`);
     const outputExists = await fileExists(configOptions.output);
     if (!outputExists) {
@@ -77,7 +78,7 @@ export const checkConfig = async (config: AcfGeneratorConfig) => {
       updateLogger.done();
     }
 
-    if (configOptions?.import) {
+    if (configOptions.import) {
       const { filePath = '', search = '' } = configOptions.import;
 
       updateLogger.awaiting(`${loggerPrefix(fileType)} Checking import file path...`);

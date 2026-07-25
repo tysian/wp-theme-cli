@@ -11,7 +11,7 @@ import {
   writeStream,
   handleError,
 } from '$/shared/utils/index.js';
-import { AcfLayout, ModuleData } from '$/types.js';
+import { AcfField, AcfLayout, ModuleData } from '$/types.js';
 import { pascalCase } from '$/shared/utils/pascalCase.js';
 import { resolveSubfields } from '$/modules/acf-generator/helpers/resolveSubfields.js';
 import { AvailableFileType, FileType } from '../acf-generator.config.js';
@@ -26,21 +26,26 @@ type Module = {
 };
 
 export const createModule = async (
-  { layout, fileTypes, conflictAction, modulesDirectory }: Module,
+  { layout, fileTypes, conflictAction = 'ignore', modulesDirectory }: Module,
   statistics: AcfGeneratorStatistics
 ): Promise<void> => {
   for (const [fileType, options] of Object.entries(fileTypes)) {
-    const { active, output, template: customTemplate, import: moduleImport } = options;
-    if (!active) {
-      return;
-    }
+    const {
+      active,
+      output,
+      skipPrefixed = [],
+      template: customTemplate,
+      import: moduleImport,
+    } = options;
+    if (!active) continue;
 
     // Prepare data structure to create modules
     const subfields = await resolveSubfields({
       fields: layout.sub_fields,
       layoutName: layout.name,
       modulesDirectory,
-    });
+    }).catch(() => [] as AcfField[]);
+
     const moduleData: ModuleData = {
       name: layout.name,
       namePascalCase: pascalCase(layout.name),
@@ -53,7 +58,6 @@ export const createModule = async (
         variableName: snakeCase(filenamify(subfield.name)),
       })),
     };
-
     try {
       updateLogger.pending(`Creating ${chalk.green(`${moduleData.fileName}`)}...`);
 
@@ -79,18 +83,40 @@ export const createModule = async (
         updateLogger.done();
       }
 
-      // Setup template - use default if default, else use custom template from config
-      let template = getDefaultTemplate(fileType as AvailableFileType);
-      if (customTemplate && customTemplate !== 'default') {
-        template = await readStream(customTemplate);
+      // Skip if output exist
+      let shouldSkip = outputExists && conflictAction === 'ignore';
+
+      // Skip if file with prefix exists
+      if (!shouldSkip) {
+        for (const prefix of skipPrefixed) {
+          const prefixedPath = path.resolve(output, `${prefix}${moduleData.fileName}`);
+          const exists = await fileExists(prefixedPath);
+
+          if (exists) {
+            updateLogger.skip(
+              `${chalk.green(`${prefix}${moduleData.fileName}`)} (prefixed)  already exists.`
+            );
+            statistics.addFile('unchanged', moduleData.fileName);
+            updateLogger.done();
+
+            shouldSkip = true;
+            break;
+          }
+        }
       }
 
-      // Render template using EJS
-      // TODO: render using lodash _.template() function instead
-      const renderedTemplate = await ejs.render(template, { data: moduleData }, { async: true });
+      if (!shouldSkip) {
+        // Setup template - use default if default, else use custom template from config
+        let template = getDefaultTemplate(fileType as AvailableFileType);
+        if (customTemplate && customTemplate !== 'default') {
+          template = await readStream(customTemplate);
+        }
 
-      // Create module file
-      if (!outputExists || (outputExists && conflictAction === 'overwrite')) {
+        // Render template using EJS
+        // TODO: render using lodash _.template() function instead
+        const renderedTemplate = await ejs.render(template, { data: moduleData }, { async: true });
+
+        // Create module file
         await writeStream(outputPath, renderedTemplate);
         statistics.addFile('created', moduleData.fileName);
         updateLogger.success(` ${chalk.green(`${moduleData.fileName}`)} created.`);
@@ -127,7 +153,7 @@ export const createModule = async (
           updateLogger.skip(`${chalk.green(`${moduleData.fileName}`)} already imported.`);
           updateLogger.done();
           statistics.addFile('unchanged', moduleData.fileName);
-          return;
+          continue;
         }
 
         // Find last index
@@ -143,7 +169,7 @@ export const createModule = async (
           );
           statistics.addFile('unchanged', moduleImport.search);
           updateLogger.done();
-          return;
+          continue;
         }
 
         contentArray.splice(lastIndex + 1, 0, textToAppend);

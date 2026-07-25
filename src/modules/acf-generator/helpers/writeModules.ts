@@ -12,7 +12,7 @@ export const writeModules = async (acfModules: AcfLayout[], config: AcfGenerator
   statistics.startTimer();
 
   const { fileTypes, conflictAction, modulesDirectory } = config;
-  for await (const layout of acfModules) {
+  for (const layout of acfModules) {
     await createModule({ layout, fileTypes, conflictAction, modulesDirectory }, statistics);
   }
 
